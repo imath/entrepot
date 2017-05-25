@@ -1,0 +1,16 @@
+{
+	"name": "test-plugin",
+	"author": "imath",
+	"keywords": [
+	  "test",
+	  "plugin"
+	],
+	"country": "fr_FR",
+	"releases": "https://github.com/imath/test-plugin/releases",
+	"issues": "https://github.com/imath/test-plugin/issues",
+	"description": {
+		"en_US" : "Testing description",
+		"fr_FR" : "Description de test"
+	},
+	"README": ""
+}

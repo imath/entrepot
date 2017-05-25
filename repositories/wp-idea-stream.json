@@ -1,0 +1,16 @@
+{
+	"name": "wp-idea-stream",
+	"author": "imath",
+	"keywords": [
+	  "media",
+	  "users"
+	],
+	"country": "fr_FR",
+	"releases": "https://github.com/imath/wp-idea-stream/releases",
+	"issues": "https://github.com/imath/wp-idea-stream/issues",
+	"description": {
+		"en_US" : "Share ideas, great ones will rise to the top!",
+		"fr_FR" : "Partager des idées, les meilleures graviront des sommets !"
+	},
+	"README": "https://raw.githubusercontent.com/imath/wp-idea-stream/master/README.md"
+}
