@@ -6,7 +6,7 @@
 	  "repositories"
 	],
 	"country": "fr_FR",
-	"releases": "https://github.com/imath/plugin-repositories/releases",
+	"releases": "",
 	"issues": "https://github.com/imath/plugin-repositories/issues",
 	"description": {
 		"en_US" : "Easier upgrades for your plugin users",

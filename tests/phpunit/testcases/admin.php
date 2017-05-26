@@ -34,5 +34,6 @@ class Plugin_Repositories_Admin_Tests extends WP_UnitTestCase {
 
 		$updates = get_site_transient( 'update_plugins' )->response;
 		$this->assertNotEmpty( $updates['plugin-repositories/plugin-repositories.php']->package );
+		$this->assertTrue( $updates['plugin-repositories/plugin-repositories.php']->is_update );
 	}
 }
