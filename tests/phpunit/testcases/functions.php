@@ -6,7 +6,7 @@
 /**
  * @group functions
  */
-class Plugin_Repositories_Tests extends WP_UnitTestCase {
+class Plugin_Repositories_Functions_Tests extends WP_UnitTestCase {
 
 	public function repositories_dir() {
 		return PR_TESTING_ASSETS;

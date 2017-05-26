@@ -1,0 +1,16 @@
+{
+	"name": "plugin-repositories",
+	"author": "imath",
+	"keywords": [
+	  "plugin",
+	  "repositories"
+	],
+	"country": "fr_FR",
+	"releases": "https://github.com/imath/plugin-repositories/releases",
+	"issues": "https://github.com/imath/plugin-repositories/issues",
+	"description": {
+		"en_US" : "Easier upgrades for your plugin users",
+		"fr_FR" : "Des mises à jour plus simples pour les utilisateurs de vos extensions."
+	},
+	"README": "https://raw.githubusercontent.com/imath/plugin-repositories/master/README.md"
+}

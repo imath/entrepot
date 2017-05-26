@@ -12,6 +12,7 @@
  * Text Domain: plugin-repositories
  * Domain Path: /languages/
  * Network: True
+ * GitHub Plugin URI: https://github.com/imath/plugin-repositories/
  */
 
 // Exit if accessed directly.
