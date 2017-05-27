@@ -10,12 +10,44 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
+function galerie_version() {
+	return galerie()->version;
+}
+
 function galerie_assets_url() {
 	return galerie()->assets_url;
 }
 
 function galerie_assets_dir() {
 	return galerie()->assets_dir;
+}
+
+function galerie_js_url() {
+	return galerie()->js_url;
+}
+
+/**
+ * Get the JS/CSS minified suffix.
+ *
+ * @since  1.0.0
+ *
+ * @return string the JS/CSS minified suffix.
+ */
+function galerie_min_suffix() {
+	$min = '.min';
+
+	if ( defined( 'SCRIPT_DEBUG' ) && true === SCRIPT_DEBUG )  {
+		$min = '';
+	}
+
+	/**
+	 * Filter here to edit the minified suffix.
+	 *
+	 * @since  1.0.0
+	 *
+	 * @param  string $min The minified suffix.
+	 */
+	return apply_filters( 'galerie_min_suffix', $min );
 }
 
 function galerie_plugins_dir() {
