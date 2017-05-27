@@ -257,27 +257,3 @@ function galerie_plugin_repository_information() {
 	exit;
 }
 add_action( 'install_plugins_pre_plugin-information', 'galerie_plugin_repository_information', 5 );
-
-function galerie_admin_home() {
-	$json         = galerie_assets_dir() . 'galerie.min.json';
-	$raw          = file_get_contents( $json );
-	$repositories =  json_decode( $raw );
-	?>
-	<h1><?php esc_html_e( 'Repositories', 'galerie' ); ?></h1>
-
-	<div class="wrap">
-		<?php var_dump( $repositories ); ?>
-	</div>
-	<?php
-}
-
-function galerie_add_menu() {
-	add_menu_page(
-		__( 'Repositories', 'galerie' ),
-		__( 'Repositories', 'galerie' ),
-		'manage_options',
-		'repositories',
-		'galerie_admin_home',
-		galerie_assets_url() . 'repo.svg'
-	);
-}

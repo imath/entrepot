@@ -41,7 +41,7 @@ module.exports = function( grunt ) {
 		},
 		clean: {
 			all: ['assets/*.min.css', 'js/*.min.js', 'assets/galerie.min.json'],
-			galerie: 'assets/galerie.min.json',
+			galerie: 'assets/galerie.min.json'
 		},
 		makepot: {
 			target: {
