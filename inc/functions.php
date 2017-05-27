@@ -14,6 +14,10 @@ function plugin_repositories_assets_url() {
 	return plugin_repositories()->assets_url;
 }
 
+function plugin_repositories_assets_dir() {
+	return plugin_repositories()->assets_dir;
+}
+
 function plugin_repositories_plugins_dir() {
 	return apply_filters( 'plugin_repositories_plugins_dir', plugin_repositories()->repositories_dir );
 }
@@ -223,10 +227,15 @@ function plugin_repositories_plugin_repository_information() {
 add_action( 'install_plugins_pre_plugin-information', 'plugin_repositories_plugin_repository_information', 5 );
 
 function plugin_repositories_admin_home() {
+	$json         = plugin_repositories_assets_dir() . 'repositories.min.json';
+	$raw          = file_get_contents( $json );
+	$repositories =  json_decode( $raw );
 	?>
 	<h1><?php esc_html_e( 'Repositories', 'plugin-repositories' ); ?></h1>
 
-	<div class="wrap"></div>
+	<div class="wrap">
+		<?php var_dump( $repositories ); ?>
+	</div>
 	<?php
 }
 

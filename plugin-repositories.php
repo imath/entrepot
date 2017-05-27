@@ -83,6 +83,7 @@ final class Plugin_Repositories {
 		$this->url              = plugin_dir_url ( $this->file );
 		$this->js_url           = trailingslashit( $this->url . 'js' );
 		$this->assets_url       = trailingslashit( $this->url . 'assets' );
+		$this->assets_dir       = trailingslashit( $this->dir . 'assets' );
 		$this->inc_dir          = trailingslashit( $this->dir . 'inc' );
 		$this->repositories_dir = trailingslashit( $this->dir . 'repositories' );
 	}
