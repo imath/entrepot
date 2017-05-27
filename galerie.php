@@ -1,32 +1,32 @@
 <?php
 /**
- * Plugin Name: Plugin Repositories
- * Plugin URI: https://github.com/imath/plugin-repositories/
- * Description: An alternative source of Plugins for your WordPress.
+ * Plugin Name: Galerie
+ * Plugin URI: https://github.com/imath/galerie/
+ * Description: Une galerie d'extensions WordPress publiques créées par des artistes codeurs.
  * Version: 1.0.0-beta1
  * Requires at least: 4.8
  * Tested up to: 4.8
  * License: GNU/GPL 2
  * Author: imath
  * Author URI: https://imathi.eu/
- * Text Domain: plugin-repositories
+ * Text Domain: galerie
  * Domain Path: /languages/
  * Network: True
- * GitHub Plugin URI: https://github.com/imath/plugin-repositories/
+ * GitHub Plugin URI: https://github.com/imath/galerie/
  */
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'Plugin_Repositories' ) ) :
+if ( ! class_exists( 'Galerie' ) ) :
 /**
  * Main plugin's class
  *
- * @package PluginRepositories
+ * @package Galerie
  *
  * @since 1.0.0
  */
-final class Plugin_Repositories {
+final class Galerie {
 
 	/**
 	 * Plugin's main instance
@@ -72,7 +72,7 @@ final class Plugin_Repositories {
 		$this->version = '1.0.0-beta1';
 
 		// Domain
-		$this->domain = 'plugin-repositories';
+		$this->domain = 'galerie';
 
 		// Base name
 		$this->file      = __FILE__;
@@ -139,7 +139,7 @@ endif;
  *
  * @since 1.0.0
  */
-function plugin_repositories() {
-	return Plugin_Repositories::start();
+function galerie() {
+	return Galerie::start();
 }
-add_action( 'plugins_loaded', 'plugin_repositories', 1 );
+add_action( 'plugins_loaded', 'galerie', 1 );

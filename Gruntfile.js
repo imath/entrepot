@@ -16,7 +16,7 @@ module.exports = function( grunt ) {
 		checktextdomain: {
 			options: {
 				correct_domain: false,
-				text_domain: ['plugin-repositories','default'],
+				text_domain: ['galerie','default'],
 				keywords: [
 					'__:1,2d',
 					'_e:1,2d',
@@ -40,19 +40,20 @@ module.exports = function( grunt ) {
 			}
 		},
 		clean: {
-			all: ['assets/*.min.css', 'js/*.min.js', 'assets/repositories.min.json']
+			all: ['assets/*.min.css', 'js/*.min.js', 'assets/galerie.min.json'],
+			galerie: 'assets/galerie.min.json',
 		},
 		makepot: {
 			target: {
 				options: {
 					domainPath: '/languages',
 					exclude: ['/node_modules'],
-					mainFile: 'plugin-repositories.php',
-					potFilename: 'plugin-repositories.pot',
+					mainFile: 'galerie.php',
+					potFilename: 'galerie.pot',
 					processPot: function( pot ) {
 						pot.headers['last-translator']      = 'imath <contact@imathi.eu>';
 						pot.headers['language-team']        = 'FRENCH <contact@imathi.eu>';
-						pot.headers['report-msgid-bugs-to'] = 'https://github.com/imath/plugin-repositories/issues';
+						pot.headers['report-msgid-bugs-to'] = 'https://github.com/imath/galerie/issues';
 						return pot;
 					},
 					type: 'wp-plugin'
@@ -69,7 +70,7 @@ module.exports = function( grunt ) {
 			options: {
 				banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
 				'<%= grunt.template.today("UTC:yyyy-mm-dd h:MM:ss TT Z") %> - ' +
-				'https://imathi.eu/tag/plugin-repositories */\n'
+				'https://imathi.eu/tag/galerie */\n'
 			}
 		},
 		cssmin: {
@@ -81,7 +82,7 @@ module.exports = function( grunt ) {
 				options: {
 					banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
 					'<%= grunt.template.today("UTC:yyyy-mm-dd h:MM:ss TT Z") %> - ' +
-					'https://imathi.eu/tag/plugin-repositories */'
+					'https://imathi.eu/tag/galerie */'
 				}
 			}
 		},
@@ -106,7 +107,7 @@ module.exports = function( grunt ) {
 		minjson: {
 			compile: {
 				files: {
-					'assets/repositories.min.json': 'repositories/*.json'
+					'assets/galerie.min.json': 'repositories/*.json'
 				}
 			}
 		},
@@ -152,7 +153,7 @@ module.exports = function( grunt ) {
 		}, this.async() );
 	} );
 
-	grunt.registerTask( 'commit', ['checktextdomain', 'phpunit'] );
+	grunt.registerTask( 'test', ['clean:galerie', 'minjson', 'phpunit'] );
 
 	grunt.registerTask( 'jstest', ['jsvalidate', 'jshint'] );
 
@@ -161,7 +162,7 @@ module.exports = function( grunt ) {
 	grunt.registerTask( 'release', ['checktextdomain', 'makepot', 'clean', 'jstest', 'shrink', 'compress'] );
 
 	// Travis CI Tasks.
-	grunt.registerTask( 'travis:build', ['jstest', 'checktextdomain', 'phpunit'] );
+	grunt.registerTask( 'travis:build', ['jstest', 'checktextdomain', 'clean:galerie', 'minjson', 'phpunit'] );
 
 	// Default task.
 	grunt.registerTask( 'default', ['commit'] );

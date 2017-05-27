@@ -1,9 +1,9 @@
 {
   "author": "imath",
   "bugs": {
-    "url": "https://github.com/imath/plugin-repositories/issues"
+    "url": "https://github.com/imath/galerie/issues"
   },
-  "description": "An alternative source of Plugins for your WordPress.",
+  "description": "A WordPress Public Plugins Gallery made by coding artists.",
   "devDependencies": {
     "grunt": "~1.0.1",
     "grunt-checktextdomain": "~1.0.1",
@@ -27,15 +27,15 @@
     "node": "~6.6.0"
   },
   "keywords": [
-    "plugin",
+    "plugins",
     "repositories"
   ],
-  "homepage": "https://imathi.eu/tag/plugin-repositories",
+  "homepage": "https://imathi.eu/tag/galerie",
   "license": "GPL-2.0+",
-  "name": "plugin-repositories",
+  "name": "galerie",
   "repository": {
     "type": "git",
-    "url": "https://github.com/imath/plugin-repositories.git"
+    "url": "https://github.com/imath/galerie.git"
   },
   "version": "1.0.0-beta1"
 }

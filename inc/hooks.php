@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Repositories hooks.
+ * Galerie hooks.
  *
- * @package PluginRepositories\inc
+ * @package Galerie\inc
  *
  * @since 1.0.0
  */
@@ -10,4 +10,4 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-add_action( 'admin_menu', 'plugin_repositories_add_menu' );
+add_action( 'admin_menu', 'galerie_add_menu' );

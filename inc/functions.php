@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Repositories functions.
+ * Galerie functions.
  *
- * @package PluginRepositories\inc
+ * @package Galerie\inc
  *
  * @since 1.0.0
  */
@@ -10,24 +10,24 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-function plugin_repositories_assets_url() {
-	return plugin_repositories()->assets_url;
+function galerie_assets_url() {
+	return galerie()->assets_url;
 }
 
-function plugin_repositories_assets_dir() {
-	return plugin_repositories()->assets_dir;
+function galerie_assets_dir() {
+	return galerie()->assets_dir;
 }
 
-function plugin_repositories_plugins_dir() {
-	return apply_filters( 'plugin_repositories_plugins_dir', plugin_repositories()->repositories_dir );
+function galerie_plugins_dir() {
+	return apply_filters( 'galerie_plugins_dir', galerie()->repositories_dir );
 }
 
-function plugin_repositories_get_repository_json( $plugin = '' ) {
+function galerie_get_repository_json( $plugin = '' ) {
 	if ( ! $plugin ) {
 		return false;
 	}
 
-	$json = sprintf( '%1$s/%2$s.json', plugin_repositories_plugins_dir(), sanitize_file_name( $plugin ) );
+	$json = sprintf( '%1$s/%2$s.json', galerie_plugins_dir(), sanitize_file_name( $plugin ) );
 	if ( ! file_exists( $json ) ) {
 		return false;
 	}
@@ -36,14 +36,14 @@ function plugin_repositories_get_repository_json( $plugin = '' ) {
 	return json_decode( $data );
 }
 
-function plugin_repositories_get_plugin_latest_stable_release( $atom_url = '', $plugin = array() ) {
+function galerie_get_plugin_latest_stable_release( $atom_url = '', $plugin = array() ) {
 	$tag_data = new stdClass;
 	$tag_data->is_update = false;
 
 	if ( ! $atom_url  ) {
 		// For Unit Testing purpose only. Do not use this constant in your code.
-		if ( defined( 'PR_TESTING_ASSETS' ) && isset( $plugin['slug'] ) &&  'plugin-repositories' === $plugin['slug'] ) {
-			$atom_url = trailingslashit( plugin_repositories()->dir ) . 'tests/phpunit/assets/releases';
+		if ( defined( 'PR_TESTING_ASSETS' ) && isset( $plugin['slug'] ) &&  'galerie' === $plugin['slug'] ) {
+			$atom_url = trailingslashit( galerie()->dir ) . 'tests/phpunit/assets/releases';
 		} else {
 			return $tag_data;
 		}
@@ -119,16 +119,16 @@ function plugin_repositories_get_plugin_latest_stable_release( $atom_url = '', $
 	return $tag_data;
 }
 
-function plugin_repositories_extra_header( $headers = array() ) {
+function galerie_extra_header( $headers = array() ) {
 	if (  ! isset( $headers['GitHub Plugin URI'] ) ) {
 		$headers['GitHub Plugin URI'] = 'GitHub Plugin URI';
 	}
 
 	return $headers;
 }
-add_filter( 'extra_plugin_headers', 'plugin_repositories_extra_header', 10, 1 );
+add_filter( 'extra_plugin_headers', 'galerie_extra_header', 10, 1 );
 
-function plugin_repositories_update_plugin_repositories( $option = null ) {
+function galerie_update_repositories( $option = null ) {
 	if ( ! did_action( 'http_api_debug' ) ) {
 		return $option;
 	}
@@ -139,13 +139,13 @@ function plugin_repositories_update_plugin_repositories( $option = null ) {
 	$repositories_data = array();
 	foreach ( $repositories as $kr => $dp ) {
 		$repository_name = trim( dirname( $kr ), '/' );
-		$json = plugin_repositories_get_repository_json( $repository_name );
+		$json = galerie_get_repository_json( $repository_name );
 
 		if ( ! $json || ! isset( $json->releases ) ) {
 			continue;
 		}
 
-		$response = plugin_repositories_get_plugin_latest_stable_release( $json->releases, array_merge( $dp, array(
+		$response = galerie_get_plugin_latest_stable_release( $json->releases, array_merge( $dp, array(
 			'plugin' => $kr,
 			'slug'   => $repository_name,
 		) ) );
@@ -166,14 +166,14 @@ function plugin_repositories_update_plugin_repositories( $option = null ) {
 	}
 
 	// Prevent infinite loops.
-	remove_filter( 'set_site_transient_update_plugins', 'plugin_repositories_update_plugin_repositories' );
+	remove_filter( 'set_site_transient_update_plugins', 'galerie_update_repositories' );
 
 	set_site_transient( 'update_plugins', $option );
 	return $option;
 }
-add_filter( 'set_site_transient_update_plugins', 'plugin_repositories_update_plugin_repositories' );
+add_filter( 'set_site_transient_update_plugins', 'galerie_update_repositories' );
 
-function plugin_repositories_plugin_repository_information() {
+function galerie_plugin_repository_information() {
 	global $tab;
 
 	if ( empty( $_REQUEST['plugin'] ) ) {
@@ -199,16 +199,16 @@ function plugin_repositories_plugin_repository_information() {
 		if ( ! empty( $repository->full_upgrade_notice ) ) {
 			echo html_entity_decode( $repository->full_upgrade_notice, ENT_QUOTES, get_bloginfo( 'charset' ) );
 		} else {
-			wp_die( __( 'Sorry, this plugin repository has not included an upgrade notice.', 'plugin-repositories' ) );
+			wp_die( __( 'Sorry, this plugin repository has not included an upgrade notice.', 'galerie' ) );
 		}
 	} else {
-		$repository_data = plugin_repositories_get_repository_json( $plugin );
+		$repository_data = galerie_get_repository_json( $plugin );
 
 		if ( ! $repository_data ) {
 			return;
 		}
 
-		$repository_info = __( 'Sorry, the README.md file of this plugin repository is not reachable at the moment.', 'plugin-repositories' );
+		$repository_info = __( 'Sorry, the README.md file of this plugin repository is not reachable at the moment.', 'galerie' );
 		if ( ! empty( $repository_data->README ) ) {
 			$repository_info = file_get_contents( $repository_data->README );
 			$has_readme = true;
@@ -224,14 +224,14 @@ function plugin_repositories_plugin_repository_information() {
 	iframe_footer();
 	exit;
 }
-add_action( 'install_plugins_pre_plugin-information', 'plugin_repositories_plugin_repository_information', 5 );
+add_action( 'install_plugins_pre_plugin-information', 'galerie_plugin_repository_information', 5 );
 
-function plugin_repositories_admin_home() {
-	$json         = plugin_repositories_assets_dir() . 'repositories.min.json';
+function galerie_admin_home() {
+	$json         = galerie_assets_dir() . 'galerie.min.json';
 	$raw          = file_get_contents( $json );
 	$repositories =  json_decode( $raw );
 	?>
-	<h1><?php esc_html_e( 'Repositories', 'plugin-repositories' ); ?></h1>
+	<h1><?php esc_html_e( 'Repositories', 'galerie' ); ?></h1>
 
 	<div class="wrap">
 		<?php var_dump( $repositories ); ?>
@@ -239,13 +239,13 @@ function plugin_repositories_admin_home() {
 	<?php
 }
 
-function plugin_repositories_add_menu() {
+function galerie_add_menu() {
 	add_menu_page(
-		__( 'Repositories', 'plugin-repositories' ),
-		__( 'Repositories', 'plugin-repositories' ),
+		__( 'Repositories', 'galerie' ),
+		__( 'Repositories', 'galerie' ),
 		'manage_options',
 		'repositories',
-		'plugin_repositories_admin_home',
-		plugin_repositories_assets_url() . 'repo.svg'
+		'galerie_admin_home',
+		galerie_assets_url() . 'repo.svg'
 	);
 }
