@@ -12,7 +12,21 @@ window.galerie = window.galerie || _.extend( {}, _.pick( window.wp, 'Backbone', 
 
 	// Prevent the search tab to appear
 	$( document ).ready( function() {
-		$( 'body' ).removeClass( 'plugin-install-php' ).addClass( 'gallerie-install-php' );
+		$( 'body' ).addClass( 'gallerie-install-php' );
+
+		var search = $( '.plugin-install-php .wp-filter-search' );
+		$( search ).removeClass( 'wp-filter-search' )
+		           .prop( 'id', 'gallerie-search' )
+				   .css( {
+					   margin: 0,
+					   width: '280px',
+					   'font-size': '16px',
+					   'font-weight': 300,
+					   'line-height': 1.5,
+					   padding: '3px 5px',
+					   height: '32px'
+				   } );
+		$( '#the-list' ).css( { 'margin-top': '2em' } );
 	} );
 
 	// Set Views holder
@@ -35,7 +49,7 @@ window.galerie = window.galerie || _.extend( {}, _.pick( window.wp, 'Backbone', 
 
 		initialize: function() {
 			var description = this.model.get( 'description' ), presentation = '',
-			    icon = galeriel10n.defaultIcon;
+			    icon = galeriel10n.defaultIcon, author;
 
 			if ( _.isUndefined( description[ galeriel10n.locale ] ) ) {
 				presentation = description.en_US;
@@ -43,13 +57,21 @@ window.galerie = window.galerie || _.extend( {}, _.pick( window.wp, 'Backbone', 
 				presentation = description[ galeriel10n.locale ];
 			}
 
+			author = this.model.get( 'author' );
+			if ( this.model.get( 'author_url' ) ) {
+				author = '<a href="' + this.model.get( 'author_url' ) + '">' + author + '</a>';
+			}
+
+			author = galeriel10n.byAuthor.replace( '%s', author );
+
 			if ( this.model.get( 'icon' ) ) {
 				icon = this.model.get( 'icon' );
 			}
 
 			this.model.set( {
 				presentation: presentation,
-				icon:         icon
+				icon:         icon,
+				author:       author
 			 }, { silent: true } );
 
 			// Add the Repository specific className
@@ -94,8 +116,10 @@ window.galerie = window.galerie || _.extend( {}, _.pick( window.wp, 'Backbone', 
 		// Init the App.
 		galerie.App.init( data );
 
-	} ).fail( function() {
-		// Display an error message.
+	} ).fail( function( xhr ) {
+		$( '#the-list' ).append(
+			'<div id="message" class="error"><p>' + $.parseJSON( xhr.responseText ) + '</p></div>'
+		);
 	} );
 
 } )( jQuery );

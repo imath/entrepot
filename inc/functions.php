@@ -118,7 +118,7 @@ function galerie_get_plugin_latest_stable_release( $atom_url = '', $plugin = arr
 		);
 
 		if ( ! empty( $plugin['Version'] ) ) {
-			if ( version_compare( $tag, $plugin['Version'], '<' ) ) {
+			if ( version_compare( $tag, $plugin['Version'], '<=' ) ) {
 				continue;
 			}
 
@@ -160,13 +160,18 @@ function galerie_extra_header( $headers = array() ) {
 }
 add_filter( 'extra_plugin_headers', 'galerie_extra_header', 10, 1 );
 
+function galerie_get_installed_repositories() {
+	$plugins = get_plugins();
+
+	return array_diff_key( $plugins, wp_list_filter( $plugins, array( 'GitHub Plugin URI' => '' ) ) );
+}
+
 function galerie_update_repositories( $option = null ) {
 	if ( ! did_action( 'http_api_debug' ) ) {
 		return $option;
 	}
 
-	$plugins      = get_plugins();
-	$repositories = array_diff_key( $plugins, wp_list_filter( $plugins, array( 'GitHub Plugin URI' => '' ) ) );
+	$repositories = galerie_get_installed_repositories();
 
 	$repositories_data = array();
 	foreach ( $repositories as $kr => $dp ) {
@@ -229,9 +234,11 @@ function galerie_plugin_repository_information() {
 		$repository = reset( $repository );
 
 		if ( ! empty( $repository->full_upgrade_notice ) ) {
-			echo html_entity_decode( $repository->full_upgrade_notice, ENT_QUOTES, get_bloginfo( 'charset' ) );
+			$upgrade_info = html_entity_decode( $repository->full_upgrade_notice, ENT_QUOTES, get_bloginfo( 'charset' ) );
+			echo galerie_sanitize_repository_text( $upgrade_info );
+
 		} else {
-			wp_die( __( 'Sorry, this plugin repository has not included an upgrade notice.', 'galerie' ) );
+			wp_die( esc_html__( 'Sorry, this plugin repository has not included an upgrade notice.', 'galerie' ) );
 		}
 	} else {
 		$repository_data = galerie_get_repository_json( $plugin );
@@ -240,7 +247,7 @@ function galerie_plugin_repository_information() {
 			return;
 		}
 
-		$repository_info = __( 'Sorry, the README.md file of this plugin repository is not reachable at the moment.', 'galerie' );
+		$repository_info = esc_html__( 'Sorry, the README.md file of this plugin repository is not reachable at the moment.', 'galerie' );
 		if ( ! empty( $repository_data->README ) ) {
 			$repository_info = file_get_contents( $repository_data->README );
 			$has_readme = true;
@@ -257,3 +264,20 @@ function galerie_plugin_repository_information() {
 	exit;
 }
 add_action( 'install_plugins_pre_plugin-information', 'galerie_plugin_repository_information', 5 );
+
+function galerie_sanitize_repository_text( $text = '' ) {
+	return wp_kses( $text, array(
+		'a' => array( 'href' => array(),'title' => array(), 'target' => array() ),
+		'abbr' => array( 'title' => array() ),'acronym' => array( 'title' => array() ),
+		'code' => array(), 'pre' => array(), 'em' => array(),'strong' => array(),
+		'ul' => array(), 'ol' => array(), 'li' => array(), 'p' => array(), 'br' => array()
+	) );
+}
+
+function galerie_get_repository_slug( $path = '' ) {
+	if ( ! $path ) {
+		return false;
+	}
+
+	return wp_basename( dirname( $path ) );
+}
