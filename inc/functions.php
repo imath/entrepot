@@ -138,7 +138,14 @@ function galerie_get_plugin_latest_stable_release( $atom_url = '', $plugin = arr
 				$tag_data->full_upgrade_notice = end( $release->content );
 			}
 
-			$tag_data->is_update = true;
+			if ( 'latest' === $plugin['Version'] ) {
+				$response['download_link'] = $response['package'];
+				$response['version']       = $response['new_version'];
+				$response['name']          = $response['slug'];
+				$tag_data->is_install = true;
+			} else {
+				$tag_data->is_update = true;
+			}
 		}
 
 		foreach ( $response as $k => $v ) {
