@@ -115,15 +115,8 @@ final class Galerie {
 	public function autoload( $class ) {
 		$name = str_replace( '_', '-', strtolower( $class ) );
 
-		if ( false === strpos( $name, $this->domain ) ) {
+		if ( false === strpos( $name, $this->domain ) && 'Parsedown' !== $class ) {
 			return;
-		}
-
-		$folder = null;
-		$parts = explode( '-', $name );
-
-		if ( isset( $parts[2] ) ) {
-			$folder = $parts[2];
 		}
 
 		$path = $this->inc_dir . "classes/class-{$name}.php";

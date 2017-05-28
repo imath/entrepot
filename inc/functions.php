@@ -257,6 +257,8 @@ function galerie_plugin_repository_information() {
 		$repository_info = esc_html__( 'Sorry, the README.md file of this plugin repository is not reachable at the moment.', 'galerie' );
 		if ( ! empty( $repository_data->README ) ) {
 			$repository_info = file_get_contents( $repository_data->README );
+			$parsedown = new Parsedown();
+			$repository_info = $parsedown->text( $repository_info );
 			$has_readme = true;
 		}
 

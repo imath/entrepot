@@ -165,7 +165,10 @@ function galerie_repositories_api( $res = false, $action = '', $args = null ) {
 
 function galerie_admin_repositories_print_templates() {
 	?>
-	<div id="the-list" data-list="galerie"></div>
+	<div class="wp-list-table widefat plugin-install">
+		<h2 class="screen-reader-text"><?php esc_html_e( 'Liste des dépôts', 'galerie'); ?></h2>
+		<div id="the-list" data-list="galerie"></div>
+	</div>
 	<script type="text/html" id="tmpl-galerie-repository">
 		<div class="plugin-card-top">
 			<div class="name column-name">
