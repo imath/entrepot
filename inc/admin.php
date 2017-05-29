@@ -255,6 +255,8 @@ function galerie_admin_repository_information() {
 		}
 
 		$repository_info = esc_html__( 'Sorry, the README.md file of this plugin repository is not reachable at the moment.', 'galerie' );
+		$has_readme      = false;
+		
 		if ( ! empty( $repository_data->README ) ) {
 			$request  = wp_remote_get( $repository_data->README, array(
 				'timeout' => 30,
