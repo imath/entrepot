@@ -82,14 +82,7 @@ function galerie_get_plugin_latest_stable_release( $atom_url = '', $plugin = arr
 	}
 
 	$atom_url = rtrim( $atom_url, '.atom' ) . '.atom';
-
-	if ( ! class_exists( 'AtomParser') ) {
-		require_once( ABSPATH . WPINC . '/atomlib.php' );
-	}
-
-	$atom = new AtomParser();
-	$atom->FILE = $atom_url;
-	$atom->parse();
+	$atom = new Galerie_Atom( $atom_url );
 
 	if ( ! isset( $atom->feed ) || ! isset( $atom->feed->entries ) ) {
 		return $tag_data;

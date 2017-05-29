@@ -3,6 +3,7 @@
 require_once getenv( 'WP_DEVELOP_DIR' ) . '/tests/phpunit/includes/functions.php';
 
 define( 'PR_TESTING_ASSETS', dirname( __FILE__ ) . '/assets' );
+define( 'GALERIE_ATOM_USE_FOPEN', true );
 
 function _bootstrap_galerie() {
 	// Load The plugin
