@@ -225,6 +225,12 @@ function galerie_admin_repository_information() {
 	}
 
 	$plugin = wp_unslash( $_REQUEST['plugin'] );
+	$output = array(
+		'title'   => __( 'Détails du dépôt', 'galerie' ),
+		'text'    => '',
+		'type'    => 'error',
+		'context' => 'repository_information',
+	);
 
 	if ( isset( $_REQUEST['section'] ) && 'changelog' === $_REQUEST['section'] ) {
 		$repository_updates = get_site_transient( 'update_plugins' );
@@ -238,14 +244,17 @@ function galerie_admin_repository_information() {
 			return;
 		}
 
-		$repository = reset( $repository );
+		$repository        = reset( $repository );
+		$output['title']   = __( 'Détails de la mise à jour', 'galerie' );
+		$output['context'] = 'repository_upgrade_notice';
 
 		if ( ! empty( $repository->full_upgrade_notice ) ) {
 			$upgrade_info = html_entity_decode( $repository->full_upgrade_notice, ENT_QUOTES, get_bloginfo( 'charset' ) );
-			echo galerie_sanitize_repository_text( $upgrade_info );
+			$output['text'] = galerie_sanitize_repository_text( $upgrade_info );
+			$output['type'] = 'success';
 
 		} else {
-			wp_die( esc_html__( 'Sorry, this plugin repository has not included an upgrade notice.', 'galerie' ) );
+			$output['text'] = __( 'Sorry, this plugin repository has not included an upgrade notice.', 'galerie' );
 		}
 	} else {
 		$repository_data = galerie_get_repository_json( $plugin );
@@ -254,30 +263,51 @@ function galerie_admin_repository_information() {
 			return;
 		}
 
-		$repository_info = esc_html__( 'Sorry, the README.md file of this plugin repository is not reachable at the moment.', 'galerie' );
-		$has_readme      = false;
-		
+		$output['text'] = __( 'Sorry, the README.md file of this plugin repository is not reachable at the moment.', 'galerie' );
+		$has_readme     = false;
+
 		if ( ! empty( $repository_data->README ) ) {
 			$request  = wp_remote_get( $repository_data->README, array(
-				'timeout' => 30,
-				'user-agent'	=> 'Galerie/WordPress-Plugin-Updater; ' . get_bloginfo( 'url' ),
+				'timeout'    => 30,
+				'user-agent' => 'Galerie/WordPress-Plugin-Updater; ' . get_bloginfo( 'url' ),
 			) );
 
 			if ( ! is_wp_error( $request ) && 200 === (int) wp_remote_retrieve_response_code( $request ) ) {
 				$repository_info = wp_remote_retrieve_body( $request );
 				$parsedown       = new Parsedown();
-				$repository_info = $parsedown->text( $repository_info );
-				$has_readme      = true;
+				$output['text']  = $parsedown->text( $repository_info );
+				$output['type']  = 'success';
 			}
-		}
-
-		if ( $has_readme ) {
-			echo $repository_info;
-		} else {
-			wp_die( $repository_info );
 		}
 	}
 
-	iframe_footer();
+	iframe_header( strip_tags( $output['title'] ) ); ?>
+
+	<div id="plugin-information-scrollable">
+
+		<?php if ( 'success' === $output['type'] ) :
+			/**
+			 * Use this filter to add extra formatting.
+			 *
+			 * @since 1.0.0
+			 *
+			 * @param string $text   The Content to output. (Repo Information or Upgrade notice).
+			 * @param array  $output {
+			 *  An array of arguments.
+			 *
+			 *  @type string $title   The page title.
+			 *  @type string $text    The content to output.
+			 *  @type string $type    Whether it's as a success or an error.
+			 *  @type string $context Whether it's the repo description or the upgrade notice.
+			 * }
+			 */
+			echo apply_filters( 'galerie_repository_modal_content', $output['text'], $output );
+		else :
+			printf( '<div id="message" class="error"><p>%s</p></div>', esc_html( $output['text'] ) );
+		endif ; ?>
+
+	</div>
+
+	<?php iframe_footer();
 	exit;
 }

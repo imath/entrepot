@@ -1,0 +1,16 @@
+{
+	"name": "wp-statuses",
+	"author": "imath",
+	"keywords": [
+	  "status",
+	  "custom"
+	],
+	"country": "fr_FR",
+	"releases": "https://github.com/imath/wp-statuses/releases",
+	"issues": "https://github.com/imath/wp-statuses/issues",
+	"description": {
+		"en_US" : "Add custom statuses very easily to your post types.",
+		"fr_FR" : "Ajoutez, très simplement, des statuts personnalisés à vos types de contenu."
+	},
+	"README": "https://raw.githubusercontent.com/imath/wp-statuses/master/README.md"
+}
