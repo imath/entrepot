@@ -155,7 +155,7 @@ function galerie_repositories_api( $res = false, $action = '', $args = null ) {
 				'plugin'            => $json->name,
 				'slug'              => $args->slug,
 				'Version'           => 'latest',
-				'GitHub Plugin URI' => rtrim( $json->releases, '/releases' ),
+				'GitHub Plugin URI' => str_replace( '/releases', '', $json->releases ),
 			) );
 		}
 	}

@@ -116,7 +116,7 @@ function galerie_get_plugin_latest_stable_release( $atom_url = '', $plugin = arr
 			}
 
 			$response = wp_parse_args( array(
-				'id'          => rtrim( str_replace( array( 'https://', 'http://' ), '', $plugin['GitHub Plugin URI'] ) ),
+				'id'          => rtrim( str_replace( array( 'https://', 'http://' ), '', $plugin['GitHub Plugin URI'] ), '/' ),
 				'slug'        => $plugin['slug'],
 				'plugin'      => $plugin['plugin'],
 				'url'         => $plugin['GitHub Plugin URI'],
