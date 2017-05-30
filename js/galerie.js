@@ -17,15 +17,17 @@ window.galerie = window.galerie || _.extend( {}, _.pick( window.wp, 'Backbone', 
 		var search = $( '.plugin-install-php .wp-filter-search' );
 		$( search ).removeClass( 'wp-filter-search' )
 		           .prop( 'id', 'gallerie-search' )
-				   .css( {
-					   margin: 0,
-					   width: '280px',
-					   'font-size': '16px',
-					   'font-weight': 300,
-					   'line-height': 1.5,
-					   padding: '3px 5px',
-					   height: '32px'
-				   } );
+							 .css( {
+							   margin: 0,
+							   width: '280px',
+							   'font-size': '16px',
+							   'font-weight': 300,
+							   'line-height': 1.5,
+							   padding: '3px 5px',
+							   height: '32px'
+						   } );
+
+		$( '#typeselector [value="tag"]' ).remove();
 		$( '#the-list' ).css( { 'margin-top': '2em' } );
 	} );
 
@@ -76,8 +78,10 @@ window.galerie = window.galerie || _.extend( {}, _.pick( window.wp, 'Backbone', 
 
 			// Add the Repository specific className
 			if ( this.model.get( 'name' ) ) {
-				this.el.className += ' plugin-card-' + this.model.get( 'name' );
+				this.el.className += ' plugin-card-' + this.model.get( 'slug' );
 			}
+
+			this.$el.prop( 'id', this.model.get( 'id' ) );
 		}
 	} );
 
@@ -86,10 +90,42 @@ window.galerie = window.galerie || _.extend( {}, _.pick( window.wp, 'Backbone', 
 			_.each( this.collection.models, function( repository ) {
 				this.displayRepository( repository );
 			}, this );
+
+			$( '#gallerie-search' ).on( 'keyup input', _.bind( this.searchRepositories, this ) );
+			$( '#typeselector' ).on( 'change', this.resetSearch );
 		},
 
 		displayRepository: function( repository ) {
 			this.views.add( new galerie.Views.Card( { model: repository } ) );
+		},
+
+		searchRepositories: function( event ) {
+			var searchType = $( '#typeselector' ).val(), searchTerm = $( event.currentTarget ).val().toLowerCase();
+
+			event.preventDefault();
+
+			if ( ! searchTerm ) {
+				$( '#the-list .plugin-card' ).removeClass( 'hide-if-js' );
+			} else {
+				_.each( this.collection.models, function( repository ) {
+					var $repoID = $( '#' + repository.get( 'id' ) );
+
+					if ( ( 'term' === searchType && -1 === repository.get( 'name' ).toLowerCase().indexOf( searchTerm ) && -1 === repository.get( 'presentation' ).toLowerCase().indexOf( searchTerm ) ) ||
+							 ( 'author' === searchType && -1 === repository.get( 'author' ).toLowerCase().indexOf( searchTerm ) )
+					) {
+							$repoID.addClass( 'hide-if-js' );
+					} else {
+						$repoID.removeClass( 'hide-if-js' );
+					}
+				} );
+			}
+		},
+
+		resetSearch: function( event ) {
+			event.preventDefault();
+
+			$( '#gallerie-search' ).val( '' );
+			$( '#the-list .plugin-card' ).removeClass( 'hide-if-js' );
 		}
 	} );
 

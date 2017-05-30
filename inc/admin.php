@@ -47,6 +47,7 @@ function galerie_admin_prepare_repositories_json_reply() {
 
 		$repositories[ $k ]->name       = galerie_sanitize_repository_text( $repositories[ $k ]->name );
 		$repositories[ $k ]->author_url = 'https://github.com/' . $repository->author;
+		$repositories[ $k ]->id         = $repository->author . '_' . $repository->slug;
 
 		// Always install the latest version.
 		if ( ! isset( $keyed_by_slug[ $repository->slug ] ) ) {
