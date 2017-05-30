@@ -1,0 +1,13 @@
+.galerie #section-holder {
+	margin: 0;
+	padding-bottom: 6em;
+}
+
+.galerie #section-holder img {
+	display: inline-block;
+	max-width: 100%;
+}
+
+.galerie #section-holder pre code {
+	background: none;
+}

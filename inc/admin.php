@@ -250,7 +250,7 @@ function galerie_admin_repository_information() {
 
 		if ( ! empty( $repository->full_upgrade_notice ) ) {
 			$upgrade_info = html_entity_decode( $repository->full_upgrade_notice, ENT_QUOTES, get_bloginfo( 'charset' ) );
-			$output['text'] = galerie_sanitize_repository_text( $upgrade_info );
+			$output['text'] = $upgrade_info;
 			$output['type'] = 'success';
 
 		} else {
@@ -281,9 +281,15 @@ function galerie_admin_repository_information() {
 		}
 	}
 
+	wp_enqueue_style( 'galerie',
+		sprintf( '%1$sstyle%2$s.css', galerie_assets_url(), galerie_min_suffix() ),
+		array( 'common' ),
+		galerie_version()
+	);
 	iframe_header( strip_tags( $output['title'] ) ); ?>
 
-	<div id="plugin-information-scrollable">
+	<div id="plugin-information-scrollable" class="galerie">
+		<div id="section-holder" class="wrap">
 
 		<?php if ( 'success' === $output['type'] ) :
 			/**
@@ -306,7 +312,18 @@ function galerie_admin_repository_information() {
 			printf( '<div id="message" class="error"><p>%s</p></div>', esc_html( $output['text'] ) );
 		endif ; ?>
 
+		</div>
 	</div>
+
+	<?php if ( ! empty( $repository_data->issues ) ) :
+		$base_url = str_replace( 'issues', '', rtrim( $repository_data->issues, '/' ) );
+	?>
+		<div id='<?php echo esc_attr( $tab ); ?>-footer'>
+			<a class="button button-primary right" href="<?php echo esc_url( $repository_data->issues ); ?>" target="_blank"><?php esc_html_e( 'Rapporter une anomalie', 'galerie' ); ?></a>
+			<a class="button button-secondary" href="<?php echo esc_url( $base_url ); ?>" target="_blank"><?php esc_html_e( 'Voir sur Github', 'galerie' ); ?></a>
+			<a class="button button-secondary" href="<?php echo esc_url( $base_url . 'pulls' ); ?>" target="_blank"><?php esc_html_e( 'Contribuer', 'galerie' ); ?></a>
+		</div>
+	<?php endif ; ?>
 
 	<?php iframe_footer();
 	exit;

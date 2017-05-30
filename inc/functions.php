@@ -219,6 +219,15 @@ function galerie_sanitize_repository_text( $text = '' ) {
 	) );
 }
 
+function galerie_sanitize_repository_content( $content = '' ) {
+	return wp_kses( $content, array_intersect_key( $GLOBALS['allowedposttags'], array(
+		'h1' => true, 'h2' => true, 'h3' => true, 'h4' => true, 'h5' => true, 'h6' => true,
+		'ul' => true, 'ol' => true, 'li' => true, 'table' => true, 'tr' => true, 'td' => true,
+		'thead' => true, 'tbody' => true, 'tfoot' => true, 'blockquote' => true, 'a' => true, 'img' => true,
+		'pre' => true, 'code' => true, 'p' => true, 'strong' => true, 'bold' => true, 'em' => true, 'i' => true,
+	) ) );
+}
+
 function galerie_get_repository_slug( $path = '' ) {
 	if ( ! $path ) {
 		return false;
