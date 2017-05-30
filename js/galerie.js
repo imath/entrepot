@@ -17,7 +17,7 @@ window.galerie = window.galerie || _.extend( {}, _.pick( window.wp, 'Backbone', 
 		var search = $( '.plugin-install-php .wp-filter-search' );
 		$( search ).removeClass( 'wp-filter-search' )
 		           .prop( 'id', 'gallerie-search' )
-							 .css( {
+		           .css( {
 							   margin: 0,
 							   width: '280px',
 							   'font-size': '16px',
