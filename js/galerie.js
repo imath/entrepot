@@ -18,14 +18,14 @@ window.galerie = window.galerie || _.extend( {}, _.pick( window.wp, 'Backbone', 
 		$( search ).removeClass( 'wp-filter-search' )
 		           .prop( 'id', 'gallerie-search' )
 		           .css( {
-							   margin: 0,
-							   width: '280px',
-							   'font-size': '16px',
-							   'font-weight': 300,
-							   'line-height': 1.5,
-							   padding: '3px 5px',
-							   height: '32px'
-						   } );
+		             margin: 0,
+		             width: '280px',
+		             'font-size': '16px',
+		             'font-weight': 300,
+		             'line-height': 1.5,
+		             padding: '3px 5px',
+		             height: '32px'
+		           } );
 
 		$( '#typeselector [value="tag"]' ).remove();
 		$( '#the-list' ).css( { 'margin-top': '2em' } );
