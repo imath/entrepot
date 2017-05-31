@@ -22,7 +22,7 @@ if ( ! class_exists( 'AtomParser') ) {
 class Galerie_Atom extends AtomParser {
 	/**
 	 * Whether the fopen method should be used.
-	 * 
+	 *
 	 * @var boolean
 	 */
 	public $use_fopen = false;
@@ -125,7 +125,7 @@ class Galerie_Atom extends AtomParser {
 					}
 
 					if ( 200 !== (int) wp_remote_retrieve_response_code( $external_request ) ) {
-						trigger_error( sprintf( __( 'Transport error - HTTP status code was not 200 (%s)', 'galerie' ),
+						trigger_error( sprintf( __( 'Erreur de transport - le code de réponse HTTP n\'est pas 200 (%s)', 'galerie' ),
 							wp_remote_retrieve_response_code( $external_request )
 						) );
 						$ret = false;
@@ -137,7 +137,7 @@ class Galerie_Atom extends AtomParser {
 
 					if ( ! xml_parse( $parser, $data, true ) ) {
 							/* translators: do not translate this string, WordPress already handles it. */
-							trigger_error( __( 'XML Error during parsing.', 'galerie' ) );
+							trigger_error( __( 'Erreur XML durant l\'analyse.', 'galerie' ) );
 							$ret = false;
 					}
 				}

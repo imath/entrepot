@@ -113,7 +113,7 @@ window.galerie = window.galerie || _.extend( {}, _.pick( window.wp, 'Backbone', 
 					if ( ( 'term' === searchType && -1 === repository.get( 'name' ).toLowerCase().indexOf( searchTerm ) && -1 === repository.get( 'presentation' ).toLowerCase().indexOf( searchTerm ) ) ||
 							 ( 'author' === searchType && -1 === repository.get( 'author' ).toLowerCase().indexOf( searchTerm ) )
 					) {
-							$repoID.addClass( 'hide-if-js' );
+						$repoID.addClass( 'hide-if-js' );
 					} else {
 						$repoID.removeClass( 'hide-if-js' );
 					}

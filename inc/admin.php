@@ -73,7 +73,7 @@ function galerie_admin_prepare_repositories_json_reply() {
 			$repositories[ $k ]->{$kd} = $kv;
 		}
 
-		$repositories[ $k ]->more_info = sprintf( __( 'Plus d\'informations sur %s' ), $repositories[ $k ]->name );
+		$repositories[ $k ]->more_info = sprintf( __( 'Plus d\'informations sur %s', 'galerie' ), $repositories[ $k ]->name );
 		$repositories[ $k ]->info_url  = sprintf( $thickbox_link, $repositories[ $k ]->slug );
 
 		if ( in_array( $data['status'], array( 'latest_installed', 'newer_installed' ), true ) ) {
@@ -167,7 +167,7 @@ function galerie_repositories_api( $res = false, $action = '', $args = null ) {
 function galerie_admin_repositories_print_templates() {
 	?>
 	<div class="wp-list-table widefat plugin-install">
-		<h2 class="screen-reader-text"><?php esc_html_e( 'Liste des dépôts', 'galerie'); ?></h2>
+		<h2 class="screen-reader-text"><?php esc_html_e( 'Liste des dépôts', 'galerie' ); ?></h2>
 		<div id="the-list" data-list="galerie"></div>
 	</div>
 	<script type="text/html" id="tmpl-galerie-repository">
@@ -255,7 +255,7 @@ function galerie_admin_repository_information() {
 			$output['type'] = 'success';
 
 		} else {
-			$output['text'] = __( 'Sorry, this plugin repository has not included an upgrade notice.', 'galerie' );
+			$output['text'] = __( 'Désolé ce dépôt n\'a pas inclu d\'informations de mise à jour pour cette version.', 'galerie' );
 		}
 	} else {
 		$repository_data = galerie_get_repository_json( $plugin );
@@ -264,7 +264,7 @@ function galerie_admin_repository_information() {
 			return;
 		}
 
-		$output['text'] = __( 'Sorry, the README.md file of this plugin repository is not reachable at the moment.', 'galerie' );
+		$output['text'] = __( 'Désolé, les détails concernant ce dépôt ne sont pas disponibles pour le moment.', 'galerie' );
 		$has_readme     = false;
 
 		if ( ! empty( $repository_data->README ) ) {
