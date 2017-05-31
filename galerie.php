@@ -4,7 +4,7 @@
  * Plugin URI: https://github.com/imath/galerie/
  * Description: Une galerie d'extensions WordPress publiques créées par des artistes codeurs.
  * Version: 1.0.0-beta1
- * Requires at least: 4.8
+ * Requires at least: 4.7
  * Tested up to: 4.8
  * License: GNU/GPL 2
  * Author: imath
