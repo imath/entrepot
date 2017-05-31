@@ -11,19 +11,14 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * WP Ajax is overused by plugins.. Let's be sure we are
- * alone to request there.
+ * Gets the list of available repositories.
  *
  * @since 1.0.0
  *
- * @return string Json reply.
+ * @return array The list of available repositories.
  */
-function galerie_admin_prepare_repositories_json_reply() {
-	if ( ! current_user_can( 'install_plugins' ) && ! current_user_can( 'update_plugins' ) ) {
-		wp_send_json( __( 'Vous n\'êtes pas autorisé à réaliser cette action.', 'galerie' ), 403 );
-	}
-
-	$json            = file_get_contents( galerie_assets_url() . 'galerie.min.json' );
+function galerie_admin_get_repositories_list() {
+	$json            = file_get_contents( galerie_assets_dir() . 'galerie.min.json' );
 	$repositories    = json_decode( $json );
 	$installed_repos = galerie_get_installed_repositories();
 	$keyed_by_slug   = array();
@@ -95,6 +90,28 @@ function galerie_admin_prepare_repositories_json_reply() {
 		}
 	}
 
+	return $repositories;
+}
+
+/**
+ * WP Ajax is overused by plugins.. Let's be sure we are
+ * alone to request there.
+ *
+ * @since 1.0.0
+ *
+ * @return string JSON reply.
+ */
+function galerie_admin_send_json() {
+	if ( ! current_user_can( 'install_plugins' ) && ! current_user_can( 'update_plugins' ) ) {
+		wp_send_json( __( 'Vous n\'êtes pas autorisé à réaliser cette action.', 'galerie' ), 403 );
+	}
+
+	$repositories = galerie_admin_get_repositories_list();
+
+	if ( empty( $repositories ) ) {
+		wp_send_json( __( 'Un problème est survenu lors de la récupération des dépôts de plugin.', 'galerie' ), 500 );
+	}
+
 	wp_send_json( $repositories, 200 );
 }
 
@@ -112,7 +129,7 @@ function galerie_admin_add_menu() {
 		'galerie_admin_menu'
 	);
 
-	add_action( "load-$screen", 'galerie_admin_prepare_repositories_json_reply' );
+	add_action( "load-$screen", 'galerie_admin_send_json' );
 }
 
 /**
