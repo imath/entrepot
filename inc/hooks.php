@@ -19,6 +19,12 @@ if ( is_multisite() ) {
 add_action( 'admin_head', 'galerie_admin_head' );
 add_action( 'admin_init', 'galerie_admin_register_scripts' );
 
+// Ease repositories identification
+add_filter( 'extra_plugin_headers', 'galerie_extra_header', 10, 1 );
+
+// Manage repositories Upgrades
+add_filter( 'set_site_transient_update_plugins', 'galerie_update_repositories' );
+
 // Plugins Install Screen > Galerie Tab.
 add_filter( 'install_plugins_tabs', 'galerie_admin_repositories_tab', 10, 1 );
 add_filter( 'install_plugins_table_api_args_galerie_repositories', 'galerie_admin_repositories_tab_args', 10, 1 );

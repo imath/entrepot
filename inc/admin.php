@@ -98,6 +98,11 @@ function galerie_admin_prepare_repositories_json_reply() {
 	wp_send_json( $repositories, 200 );
 }
 
+/**
+ * Register the Repositories Administration page
+ *
+ * @since 1.0.0
+ */
 function galerie_admin_add_menu() {
 	$screen = add_plugins_page(
 		__( 'Repositories', 'galerie' ),
@@ -110,12 +115,27 @@ function galerie_admin_add_menu() {
 	add_action( "load-$screen", 'galerie_admin_prepare_repositories_json_reply' );
 }
 
+/**
+ * The Repositories Administration page
+ *
+ * @since 1.0.0
+ */
 function galerie_admin_menu() {}
 
+/**
+ * Removes the Repositories Administration page from the Admin Menu.
+ *
+ * @since 1.0.0
+ */
 function galerie_admin_head() {
 	remove_submenu_page( 'plugins.php', 'repositories' );
 }
 
+/**
+ * Register Administration scripts.
+ *
+ * @since 1.0.0
+ */
 function galerie_admin_register_scripts() {
 	wp_register_script(
 		'galerie',
@@ -133,14 +153,41 @@ function galerie_admin_register_scripts() {
 	) );
 }
 
+/**
+ * Adds a new tab to the Plugins Install screen.
+ *
+ * @since 1.0.0
+ *
+ * @param  array  $tabs The list of tabs.
+ * @return array        The list of tabs.
+ */
 function galerie_admin_repositories_tab( $tabs = array() ) {
 	return array_merge( $tabs, array( 'galerie_repositories' => __( 'Galerie', 'galerie' ) ) );
 }
 
+/**
+ * Sets specific query args for the Galerie's Tab.
+ *
+ * @since 1.0.0
+ *
+ * @param  array  $args Query arguments.
+ * @return array        Query arguments.
+ */
 function galerie_admin_repositories_tab_args( $args = false ) {
 	return array( 'galerie' => true, 'per_page' => 0 );
 }
 
+/**
+ * Shortcircuits the Plugins API for repositories
+ *
+ * @since 1.0.0
+ *
+ * @param  boolean $res    False Not Shortcircuit.
+ * @param  string  $action The Query type.
+ * @param  object  $args   Query arguments.
+ * @return object|boolean  The Plugins API response.
+ *                         False when not Shortcircuited.
+ */
 function galerie_repositories_api( $res = false, $action = '', $args = null ) {
 	if ( 'query_plugins' === $action && ! empty( $args->galerie ) ) {
 		wp_enqueue_script( 'galerie' );
@@ -164,6 +211,13 @@ function galerie_repositories_api( $res = false, $action = '', $args = null ) {
 	return $res;
 }
 
+/**
+ * Prints the the JavaScript templates.
+ *
+ * @since 1.0.0
+ *
+ * @return string HTML Output.
+ */
 function galerie_admin_repositories_print_templates() {
 	?>
 	<div class="wp-list-table widefat plugin-install">
@@ -218,6 +272,13 @@ function galerie_admin_repositories_print_templates() {
 	<?php
 }
 
+/**
+ * Displays the repository's modal content.
+ *
+ * @since 1.0.0
+ *
+ * @return string The repository's modal content.
+ */
 function galerie_admin_repository_information() {
 	global $tab;
 

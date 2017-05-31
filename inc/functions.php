@@ -10,18 +10,46 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Gets the plugin's version.
+ *
+ * @since 1.0.0
+ *
+ * @return string The plugin's version.
+ */
 function galerie_version() {
 	return galerie()->version;
 }
 
+/**
+ * Gets the plugin's assets folder URL.
+ *
+ * @since 1.0.0
+ *
+ * @return string The plugin's assets folder URL.
+ */
 function galerie_assets_url() {
 	return galerie()->assets_url;
 }
 
+/**
+ * Gets the plugin's assets folder path.
+ *
+ * @since 1.0.0
+ *
+ * @return string The assets folder path.
+ */
 function galerie_assets_dir() {
 	return galerie()->assets_dir;
 }
 
+/**
+ * Gets the plugin's JS folder URL.
+ *
+ * @since 1.0.0
+ *
+ * @return The plugin's JS folder URL.
+ */
 function galerie_js_url() {
 	return galerie()->js_url;
 }
@@ -50,10 +78,32 @@ function galerie_min_suffix() {
 	return apply_filters( 'galerie_min_suffix', $min );
 }
 
+/**
+ * Gets the Repositories' dir.
+ *
+ * @since 1.0.0
+ *
+ * @return string Path to the repositories dir.
+ */
 function galerie_plugins_dir() {
+	/**
+	 * Use this filter to move somewhere else the Repositories dir.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $repositories_dir Path to the repositories dir
+	 */
 	return apply_filters( 'galerie_plugins_dir', galerie()->repositories_dir );
 }
 
+/**
+ * Gets a specific plugin's JSON data.
+ *
+ * @since 1.0.0
+ *
+ * @param  string $plugin Name of the plugin.
+ * @return string         JSON data.
+ */
 function galerie_get_repository_json( $plugin = '' ) {
 	if ( ! $plugin ) {
 		return false;
@@ -68,6 +118,31 @@ function galerie_get_repository_json( $plugin = '' ) {
 	return json_decode( $data );
 }
 
+/**
+ * Gets the repository's slug of a given path.
+ *
+ * @since 1.0.0
+ *
+ * @param  string $path Path to the repository.
+ * @return string       The repository's slug.
+ */
+function galerie_get_repository_slug( $path = '' ) {
+	if ( ! $path ) {
+		return false;
+	}
+
+	return wp_basename( dirname( $path ) );
+}
+
+/**
+ * Checks with the Github releases of the Repository if there a new stable version available.
+ *
+ * @since 1.0.0
+ *
+ * @param  string $atom_url The Repository's feed URL.
+ * @param  array  $plugin   The plugin's data.
+ * @return object           The stable release data.
+ */
 function galerie_get_plugin_latest_stable_release( $atom_url = '', $plugin = array() ) {
 	$tag_data = new stdClass;
 	$tag_data->is_update = false;
@@ -151,6 +226,15 @@ function galerie_get_plugin_latest_stable_release( $atom_url = '', $plugin = arr
 	return $tag_data;
 }
 
+/**
+ * Adds a new Plugin's header tag to ease repositories identification
+ * within the regular plugins.
+ *
+ * @since 1.0.0
+ *
+ * @param  array  $headers  The current Plugin's header tag.
+ * @return array            The repositories header tag.
+ */
 function galerie_extra_header( $headers = array() ) {
 	if (  ! isset( $headers['GitHub Plugin URI'] ) ) {
 		$headers['GitHub Plugin URI'] = 'GitHub Plugin URI';
@@ -158,15 +242,30 @@ function galerie_extra_header( $headers = array() ) {
 
 	return $headers;
 }
-add_filter( 'extra_plugin_headers', 'galerie_extra_header', 10, 1 );
 
+/**
+ * Gets all installed repositories.
+ *
+ * @since 1.0.0
+ *
+ * @return array The repositories list.
+ */
 function galerie_get_installed_repositories() {
 	$plugins = get_plugins();
 
 	return array_diff_key( $plugins, wp_list_filter( $plugins, array( 'GitHub Plugin URI' => '' ) ) );
 }
 
+/**
+ * Manage repositories Upgrades by overriding the update_plugins transient.
+ *
+ * @since 1.0.0
+ *
+ * @param  object $option The update_plugins transient value.
+ * @return object         The update_plugins transient value.
+ */
 function galerie_update_repositories( $option = null ) {
+	// Only do it when a WordPress.org request happened.
 	if ( ! did_action( 'http_api_debug' ) ) {
 		return $option;
 	}
@@ -208,8 +307,15 @@ function galerie_update_repositories( $option = null ) {
 	set_site_transient( 'update_plugins', $option );
 	return $option;
 }
-add_filter( 'set_site_transient_update_plugins', 'galerie_update_repositories' );
 
+/**
+ * Sanitize repositiories headers the way it's done for Plugins.
+ *
+ * @since 1.0.0
+ *
+ * @param  string $text The text to sanitize.
+ * @return string       The sanitized text.
+ */
 function galerie_sanitize_repository_text( $text = '' ) {
 	return wp_kses( $text, array(
 		'a' => array( 'href' => array(),'title' => array(), 'target' => array() ),
@@ -219,6 +325,14 @@ function galerie_sanitize_repository_text( $text = '' ) {
 	) );
 }
 
+/**
+ * Sanitize the repository's content.
+ *
+ * @since 1.0.0
+ *
+ * @param  string $content The content to sanitized.
+ * @return string          The sanitized content.
+ */
 function galerie_sanitize_repository_content( $content = '' ) {
 	return wp_kses( $content, array_intersect_key( $GLOBALS['allowedposttags'], array(
 		'h1' => true, 'h2' => true, 'h3' => true, 'h4' => true, 'h5' => true, 'h6' => true,
@@ -226,12 +340,4 @@ function galerie_sanitize_repository_content( $content = '' ) {
 		'thead' => true, 'tbody' => true, 'tfoot' => true, 'blockquote' => true, 'a' => true, 'img' => true,
 		'pre' => true, 'code' => true, 'p' => true, 'strong' => true, 'bold' => true, 'em' => true, 'i' => true,
 	) ) );
-}
-
-function galerie_get_repository_slug( $path = '' ) {
-	if ( ! $path ) {
-		return false;
-	}
-
-	return wp_basename( dirname( $path ) );
 }
