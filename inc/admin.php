@@ -37,7 +37,7 @@ function galerie_admin_get_repositories_list() {
 		$data = null;
 
 		if ( ! isset( $repository->slug ) ) {
-			$repositories[ $k ]->slug = strtolower( $repository->name );
+			$repositories[ $k ]->slug = sanitize_title( $repository->name );
 		}
 
 		$repositories[ $k ]->name       = galerie_sanitize_repository_text( $repositories[ $k ]->name );

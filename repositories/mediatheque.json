@@ -1,0 +1,18 @@
+{
+	"name": "MediaThèque",
+	"author": "imath",
+	"icon": "https://raw.githubusercontent.com/imath/mediatheque/master/icon.png",
+	"tags": [
+	  "media",
+	  "library",
+	  "user"
+	],
+	"country": "fr_FR",
+	"releases": "https://github.com/imath/mediatheque/releases",
+	"issues": "https://github.com/imath/mediatheque/issues",
+	"description": {
+		"en_US" : "An alternative Media management for all your WordPress users.",
+		"fr_FR" : "Une gestion alternative des media dans WordPress, pour tous."
+	},
+	"README": "https://raw.githubusercontent.com/imath/mediatheque/master/README.md"
+}
