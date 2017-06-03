@@ -1,7 +1,8 @@
 {
-	"name": "wp-idea-stream",
+	"name": "WP Idea Stream",
 	"author": "imath",
-	"keywords": [
+	"icon": "https://raw.githubusercontent.com/imath/wp-idea-stream/master/icon.png",
+	"tags": [
 	  "ideas",
 	  "innovation"
 	],

@@ -1,16 +1,16 @@
 {
-	"name": "galerie",
+	"name": "Galerie",
 	"author": "imath",
-	"keywords": [
+	"tags": [
 	  "plugins",
 	  "repositories"
 	],
 	"country": "fr_FR",
-	"releases": "",
+	"releases": "https://github.com/imath/galerie/releases",
 	"issues": "https://github.com/imath/galerie/issues",
 	"description": {
-		"en_US" : "A WordPress Public Plugins Gallery made by coding artists.",
-		"fr_FR" : "Une galerie d'extensions WordPress publiques créées par des artistes codeurs."
+		"en_US" : "Galerie, a showroom of plugins made by WordPress Coding Artists.",
+		"fr_FR" : "Galerie, une salle d'exposition d'extensions créées par des Artistes Codeurs WordPress."
 	},
 	"README": "https://raw.githubusercontent.com/imath/galerie/master/README.md"
 }

@@ -1,7 +1,8 @@
 {
-	"name": "wp-statuses",
+	"name": "WP Statuses",
 	"author": "imath",
-	"keywords": [
+	"icon": "https://raw.githubusercontent.com/imath/wp-statuses/master/icon.png",
+	"tags": [
 	  "status",
 	  "custom"
 	],
