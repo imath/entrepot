@@ -407,3 +407,39 @@ function galerie_admin_repository_information() {
 	<?php iframe_footer();
 	exit;
 }
+
+/**
+ * Adds the detailed informations for repositories on Plugins main screen.
+ *
+ * @since 1.0.0
+ *
+ * @param  array  $plugins The plugins list.
+ * @return array           The plugins list.
+ */
+function galerie_all_installed_repositories_list( $plugins = array() ) {
+	$repositories = galerie_get_installed_repositories();
+
+	if ( ! empty( $repositories ) ) {
+		foreach ( array_keys( $repositories ) as $plugin_id ) {
+			if ( ! isset( $plugins[ $plugin_id ] ) ) {
+				continue;
+			}
+
+			$slug = sanitize_file_name( dirname( $plugin_id ) );
+			$json = sprintf( '%1$s/%2$s.json', galerie_plugins_dir(), $slug );
+
+			// It's not a repository.
+			if ( ! file_exists( $json ) ) {
+				continue;
+			}
+
+			/**
+			 * Simply by adding the plugin's slug, the detailed informations
+			 * thickbox link will be output.
+			 */
+			$plugins[ $plugin_id ]['slug'] = $slug;
+		}
+	}
+
+	return $plugins;
+}
