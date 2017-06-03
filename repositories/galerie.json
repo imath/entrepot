@@ -1,6 +1,7 @@
 {
 	"name": "Galerie",
 	"author": "imath",
+	"icon": "https://raw.githubusercontent.com/imath/galerie/master/icon.png",
 	"tags": [
 	  "plugins",
 	  "repositories"

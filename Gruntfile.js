@@ -134,7 +134,8 @@ module.exports = function( grunt ) {
 						'!Gruntfile.js',
 						'!package.json',
 						'!phpunit.xml.dist',
-						'!CONTRIBUTING.md'
+						'!CONTRIBUTING.md',
+						'!icon.png'
 					],
 					dest: './'
 				}]
