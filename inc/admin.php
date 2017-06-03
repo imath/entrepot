@@ -396,11 +396,13 @@ function galerie_admin_repository_information() {
 
 	<?php if ( ! empty( $repository_data->issues ) ) :
 		$base_url = str_replace( 'issues', '', rtrim( $repository_data->issues, '/' ) );
+		$flag_url = add_query_arg( 'repository', $plugin, 'https://imathi.eu/galerie/' );
 	?>
 		<div id='<?php echo esc_attr( $tab ); ?>-footer'>
 			<a class="button button-primary right" href="<?php echo esc_url( $repository_data->issues ); ?>" target="_blank"><?php esc_html_e( 'Rapporter une anomalie', 'galerie' ); ?></a>
 			<a class="button button-secondary" href="<?php echo esc_url( $base_url ); ?>" target="_blank"><?php esc_html_e( 'Voir sur Github', 'galerie' ); ?></a>
 			<a class="button button-secondary" href="<?php echo esc_url( $base_url . 'pulls' ); ?>" target="_blank"><?php esc_html_e( 'Contribuer', 'galerie' ); ?></a>
+			<a class="button button-primary galerie-warning" href="<?php echo esc_url( $flag_url ); ?>" target="_blank"><?php esc_html_e( 'Signaler', 'galerie' ); ?></a>
 		</div>
 	<?php endif ; ?>
 

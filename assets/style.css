@@ -11,3 +11,19 @@
 .galerie #section-holder pre code {
 	background: none;
 }
+
+.wp-core-ui .button-primary.galerie-warning {
+	background: #dc3232;
+    border-color: #dc3232 #a00 #a00;
+    -webkit-box-shadow: 0 1px 0 #a00;
+    box-shadow: 0 1px 0 ##a00;
+    color: #fff;
+    text-decoration: none;
+    text-shadow: 0 -1px 1px #a00, 1px 0 1px #a00, 0 1px 1px #a00, -1px 0 1px #a00;
+}
+
+.wp-core-ui .button-primary.galerie-warning:hover {
+	background: #a00;
+    border-color: #dc3232;
+    color: #fff;
+ }
