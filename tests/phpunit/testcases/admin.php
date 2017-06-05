@@ -47,6 +47,7 @@ class galerie_Admin_Tests extends WP_UnitTestCase {
 		set_current_screen( 'dashboard' );
 
 		$repositories = galerie_admin_get_repositories_list();
+		$slugs        = array();
 
 		foreach ( $repositories as $repository ) {
 			$this->assertNotEmpty( $repository->slug );
@@ -57,10 +58,13 @@ class galerie_Admin_Tests extends WP_UnitTestCase {
 				$this->assertTrue( rtrim( $repository->releases, '/' ) === 'https://github.com/' . $repository->author . '/' . $repository->slug . '/releases' );
 			}
 
+			$slugs[] = $repository->slug;
 			$this->assertTrue( file_exists( galerie_plugins_dir() . $repository->slug . '.json' ) );
 			$this->assertNotEmpty( $repository->description->en_US );
 			$this->assertNotEmpty( $repository->README );
 		}
+
+		$this->assertTrue( count( $repositories ) === count( array_unique( $slugs ) ), 'Plugin slugs should be unique.' );
 
 		set_current_screen( 'front' );
 	}
