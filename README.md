@@ -19,6 +19,6 @@ Cette extension nécessite WordPress 4.7.
 Here is an alternative to the official WordPress *Plugins directory*, it can list plugins hosted on Github.com. The only resctriction for plugin authors to be listed in there is that their plugins must be completely free (which excludes premium but also freemium plugins, etc ...). It allows users to easily install and update Github Plugins thanks to a specific UI of their WordPress administration. Registered Github Plugins are randomly listed on the **Gallery** tab of the WordPress Plugins Installation Administration screen, as shown in the screenshot above.
 
 Users can download this plugin to enjoy this alternative source of WordPress plugins.
-*Coding Artists* can, using a particular "Pull Request" register their Github plugins. For more information, see the [documentation] (https://github.com/imath/wp-idea-stream/wiki).
+*Coding Artists* can, using a particular "Pull Request" register their Github plugins. For more information, see the [documentation](https://github.com/imath/wp-idea-stream/wiki).
 
 This plugin requires WordPress 4.7.
