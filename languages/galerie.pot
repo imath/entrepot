@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Galerie 1.0.0-beta1\n"
 "Report-Msgid-Bugs-To: https://github.com/imath/galerie/issues\n"
-"POT-Creation-Date: 2017-06-03 17:40:25+00:00\n"
+"POT-Creation-Date: 2017-06-05 11:53:45+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13,19 +13,19 @@ msgstr ""
 "Language-Team: FRENCH <contact@imathi.eu>\n"
 "X-Generator: grunt-wp-i18n 0.5.4\n"
 
-#: inc/admin.php:71
+#: inc/admin.php:87
 msgid "Plus d'informations sur %s"
 msgstr ""
 
-#: inc/admin.php:106
+#: inc/admin.php:122
 msgid "Vous n'êtes pas autorisé à réaliser cette action."
 msgstr ""
 
-#: inc/admin.php:112
+#: inc/admin.php:128
 msgid "Un problème est survenu lors de la récupération des dépôts de plugin."
 msgstr ""
 
-#: inc/admin.php:125 inc/admin.php:126
+#: inc/admin.php:141 inc/admin.php:142
 msgid "Repositories"
 msgstr ""
 
@@ -33,79 +33,79 @@ msgstr ""
 msgid "Galerie"
 msgstr ""
 
-#: inc/admin.php:241
+#: inc/admin.php:257
 msgid "Liste des dépôts"
 msgstr ""
 
-#: inc/admin.php:259
+#: inc/admin.php:275
 msgid "Installer maintenant"
 msgstr ""
 
-#: inc/admin.php:259
+#: inc/admin.php:275
 msgid "Installer"
 msgstr ""
 
-#: inc/admin.php:262
+#: inc/admin.php:278
 msgid "Mettre à jour maintenant"
 msgstr ""
 
-#: inc/admin.php:262
+#: inc/admin.php:278
 msgid "Mettre à jour"
 msgstr ""
 
-#: inc/admin.php:265
+#: inc/admin.php:281
 msgid "Activer sur le réseau"
 msgstr ""
 
-#: inc/admin.php:265
+#: inc/admin.php:281
 msgid "Activer"
 msgstr ""
 
-#: inc/admin.php:268
+#: inc/admin.php:284
 msgid "Actif"
 msgstr ""
 
-#: inc/admin.php:271
+#: inc/admin.php:287
 msgid "Installé"
 msgstr ""
 
-#: inc/admin.php:277
+#: inc/admin.php:293
 msgid "Plus de détails"
 msgstr ""
 
-#: inc/admin.php:308
+#: inc/admin.php:324
 msgid "Détails du dépôt"
 msgstr ""
 
-#: inc/admin.php:327
+#: inc/admin.php:343
 msgid "Détails de la mise à jour"
 msgstr ""
 
-#: inc/admin.php:336
+#: inc/admin.php:352
 msgid ""
 "Désolé ce dépôt n'a pas inclu d'informations de mise à jour pour cette "
 "version."
 msgstr ""
 
-#: inc/admin.php:345
+#: inc/admin.php:361
 msgid ""
 "Désolé, les détails concernant ce dépôt ne sont pas disponibles pour le "
 "moment."
 msgstr ""
 
-#: inc/admin.php:402
+#: inc/admin.php:418
 msgid "Rapporter une anomalie"
 msgstr ""
 
-#: inc/admin.php:403
+#: inc/admin.php:419
 msgid "Voir sur Github"
 msgstr ""
 
-#: inc/admin.php:404
+#: inc/admin.php:420
 msgid "Contribuer"
 msgstr ""
 
-#: inc/admin.php:405
+#: inc/admin.php:421
 msgid "Signaler"
 msgstr ""
 
@@ -136,8 +136,8 @@ msgstr ""
 
 #. Description of the plugin/theme
 msgid ""
-"Une galerie d'extensions WordPress publiques créées par des artistes "
-"codeurs."
+"Galerie, une salle d'exposition d'extensions créées par des Artistes "
+"Codeurs WordPress."
 msgstr ""
 
 #. Author of the plugin/theme
@@ -148,7 +148,7 @@ msgstr ""
 msgid "https://imathi.eu/"
 msgstr ""
 
-#: inc/admin.php:169
+#: inc/admin.php:185
 msgctxt "plugin"
 msgid "De %s"
 msgstr ""
