@@ -35,8 +35,7 @@ function galerie_admin_updater() {
  * @return array The list of available repositories.
  */
 function galerie_admin_get_repositories_list() {
-	$json            = file_get_contents( galerie_assets_dir() . 'galerie.min.json' );
-	$repositories    = json_decode( $json );
+	$repositories    = galerie_get_repositories();
 	$installed_repos = galerie_get_installed_repositories();
 	$keyed_by_slug   = array();
 
@@ -445,10 +444,9 @@ function galerie_all_installed_repositories_list( $plugins = array() ) {
 			}
 
 			$slug = sanitize_file_name( dirname( $plugin_id ) );
-			$json = sprintf( '%1$s/%2$s.json', galerie_plugins_dir(), $slug );
 
 			// It's not a repository.
-			if ( ! file_exists( $json ) ) {
+			if ( ! galerie_get_repositories( $slug ) ) {
 				continue;
 			}
 

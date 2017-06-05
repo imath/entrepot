@@ -92,4 +92,15 @@ class galerie_Admin_Tests extends WP_UnitTestCase {
 		set_current_screen( 'front' );
 		update_network_option( 0, '_galerie_version', $db_version );
 	}
+
+	public function test_galerie_all_installed_repositories_list() {
+		set_current_screen( 'dashboard' );
+
+		$plugins = apply_filters( 'all_plugins', get_plugins() );
+		$galerie = wp_list_filter( $plugins, array( 'slug' => 'galerie' ) );
+
+		$this->assertTrue( 1 === count( $galerie ) );
+
+		set_current_screen( 'front' );
+	}
 }

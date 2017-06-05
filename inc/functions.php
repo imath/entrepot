@@ -169,13 +169,18 @@ function galerie_get_repository_json( $plugin = '' ) {
 		return false;
 	}
 
-	$json = sprintf( '%1$s/%2$s.json', galerie_plugins_dir(), sanitize_file_name( $plugin ) );
-	if ( ! file_exists( $json ) ) {
-		return false;
+	// Specific to unit tests
+	if ( defined( 'PR_TESTING_ASSETS') && PR_TESTING_ASSETS ) {
+		$json = sprintf( '%1$s/%2$s.json', galerie_plugins_dir(), sanitize_file_name( $plugin ) );
+		if ( ! file_exists( $json ) ) {
+			return false;
+		}
+
+		$data = file_get_contents( $json );
+		return json_decode( $data );
 	}
 
-	$data = file_get_contents( $json );
-	return json_decode( $data );
+	return galerie_get_repositories( $plugin );
 }
 
 /**
