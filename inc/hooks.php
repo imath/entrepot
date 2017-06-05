@@ -10,6 +10,18 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Aliases the admin_init hook for unit testing purpose.
+ *
+ * @since 1.0.0
+ */
+function galerie_admin_init() {
+	do_action( 'galerie_admin_init' );
+}
+add_action( 'admin_init',         'galerie_admin_init',       999 );
+add_action( 'galerie_admin_init', 'galerie_admin_updater'         );
+add_action( 'plugins_loaded',     'galerie_setup_cache_group'     );
+
 if ( is_multisite() ) {
 	add_action( 'network_admin_menu', 'galerie_admin_add_menu' );
 } else {

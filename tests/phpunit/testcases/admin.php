@@ -64,4 +64,32 @@ class galerie_Admin_Tests extends WP_UnitTestCase {
 
 		set_current_screen( 'front' );
 	}
+
+	/**
+	 * @group cache
+	 */
+	public function test_galerie_admin_updater() {
+		set_current_screen( 'dashboard' );
+
+		$db_version = galerie_db_version();
+
+		$repositories = galerie_get_repositories();
+		$this->assertSame( wp_cache_get('repositories', 'galerie' ), $repositories );
+
+		do_action( 'galerie_admin_init' );
+
+		// There was an upgrade, cache should be reset.
+		$this->assertFalse( wp_cache_get('repositories', 'galerie' ) );
+
+		$repositories = galerie_get_repositories();
+
+		do_action( 'galerie_admin_init' );
+
+		// There was no upgrade, cache should not be reset.
+		$this->assertSame( wp_cache_get('repositories', 'galerie' ), $repositories );
+
+		// Restore
+		set_current_screen( 'front' );
+		update_network_option( 0, '_galerie_version', $db_version );
+	}
 }

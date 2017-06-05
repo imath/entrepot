@@ -11,6 +11,23 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Galerie's Upgrader.
+ *
+ * @since 1.0.0
+ */
+function galerie_admin_updater() {
+	if ( ! version_compare( galerie_db_version(), galerie_version(), '<' ) ) {
+		return;
+	}
+
+	// New repositories can be added each time the Galerie has a new release.
+	wp_cache_delete( 'repositories', 'galerie' );
+
+	// Update Galerie version.
+	update_network_option( 0, '_galerie_version', galerie_version() );
+}
+
+/**
  * Gets the list of available repositories.
  *
  * @since 1.0.0

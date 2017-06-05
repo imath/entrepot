@@ -167,4 +167,18 @@ class galerie_Functions_Tests extends WP_UnitTestCase {
 		$this->assertTrue( $release->is_install );
 		$this->assertTrue( $release->version === '1.7.0' );
 	}
+
+	/**
+	 * @group cache
+	 */
+	public function test_galerie_get_repositories() {
+		$repositories = galerie_get_repositories();
+
+		$galerie = galerie_get_repositories( 'galerie' );
+		$check   = wp_list_pluck( $repositories, 'releases' );
+		$this->assertEquals( $galerie->releases, $check[0] );
+
+		$foo = galerie_get_repositories( 'foo' );
+		$this->assertEmpty( $foo );
+	}
 }

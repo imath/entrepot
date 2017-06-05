@@ -22,6 +22,17 @@ function galerie_version() {
 }
 
 /**
+ * Gets the plugin's db version.
+ *
+ * @since 1.0.0
+ *
+ * @return string The plugin's db version.
+ */
+function galerie_db_version() {
+	return get_network_option( 0, '_galerie_version', 0 );
+}
+
+/**
  * Gets the plugin's assets folder URL.
  *
  * @since 1.0.0
@@ -94,6 +105,55 @@ function galerie_plugins_dir() {
 	 * @param string $repositories_dir Path to the repositories dir
 	 */
 	return apply_filters( 'galerie_plugins_dir', galerie()->repositories_dir );
+}
+
+/**
+ * Adds the Galerie cache group.
+ *
+ * @since 1.0.0
+ */
+function galerie_setup_cache_group() {
+	wp_cache_add_global_groups( 'galerie' );
+}
+
+/**
+ * Gets all registered repositories or a specific one.
+ *
+ * @since 1.0.0
+ *
+ * @param  string $slug An empty string to get all repositories or
+ *                      the repository slug to get a specific repository.
+ * @return array|object The list of repository objects or a single repository object.
+ */
+function galerie_get_repositories( $slug = '' ) {
+	$repositories = wp_cache_get( 'repositories', 'galerie' );
+
+	if ( ! $repositories ) {
+		$json            = file_get_contents( galerie_assets_dir() . 'galerie.min.json' );
+		$repositories    = json_decode( $json );
+
+		// Cache repositories
+		wp_cache_add( 'repositories', $repositories, 'galerie' );
+	}
+
+	if ( $slug ) {
+		$single = false;
+
+		foreach ( $repositories as $repository ) {
+			if ( ! isset( $repository->releases ) ) {
+				continue;
+			}
+
+			if ( $slug === galerie_get_repository_slug( $repository->releases ) ) {
+				$single = $repository;
+				break;
+			}
+		}
+
+		return $single;
+	}
+
+	return $repositories;
 }
 
 /**
