@@ -1,6 +1,6 @@
 # Galerie
 
-![Onglet Galerie](https://cldup.com/l1LUrdSl3N.png)
+![Onglet Galerie](https://cldup.com/TJX56I5die.png)
 
 ## Français 🇫🇷
 *Une galerie d'extensions WordPress publiques créées par des artistes codeurs.*
