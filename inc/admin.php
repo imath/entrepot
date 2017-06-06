@@ -253,10 +253,13 @@ function galerie_repositories_api( $res = false, $action = '', $args = null ) {
  */
 function galerie_admin_repositories_print_templates() {
 	?>
-	<div class="wp-list-table widefat plugin-install">
-		<h2 class="screen-reader-text"><?php esc_html_e( 'Liste des dépôts', 'galerie' ); ?></h2>
-		<div id="the-list" data-list="galerie"></div>
-	</div>
+	<form id="plugin-filter" method="post">
+		<div class="wp-list-table widefat plugin-install">
+			<h2 class="screen-reader-text"><?php esc_html_e( 'Liste des dépôts', 'galerie' ); ?></h2>
+			<div id="the-list" data-list="galerie"></div>
+		</div>
+	</form>
+
 	<script type="text/html" id="tmpl-galerie-repository">
 		<div class="plugin-card-top">
 			<div class="name column-name">
@@ -278,7 +281,7 @@ function galerie_admin_repositories_print_templates() {
 							<a class="update-now button aria-button-if-js" data-plugin="{{data.file}}" data-slug="{{data.slug}}" href="{{{data.url}}}" aria-label="<?php esc_attr_e( 'Mettre à jour maintenant', 'galerie' ); ?>" data-name="{{data.name}}"><?php esc_html_e( 'Mettre à jour', 'galerie' ); ?></a>
 
 						<# } else if ( data.activate_url ) { #>
-							<a href="{{{data.activate_url}}}" class="button activate-now" aria-label="<?php echo is_network_admin() ? esc_attr__( 'Activer sur le réseau', 'galerie' ) : esc_attr__( 'Activer', 'galerie' ); ?>"><?php echo is_network_admin() ? esc_html__( 'Activer sur le réseau', 'galerie' ) : esc_html__( 'Activer', 'galerie' ); ?></a>
+							<a href="{{{data.activate_url}}}" class="button button-primary activate-now" aria-label="<?php echo is_network_admin() ? esc_attr__( 'Activer sur le réseau', 'galerie' ) : esc_attr__( 'Activer', 'galerie' ); ?>"><?php echo is_network_admin() ? esc_html__( 'Activer sur le réseau', 'galerie' ) : esc_html__( 'Activer', 'galerie' ); ?></a>
 
 						<# } else if ( data.active ) { #>
 							<button type="button" class="button button-disabled" disabled="disabled"><?php esc_html_e( 'Actif', 'galerie' ); ?></button>
