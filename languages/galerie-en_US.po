@@ -1,0 +1,156 @@
+# Copyright (C) 2017 imath
+# This file is distributed under the GNU/GPL 2.
+msgid ""
+msgstr ""
+"Project-Id-Version: Galerie 1.0.0-beta1\n"
+"Report-Msgid-Bugs-To: https://github.com/imath/galerie/issues\n"
+"POT-Creation-Date: 2017-06-05 11:59:09+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2017-06-06 09:44+0100\n"
+"Last-Translator: \n"
+"Language-Team: imath <contact@imathi.eu>\n"
+"X-Generator: Poedit 1.5.7\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: en_US\n"
+
+#: inc/admin.php:87
+msgid "Plus d'informations sur %s"
+msgstr "Read more about %s"
+
+#: inc/admin.php:122
+msgid "Vous n'êtes pas autorisé à réaliser cette action."
+msgstr "You are not allowed to perform this action."
+
+#: inc/admin.php:128
+msgid "Un problème est survenu lors de la récupération des dépôts de plugin."
+msgstr "A problem occured while loading the plugin repositories."
+
+#: inc/admin.php:141 inc/admin.php:142
+msgid "Repositories"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "Galerie"
+msgstr "Galerie"
+
+#: inc/admin.php:257
+msgid "Liste des dépôts"
+msgstr "Repositories list"
+
+#: inc/admin.php:275
+msgid "Installer maintenant"
+msgstr "Install now"
+
+#: inc/admin.php:275
+msgid "Installer"
+msgstr "Install"
+
+#: inc/admin.php:278
+msgid "Mettre à jour maintenant"
+msgstr "Ugrade now"
+
+#: inc/admin.php:278
+msgid "Mettre à jour"
+msgstr "Upgrade"
+
+#: inc/admin.php:281
+msgid "Activer sur le réseau"
+msgstr "Activate on the network"
+
+#: inc/admin.php:281
+msgid "Activer"
+msgstr "Activate"
+
+#: inc/admin.php:284
+msgid "Actif"
+msgstr "Active"
+
+#: inc/admin.php:287
+msgid "Installé"
+msgstr "Installed"
+
+#: inc/admin.php:293
+msgid "Plus de détails"
+msgstr "More details"
+
+#: inc/admin.php:324
+msgid "Détails du dépôt"
+msgstr "Repository's details"
+
+#: inc/admin.php:343
+msgid "Détails de la mise à jour"
+msgstr "Upgrade's details"
+
+#: inc/admin.php:352
+msgid ""
+"Désolé ce dépôt n'a pas inclu d'informations de mise à jour pour cette "
+"version."
+msgstr "Sorry this repository is not providing details about this upgrade."
+
+#: inc/admin.php:361
+msgid ""
+"Désolé, les détails concernant ce dépôt ne sont pas disponibles pour le "
+"moment."
+msgstr "Sorry, details about this repository are currently not available."
+
+#: inc/admin.php:418
+msgid "Rapporter une anomalie"
+msgstr "Report an issue"
+
+#: inc/admin.php:419
+msgid "Voir sur Github"
+msgstr "View on Github"
+
+#: inc/admin.php:420
+msgid "Contribuer"
+msgstr "Contribute"
+
+#: inc/admin.php:421
+msgid "Signaler"
+msgstr "Flag"
+
+#. translators: do not translate this string, WordPress already handles it.
+#: inc/classes/class-galerie-atom.php:64
+msgid ""
+"PHP's XML extension is not available. Please contact your hosting provider "
+"to enable PHP's XML extension."
+msgstr ""
+
+#. translators: do not translate this string, WordPress already handles it.
+#: inc/classes/class-galerie-atom.php:98
+msgid "XML Error: %1$s at line %2$s"
+msgstr ""
+
+#: inc/classes/class-galerie-atom.php:128
+msgid "Erreur de transport - le code de réponse HTTP n'est pas 200 (%s)"
+msgstr "Transport error -the HTTP response code is not 200 (%s)"
+
+#. translators: do not translate this string, WordPress already handles it.
+#: inc/classes/class-galerie-atom.php:140
+msgid "Erreur XML durant l'analyse."
+msgstr "XML Error while parsing the file."
+
+#. Plugin URI of the plugin/theme
+msgid "https://github.com/imath/galerie/"
+msgstr "https://github.com/imath/galerie/"
+
+#. Description of the plugin/theme
+msgid ""
+"Galerie, une salle d'exposition d'extensions créées par des Artistes Codeurs "
+"WordPress."
+msgstr "A WordPress plugins gallery crafted by Coding Artists"
+
+#. Author of the plugin/theme
+msgid "imath"
+msgstr "imath"
+
+#. Author URI of the plugin/theme
+msgid "https://imathi.eu/"
+msgstr "https://imathi.eu/"
+
+#: inc/admin.php:185
+msgctxt "plugin"
+msgid "De %s"
+msgstr "By %s"

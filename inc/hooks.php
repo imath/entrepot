@@ -50,3 +50,6 @@ add_filter( 'plugins_api', 'galerie_repositories_api', 10, 3 );
 // Filters for modal content.
 add_filter( 'galerie_repository_modal_content', 'galerie_sanitize_repository_content', 9 );
 add_filter( 'galerie_repository_modal_content', 'links_add_target'                       );
+
+// Load translations
+add_action( 'plugins_loaded', 'galerie_load_textdomain', 9 );

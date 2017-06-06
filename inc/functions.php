@@ -106,6 +106,15 @@ function galerie_plugins_dir() {
 	 */
 	return apply_filters( 'galerie_plugins_dir', galerie()->repositories_dir );
 }
+/**
+ * Loads translation.
+ *
+ * @since 1.0.0
+ */
+function galerie_load_textdomain() {
+	$galerie = galerie();
+	load_plugin_textdomain( $galerie->domain, false, trailingslashit( basename( $galerie->dir ) ) . 'languages' );
+}
 
 /**
  * Adds the Galerie cache group.
