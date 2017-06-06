@@ -138,8 +138,8 @@ function galerie_admin_send_json() {
  */
 function galerie_admin_add_menu() {
 	$screen = add_plugins_page(
-		__( 'Repositories', 'galerie' ),
-		__( 'Repositories', 'galerie' ),
+		__( 'Dépôts', 'galerie' ),
+		__( 'Dépôts', 'galerie' ),
 		'manage_options',
 		'repositories',
 		'galerie_admin_menu'
