@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Galerie 1.0.0-beta1\n"
 "Report-Msgid-Bugs-To: https://github.com/imath/galerie/issues\n"
-"POT-Creation-Date: 2017-06-05 11:59:09+00:00\n"
+"POT-Creation-Date: 2017-06-07 06:14:25+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -26,86 +26,86 @@ msgid "Un problème est survenu lors de la récupération des dépôts de plugin
 msgstr ""
 
 #: inc/admin.php:141 inc/admin.php:142
-msgid "Repositories"
+msgid "Dépôts"
 msgstr ""
 
 #. Plugin Name of the plugin/theme
 msgid "Galerie"
 msgstr ""
 
-#: inc/admin.php:257
+#: inc/admin.php:258
 msgid "Liste des dépôts"
 msgstr ""
 
-#: inc/admin.php:275
+#: inc/admin.php:278
 msgid "Installer maintenant"
 msgstr ""
 
-#: inc/admin.php:275
+#: inc/admin.php:278
 msgid "Installer"
 msgstr ""
 
-#: inc/admin.php:278
+#: inc/admin.php:281
 msgid "Mettre à jour maintenant"
 msgstr ""
 
-#: inc/admin.php:278
+#: inc/admin.php:281
 msgid "Mettre à jour"
 msgstr ""
 
-#: inc/admin.php:281
+#: inc/admin.php:284
 msgid "Activer sur le réseau"
 msgstr ""
 
-#: inc/admin.php:281
+#: inc/admin.php:284
 msgid "Activer"
 msgstr ""
 
-#: inc/admin.php:284
+#: inc/admin.php:287
 msgid "Actif"
 msgstr ""
 
-#: inc/admin.php:287
+#: inc/admin.php:290
 msgid "Installé"
 msgstr ""
 
-#: inc/admin.php:293
+#: inc/admin.php:296
 msgid "Plus de détails"
 msgstr ""
 
-#: inc/admin.php:324
+#: inc/admin.php:327
 msgid "Détails du dépôt"
 msgstr ""
 
-#: inc/admin.php:343
+#: inc/admin.php:346
 msgid "Détails de la mise à jour"
 msgstr ""
 
-#: inc/admin.php:352
+#: inc/admin.php:355
 msgid ""
 "Désolé ce dépôt n'a pas inclu d'informations de mise à jour pour cette "
 "version."
 msgstr ""
 
-#: inc/admin.php:361
+#: inc/admin.php:364
 msgid ""
 "Désolé, les détails concernant ce dépôt ne sont pas disponibles pour le "
 "moment."
 msgstr ""
 
-#: inc/admin.php:418
+#: inc/admin.php:421
 msgid "Rapporter une anomalie"
 msgstr ""
 
-#: inc/admin.php:419
+#: inc/admin.php:422
 msgid "Voir sur Github"
 msgstr ""
 
-#: inc/admin.php:420
+#: inc/admin.php:423
 msgid "Contribuer"
 msgstr ""
 
-#: inc/admin.php:421
+#: inc/admin.php:424
 msgid "Signaler"
 msgstr ""
 
