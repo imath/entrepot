@@ -1,6 +1,7 @@
 {
 	"name": "MediaThèque",
 	"author": "imath",
+	"slug": "mediatheque",
 	"icon": "https://raw.githubusercontent.com/imath/mediatheque/master/icon.png",
 	"tags": [
 	  "media",

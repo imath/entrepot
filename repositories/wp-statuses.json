@@ -1,6 +1,7 @@
 {
 	"name": "WP Statuses",
 	"author": "imath",
+	"slug": "wp-statuses",
 	"icon": "https://raw.githubusercontent.com/imath/wp-statuses/master/icon.png",
 	"tags": [
 	  "status",

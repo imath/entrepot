@@ -1,6 +1,7 @@
 {
 	"name": "WP Idea Stream",
 	"author": "imath",
+	"slug": "wp-idea-stream",
 	"icon": "https://raw.githubusercontent.com/imath/wp-idea-stream/master/icon.png",
 	"tags": [
 	  "ideas",
