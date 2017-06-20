@@ -24,3 +24,7 @@ Users can download this plugin to enjoy an alternative source of free WordPress 
 *Authors* can, using a particular "Pull Request" register their free Github.com hosted plugins. For more information, see the [documentation](https://github.com/imath/galerie/wiki).
 
 This plugin requires WordPress 4.8.
+
+## Code of Conduct
+
+Please take a minute to read the project's [code of conduct](https://github.com/imath/galerie/blob/master/CODE_OF_CONDUCT.md).
