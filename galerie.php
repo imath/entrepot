@@ -2,9 +2,9 @@
 /**
  * Plugin Name: Galerie
  * Plugin URI: https://github.com/imath/galerie/
- * Description: Galerie, une salle d'exposition d'extensions créées par des Artistes Codeurs WordPress.
+ * Description: Une liste d'extensions gratuites hébergées sur Github.com.
  * Version: 1.0.0-beta1
- * Requires at least: 4.7
+ * Requires at least: 4.8
  * Tested up to: 4.8
  * License: GNU/GPL 2
  * Author: imath

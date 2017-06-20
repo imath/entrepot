@@ -11,8 +11,8 @@
 	"releases": "https://github.com/imath/galerie/releases",
 	"issues": "https://github.com/imath/galerie/issues",
 	"description": {
-		"en_US" : "Galerie, a showroom of plugins made by WordPress Coding Artists.",
-		"fr_FR" : "Galerie, une salle d'exposition d'extensions créées par des Artistes Codeurs WordPress."
+		"en_US" : "Galerie, a list of free Github.com hosted plugins.",
+		"fr_FR" : "Galerie, une liste d'extensions gratuites hébergées sur Github.com."
 	},
 	"README": "https://raw.githubusercontent.com/imath/galerie/master/README.md"
 }
