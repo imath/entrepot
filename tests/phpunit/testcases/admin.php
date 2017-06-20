@@ -6,10 +6,10 @@
 /**
  * @group admin
  */
-class galerie_Admin_Tests extends WP_UnitTestCase {
+class entrepot_Admin_Tests extends WP_UnitTestCase {
 
 	public function setUp() {
-		require_once( galerie()->inc_dir . 'admin.php' );
+		require_once( entrepot()->inc_dir . 'admin.php' );
 
 		parent::setUp();
 	}
@@ -18,7 +18,7 @@ class galerie_Admin_Tests extends WP_UnitTestCase {
 		return PR_TESTING_ASSETS;
 	}
 
-	public function test_galerie_get_installed_repositories() {
+	public function test_entrepot_get_installed_repositories() {
 		set_current_screen( 'dashboard' );
 
 		$plugin_data = get_plugin_data( PR_TESTING_ASSETS . '/test-plugin.php', true, false );
@@ -31,35 +31,35 @@ class galerie_Admin_Tests extends WP_UnitTestCase {
 	/**
 	 * @group updates
 	 */
-	public function test_galerie_update_repositories() {
-		add_filter( 'galerie_plugins_dir', array( $this, 'repositories_dir' ) );
+	public function test_entrepot_update_repositories() {
+		add_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
 
 		wp_update_plugins();
 
-		remove_filter( 'galerie_plugins_dir', array( $this, 'repositories_dir' ) );
+		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
 
 		$updates = get_site_transient( 'update_plugins' )->response;
-		$this->assertNotEmpty( $updates['galerie/galerie.php']->package );
-		$this->assertTrue( $updates['galerie/galerie.php']->is_update );
+		$this->assertNotEmpty( $updates['entrepot/entrepot.php']->package );
+		$this->assertTrue( $updates['entrepot/entrepot.php']->is_update );
 	}
 
-	public function test_galerie_admin_get_repositories_list() {
+	public function test_entrepot_admin_get_repositories_list() {
 		set_current_screen( 'dashboard' );
 
-		$repositories = galerie_admin_get_repositories_list();
+		$repositories = entrepot_admin_get_repositories_list();
 		$slugs        = array();
 
 		foreach ( $repositories as $repository ) {
 			$this->assertNotEmpty( $repository->slug );
 			$this->assertNotEmpty( $repository->author );
 
-			if ( 'galerie' !== $repository->slug ) {
+			if ( 'entrepot' !== $repository->slug ) {
 				$this->assertNotEmpty( $repository->releases );
 				$this->assertTrue( rtrim( $repository->releases, '/' ) === 'https://github.com/' . $repository->author . '/' . $repository->slug . '/releases' );
 			}
 
 			$slugs[] = $repository->slug;
-			$this->assertTrue( file_exists( galerie_plugins_dir() . $repository->slug . '.json' ) );
+			$this->assertTrue( file_exists( entrepot_plugins_dir() . $repository->slug . '.json' ) );
 			$this->assertNotEmpty( $repository->description->en_US );
 			$this->assertNotEmpty( $repository->README );
 		}
@@ -72,38 +72,38 @@ class galerie_Admin_Tests extends WP_UnitTestCase {
 	/**
 	 * @group cache
 	 */
-	public function test_galerie_admin_updater() {
+	public function test_entrepot_admin_updater() {
 		set_current_screen( 'dashboard' );
 
-		$db_version = galerie_db_version();
+		$db_version = entrepot_db_version();
 
-		$repositories = galerie_get_repositories();
-		$this->assertSame( wp_cache_get('repositories', 'galerie' ), $repositories );
+		$repositories = entrepot_get_repositories();
+		$this->assertSame( wp_cache_get('repositories', 'entrepot' ), $repositories );
 
-		do_action( 'galerie_admin_init' );
+		do_action( 'entrepot_admin_init' );
 
 		// There was an upgrade, cache should be reset.
-		$this->assertFalse( wp_cache_get('repositories', 'galerie' ) );
+		$this->assertFalse( wp_cache_get('repositories', 'entrepot' ) );
 
-		$repositories = galerie_get_repositories();
+		$repositories = entrepot_get_repositories();
 
-		do_action( 'galerie_admin_init' );
+		do_action( 'entrepot_admin_init' );
 
 		// There was no upgrade, cache should not be reset.
-		$this->assertSame( wp_cache_get('repositories', 'galerie' ), $repositories );
+		$this->assertSame( wp_cache_get('repositories', 'entrepot' ), $repositories );
 
 		// Restore
 		set_current_screen( 'front' );
-		update_network_option( 0, '_galerie_version', $db_version );
+		update_network_option( 0, '_entrepot_version', $db_version );
 	}
 
-	public function test_galerie_all_installed_repositories_list() {
+	public function test_entrepot_all_installed_repositories_list() {
 		set_current_screen( 'dashboard' );
 
 		$plugins = apply_filters( 'all_plugins', get_plugins() );
-		$galerie = wp_list_filter( $plugins, array( 'slug' => 'galerie' ) );
+		$entrepot = wp_list_filter( $plugins, array( 'slug' => 'entrepot' ) );
 
-		$this->assertTrue( 1 === count( $galerie ) );
+		$this->assertTrue( 1 === count( $entrepot ) );
 
 		set_current_screen( 'front' );
 	}

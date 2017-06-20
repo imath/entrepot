@@ -1,8 +1,8 @@
 <?php
 /**
- * Galerie functions.
+ * Entrepôt functions.
  *
- * @package Galerie\inc
+ * @package Entrepôt\inc
  *
  * @since 1.0.0
  */
@@ -17,8 +17,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * @return string The plugin's version.
  */
-function galerie_version() {
-	return galerie()->version;
+function entrepot_version() {
+	return entrepot()->version;
 }
 
 /**
@@ -28,8 +28,8 @@ function galerie_version() {
  *
  * @return string The plugin's db version.
  */
-function galerie_db_version() {
-	return get_network_option( 0, '_galerie_version', 0 );
+function entrepot_db_version() {
+	return get_network_option( 0, '_entrepot_version', 0 );
 }
 
 /**
@@ -39,8 +39,8 @@ function galerie_db_version() {
  *
  * @return string The plugin's assets folder URL.
  */
-function galerie_assets_url() {
-	return galerie()->assets_url;
+function entrepot_assets_url() {
+	return entrepot()->assets_url;
 }
 
 /**
@@ -50,8 +50,8 @@ function galerie_assets_url() {
  *
  * @return string The assets folder path.
  */
-function galerie_assets_dir() {
-	return galerie()->assets_dir;
+function entrepot_assets_dir() {
+	return entrepot()->assets_dir;
 }
 
 /**
@@ -61,8 +61,8 @@ function galerie_assets_dir() {
  *
  * @return The plugin's JS folder URL.
  */
-function galerie_js_url() {
-	return galerie()->js_url;
+function entrepot_js_url() {
+	return entrepot()->js_url;
 }
 
 /**
@@ -72,7 +72,7 @@ function galerie_js_url() {
  *
  * @return string the JS/CSS minified suffix.
  */
-function galerie_min_suffix() {
+function entrepot_min_suffix() {
 	$min = '.min';
 
 	if ( defined( 'SCRIPT_DEBUG' ) && true === SCRIPT_DEBUG )  {
@@ -86,7 +86,7 @@ function galerie_min_suffix() {
 	 *
 	 * @param  string $min The minified suffix.
 	 */
-	return apply_filters( 'galerie_min_suffix', $min );
+	return apply_filters( 'entrepot_min_suffix', $min );
 }
 
 /**
@@ -96,7 +96,7 @@ function galerie_min_suffix() {
  *
  * @return string Path to the repositories dir.
  */
-function galerie_plugins_dir() {
+function entrepot_plugins_dir() {
 	/**
 	 * Use this filter to move somewhere else the Repositories dir.
 	 *
@@ -104,25 +104,25 @@ function galerie_plugins_dir() {
 	 *
 	 * @param string $repositories_dir Path to the repositories dir
 	 */
-	return apply_filters( 'galerie_plugins_dir', galerie()->repositories_dir );
+	return apply_filters( 'entrepot_plugins_dir', entrepot()->repositories_dir );
 }
 /**
  * Loads translation.
  *
  * @since 1.0.0
  */
-function galerie_load_textdomain() {
-	$galerie = galerie();
-	load_plugin_textdomain( $galerie->domain, false, trailingslashit( basename( $galerie->dir ) ) . 'languages' );
+function entrepot_load_textdomain() {
+	$entrepot = entrepot();
+	load_plugin_textdomain( $entrepot->domain, false, trailingslashit( basename( $entrepot->dir ) ) . 'languages' );
 }
 
 /**
- * Adds the Galerie cache group.
+ * Adds the Entrepôt cache group.
  *
  * @since 1.0.0
  */
-function galerie_setup_cache_group() {
-	wp_cache_add_global_groups( 'galerie' );
+function entrepot_setup_cache_group() {
+	wp_cache_add_global_groups( 'entrepot' );
 }
 
 /**
@@ -134,15 +134,15 @@ function galerie_setup_cache_group() {
  *                      the repository slug to get a specific repository.
  * @return array|object The list of repository objects or a single repository object.
  */
-function galerie_get_repositories( $slug = '' ) {
-	$repositories = wp_cache_get( 'repositories', 'galerie' );
+function entrepot_get_repositories( $slug = '' ) {
+	$repositories = wp_cache_get( 'repositories', 'entrepot' );
 
 	if ( ! $repositories ) {
-		$json            = file_get_contents( galerie_assets_dir() . 'galerie.min.json' );
+		$json            = file_get_contents( entrepot_assets_dir() . 'entrepot.min.json' );
 		$repositories    = json_decode( $json );
 
 		// Cache repositories
-		wp_cache_add( 'repositories', $repositories, 'galerie' );
+		wp_cache_add( 'repositories', $repositories, 'entrepot' );
 	}
 
 	if ( $slug ) {
@@ -153,7 +153,7 @@ function galerie_get_repositories( $slug = '' ) {
 				continue;
 			}
 
-			if ( $slug === galerie_get_repository_slug( $repository->releases ) ) {
+			if ( $slug === entrepot_get_repository_slug( $repository->releases ) ) {
 				$single = $repository;
 				break;
 			}
@@ -173,14 +173,14 @@ function galerie_get_repositories( $slug = '' ) {
  * @param  string $plugin Name of the plugin.
  * @return string         JSON data.
  */
-function galerie_get_repository_json( $plugin = '' ) {
+function entrepot_get_repository_json( $plugin = '' ) {
 	if ( ! $plugin ) {
 		return false;
 	}
 
 	// Specific to unit tests
 	if ( defined( 'PR_TESTING_ASSETS') && PR_TESTING_ASSETS ) {
-		$json = sprintf( '%1$s/%2$s.json', galerie_plugins_dir(), sanitize_file_name( $plugin ) );
+		$json = sprintf( '%1$s/%2$s.json', entrepot_plugins_dir(), sanitize_file_name( $plugin ) );
 		if ( ! file_exists( $json ) ) {
 			return false;
 		}
@@ -189,7 +189,7 @@ function galerie_get_repository_json( $plugin = '' ) {
 		return json_decode( $data );
 	}
 
-	return galerie_get_repositories( $plugin );
+	return entrepot_get_repositories( $plugin );
 }
 
 /**
@@ -200,7 +200,7 @@ function galerie_get_repository_json( $plugin = '' ) {
  * @param  string $path Path to the repository.
  * @return string       The repository's slug.
  */
-function galerie_get_repository_slug( $path = '' ) {
+function entrepot_get_repository_slug( $path = '' ) {
 	if ( ! $path ) {
 		return false;
 	}
@@ -217,21 +217,21 @@ function galerie_get_repository_slug( $path = '' ) {
  * @param  array  $plugin   The plugin's data.
  * @return object           The stable release data.
  */
-function galerie_get_plugin_latest_stable_release( $atom_url = '', $plugin = array() ) {
+function entrepot_get_plugin_latest_stable_release( $atom_url = '', $plugin = array() ) {
 	$tag_data = new stdClass;
 	$tag_data->is_update = false;
 
 	if ( ! $atom_url  ) {
 		// For Unit Testing purpose only. Do not use this constant in your code.
-		if ( defined( 'PR_TESTING_ASSETS' ) && isset( $plugin['slug'] ) &&  'galerie' === $plugin['slug'] ) {
-			$atom_url = trailingslashit( galerie()->dir ) . 'tests/phpunit/assets/releases';
+		if ( defined( 'PR_TESTING_ASSETS' ) && isset( $plugin['slug'] ) &&  'entrepot' === $plugin['slug'] ) {
+			$atom_url = trailingslashit( entrepot()->dir ) . 'tests/phpunit/assets/releases';
 		} else {
 			return $tag_data;
 		}
 	}
 
 	$atom_url = rtrim( $atom_url, '.atom' ) . '.atom';
-	$atom = new Galerie_Atom( $atom_url );
+	$atom = new Entrepot_Atom( $atom_url );
 
 	if ( ! isset( $atom->feed ) || ! isset( $atom->feed->entries ) ) {
 		return $tag_data;
@@ -309,7 +309,7 @@ function galerie_get_plugin_latest_stable_release( $atom_url = '', $plugin = arr
  * @param  array  $headers  The current Plugin's header tag.
  * @return array            The repositories header tag.
  */
-function galerie_extra_header( $headers = array() ) {
+function entrepot_extra_header( $headers = array() ) {
 	if (  ! isset( $headers['GitHub Plugin URI'] ) ) {
 		$headers['GitHub Plugin URI'] = 'GitHub Plugin URI';
 	}
@@ -324,7 +324,7 @@ function galerie_extra_header( $headers = array() ) {
  *
  * @return array The repositories list.
  */
-function galerie_get_installed_repositories() {
+function entrepot_get_installed_repositories() {
 	$plugins = get_plugins();
 
 	return array_diff_key( $plugins, wp_list_filter( $plugins, array( 'GitHub Plugin URI' => '' ) ) );
@@ -338,24 +338,24 @@ function galerie_get_installed_repositories() {
  * @param  object $option The update_plugins transient value.
  * @return object         The update_plugins transient value.
  */
-function galerie_update_repositories( $option = null ) {
+function entrepot_update_repositories( $option = null ) {
 	// Only do it when a WordPress.org request happened.
 	if ( ! did_action( 'http_api_debug' ) ) {
 		return $option;
 	}
 
-	$repositories = galerie_get_installed_repositories();
+	$repositories = entrepot_get_installed_repositories();
 
 	$repositories_data = array();
 	foreach ( $repositories as $kr => $dp ) {
 		$repository_name = trim( dirname( $kr ), '/' );
-		$json = galerie_get_repository_json( $repository_name );
+		$json = entrepot_get_repository_json( $repository_name );
 
 		if ( ! $json || ! isset( $json->releases ) ) {
 			continue;
 		}
 
-		$response = galerie_get_plugin_latest_stable_release( $json->releases, array_merge( $dp, array(
+		$response = entrepot_get_plugin_latest_stable_release( $json->releases, array_merge( $dp, array(
 			'plugin' => $kr,
 			'slug'   => $repository_name,
 		) ) );
@@ -376,7 +376,7 @@ function galerie_update_repositories( $option = null ) {
 	}
 
 	// Prevent infinite loops.
-	remove_filter( 'set_site_transient_update_plugins', 'galerie_update_repositories' );
+	remove_filter( 'set_site_transient_update_plugins', 'entrepot_update_repositories' );
 
 	set_site_transient( 'update_plugins', $option );
 	return $option;
@@ -390,7 +390,7 @@ function galerie_update_repositories( $option = null ) {
  * @param  string $text The text to sanitize.
  * @return string       The sanitized text.
  */
-function galerie_sanitize_repository_text( $text = '' ) {
+function entrepot_sanitize_repository_text( $text = '' ) {
 	return wp_kses( $text, array(
 		'a' => array( 'href' => array(),'title' => array(), 'target' => array() ),
 		'abbr' => array( 'title' => array() ),'acronym' => array( 'title' => array() ),
@@ -407,7 +407,7 @@ function galerie_sanitize_repository_text( $text = '' ) {
  * @param  string $content The content to sanitized.
  * @return string          The sanitized content.
  */
-function galerie_sanitize_repository_content( $content = '' ) {
+function entrepot_sanitize_repository_content( $content = '' ) {
 	return wp_kses( $content, array_intersect_key( $GLOBALS['allowedposttags'], array(
 		'h1' => true, 'h2' => true, 'h3' => true, 'h4' => true, 'h5' => true, 'h6' => true,
 		'ul' => true, 'ol' => true, 'li' => true, 'table' => true, 'tr' => true, 'td' => true,

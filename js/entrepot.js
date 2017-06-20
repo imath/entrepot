@@ -1,22 +1,22 @@
-/* global _, galeriel10n, galerie */
+/* global _, entrepotl10n, entrepot */
 
 // Make sure the wp object exists.
 window.wp = window.wp || {};
-window.galerie = window.galerie || _.extend( {}, _.pick( window.wp, 'Backbone', 'template' ) );
+window.entrepot = window.entrepot || _.extend( {}, _.pick( window.wp, 'Backbone', 'template' ) );
 
 ( function( $ ) {
 
-	if ( 'undefined' === typeof galeriel10n ) {
+	if ( 'undefined' === typeof entrepotl10n ) {
 		return false;
 	}
 
 	// Prevent the search tab to appear
 	$( document ).ready( function() {
-		$( 'body' ).addClass( 'gallerie-install-php' );
+		$( 'body' ).addClass( 'entrepot-install-php' );
 
 		var search = $( '.plugin-install-php .wp-filter-search' );
 		$( search ).removeClass( 'wp-filter-search' )
-		           .prop( 'id', 'gallerie-search' )
+		           .prop( 'id', 'entrepot-search' )
 		           .css( {
 		             margin: 0,
 		             width: '280px',
@@ -32,10 +32,10 @@ window.galerie = window.galerie || _.extend( {}, _.pick( window.wp, 'Backbone', 
 	} );
 
 	// Set Views holder
-	galerie.Views = galerie.Views || {};
+	entrepot.Views = entrepot.Views || {};
 
 	// Extend wp.Backbone.View with .prepare()
-	galerie.View = galerie.Backbone.View.extend( {
+	entrepot.View = entrepot.Backbone.View.extend( {
 		prepare: function() {
 			if ( ! _.isUndefined( this.model ) && _.isFunction( this.model.toJSON ) ) {
 				return this.model.toJSON();
@@ -45,18 +45,18 @@ window.galerie = window.galerie || _.extend( {}, _.pick( window.wp, 'Backbone', 
 		}
 	} );
 
-	galerie.Views.Card = galerie.View.extend( {
+	entrepot.Views.Card = entrepot.View.extend( {
 		className:  'plugin-card',
-		template: galerie.template( 'galerie-repository' ),
+		template: entrepot.template( 'entrepot-repository' ),
 
 		initialize: function() {
 			var description = this.model.get( 'description' ), presentation = '',
-			    icon = galeriel10n.defaultIcon, author;
+			    icon = entrepotl10n.defaultIcon, author;
 
-			if ( _.isUndefined( description[ galeriel10n.locale ] ) ) {
+			if ( _.isUndefined( description[ entrepotl10n.locale ] ) ) {
 				presentation = description.en_US;
 			} else {
-				presentation = description[ galeriel10n.locale ];
+				presentation = description[ entrepotl10n.locale ];
 			}
 
 			author = this.model.get( 'author' );
@@ -64,7 +64,7 @@ window.galerie = window.galerie || _.extend( {}, _.pick( window.wp, 'Backbone', 
 				author = '<a href="' + this.model.get( 'author_url' ) + '">' + author + '</a>';
 			}
 
-			author = galeriel10n.byAuthor.replace( '%s', author );
+			author = entrepotl10n.byAuthor.replace( '%s', author );
 
 			if ( this.model.get( 'icon' ) ) {
 				icon = this.model.get( 'icon' );
@@ -85,18 +85,18 @@ window.galerie = window.galerie || _.extend( {}, _.pick( window.wp, 'Backbone', 
 		}
 	} );
 
-	galerie.Views.List = galerie.View.extend( {
+	entrepot.Views.List = entrepot.View.extend( {
 		initialize: function() {
 			_.each( this.collection.models, function( repository ) {
 				this.displayRepository( repository );
 			}, this );
 
-			$( '#gallerie-search' ).on( 'keyup input', _.bind( this.searchRepositories, this ) );
+			$( '#entrepot-search' ).on( 'keyup input', _.bind( this.searchRepositories, this ) );
 			$( '#typeselector' ).on( 'change', this.resetSearch );
 		},
 
 		displayRepository: function( repository ) {
-			this.views.add( new galerie.Views.Card( { model: repository } ) );
+			this.views.add( new entrepot.Views.Card( { model: repository } ) );
 		},
 
 		searchRepositories: function( event ) {
@@ -124,24 +124,24 @@ window.galerie = window.galerie || _.extend( {}, _.pick( window.wp, 'Backbone', 
 		resetSearch: function( event ) {
 			event.preventDefault();
 
-			$( '#gallerie-search' ).val( '' );
+			$( '#entrepot-search' ).val( '' );
 			$( '#the-list .plugin-card' ).removeClass( 'hide-if-js' );
 		}
 	} );
 
-	galerie.App = {
+	entrepot.App = {
 		init: function( data ) {
 			this.views        = new Backbone.Collection();
 			this.repositories = new Backbone.Collection( data );
 
-			this.list = new galerie.Views.List( {
+			this.list = new entrepot.Views.List( {
 				el:           $( '#the-list' ),
 				collection:   this.repositories
 			} ).render();
 		}
 	};
 
-	$.getJSON( galeriel10n.url, function( data ) {
+	$.getJSON( entrepotl10n.url, function( data ) {
 		if ( ! data ) {
 			return false;
 		}
@@ -150,7 +150,7 @@ window.galerie = window.galerie || _.extend( {}, _.pick( window.wp, 'Backbone', 
 		data.sort( function() { return 0.5 - Math.random(); } );
 
 		// Init the App.
-		galerie.App.init( data );
+		entrepot.App.init( data );
 
 	} ).fail( function( xhr ) {
 		$( '#the-list' ).append(

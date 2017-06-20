@@ -1,8 +1,8 @@
 <?php
 /**
- * Galerie's Atom Parser class.
+ * Entrepôt's Atom Parser class.
  *
- * @package Galerie\inc\classes
+ * @package Entrepôt\inc\classes
  *
  * @since 1.0.0
  */
@@ -15,11 +15,11 @@ if ( ! class_exists( 'AtomParser') ) {
 }
 
 /**
- * Galerie's Atom Parser class.
+ * Entrepôt's Atom Parser class.
  *
  * @since  1.0.0
  */
-class Galerie_Atom extends AtomParser {
+class Entrepot_Atom extends AtomParser {
 	/**
 	 * Whether the fopen method should be used.
 	 *
@@ -37,8 +37,8 @@ class Galerie_Atom extends AtomParser {
 	public function __construct( $feed = '' ) {
 		parent::__construct();
 
-		if ( defined( 'GALERIE_ATOM_USE_FOPEN' ) ) {
-			$this->use_fopen = GALERIE_ATOM_USE_FOPEN;
+		if ( defined( 'ENTREPOT_ATOM_USE_FOPEN' ) ) {
+			$this->use_fopen = ENTREPOT_ATOM_USE_FOPEN;
 		}
 
 		if ( $feed ) {
@@ -82,10 +82,10 @@ class Galerie_Atom extends AtomParser {
 
 			$ret = true;
 
-			$feed = get_site_transient( 'galerie_feed_' . md5( $this->FILE ) );
+			$feed = get_site_transient( 'entrepot_feed_' . md5( $this->FILE ) );
 
 			if ( ! $feed ) {
-				// Define GALERIE_ATOM_USE_FOPEN to true to force fopen method.
+				// Define ENTREPOT_ATOM_USE_FOPEN to true to force fopen method.
 				if ( $this->use_fopen || false !== strpos( $this->FILE, rtrim( ABSPATH, '/\\' ) ) ) {
 					$fp = fopen( $this->FILE, 'r' );
 					while ( $data = fread( $fp, 4096 ) ) {
@@ -109,7 +109,7 @@ class Galerie_Atom extends AtomParser {
 				} else {
 					$options = array(
 						'timeout' => 60,
-						'user-agent'	=> 'Galerie/WordPress-Plugin-Updater; ' . get_bloginfo( 'url' ),
+						'user-agent'	=> 'Entrepôt/WordPress-Plugin-Updater; ' . get_bloginfo( 'url' ),
 					);
 
 					$external_request = wp_remote_get( $this->FILE, $options );
@@ -125,7 +125,7 @@ class Galerie_Atom extends AtomParser {
 					}
 
 					if ( 200 !== (int) wp_remote_retrieve_response_code( $external_request ) ) {
-						trigger_error( sprintf( __( 'Erreur de transport - le code de réponse HTTP n\'est pas 200 (%s)', 'galerie' ),
+						trigger_error( sprintf( __( 'Erreur de transport - le code de réponse HTTP n\'est pas 200 (%s)', 'entrepot' ),
 							wp_remote_retrieve_response_code( $external_request )
 						) );
 						$ret = false;
@@ -137,13 +137,13 @@ class Galerie_Atom extends AtomParser {
 
 					if ( ! xml_parse( $parser, $data, true ) ) {
 							/* translators: do not translate this string, WordPress already handles it. */
-							trigger_error( __( 'Erreur XML durant l\'analyse.', 'galerie' ) );
+							trigger_error( __( 'Erreur XML durant l\'analyse.', 'entrepot' ) );
 							$ret = false;
 					}
 				}
 
 				if ( ! empty( $this->feed ) && ! empty( $this->feed->entries ) ) {
-					set_site_transient( 'galerie_feed_' . md5( $this->FILE ), $this->feed, 2 * HOUR_IN_SECONDS );
+					set_site_transient( 'entrepot_feed_' . md5( $this->FILE ), $this->feed, 2 * HOUR_IN_SECONDS );
 				}
 
 			// Use the cached feed.

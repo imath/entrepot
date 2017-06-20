@@ -1,9 +1,9 @@
 {
   "author": "imath",
   "bugs": {
-    "url": "https://github.com/imath/galerie/issues"
+    "url": "https://github.com/imath/entrepot/issues"
   },
-  "description": "A WordPress Public Plugins Gallery made by coding artists.",
+  "description": "Store your free WordPress plugins into Entrepôt.",
   "devDependencies": {
     "grunt": "~1.0.1",
     "grunt-checktextdomain": "~1.0.1",
@@ -30,12 +30,12 @@
     "plugins",
     "repositories"
   ],
-  "homepage": "https://imathi.eu/tag/galerie",
+  "homepage": "https://imathi.eu/tag/entrepot",
   "license": "GPL-2.0+",
-  "name": "galerie",
+  "name": "entrepot",
   "repository": {
     "type": "git",
-    "url": "https://github.com/imath/galerie.git"
+    "url": "https://github.com/imath/entrepot.git"
   },
   "version": "1.0.0-beta1"
 }

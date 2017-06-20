@@ -1,0 +1,16 @@
+{
+	"name": "entrepot",
+	"author": "imath",
+	"keywords": [
+	  "plugins",
+	  "repositories"
+	],
+	"country": "fr_FR",
+	"releases": "",
+	"issues": "https://github.com/imath/entrepot/issues",
+	"description": {
+		"en_US" : "A WordPress Public Plugins Gallery made by coding artists.",
+		"fr_FR" : "Une entrepot d'extensions WordPress publiques créées par des artistes codeurs."
+	},
+	"README": "https://raw.githubusercontent.com/imath/entrepot/master/README.md"
+}

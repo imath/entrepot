@@ -1,7 +1,7 @@
 <?php
 /**
- * Plugin Name: Galerie
- * Plugin URI: https://github.com/imath/galerie/
+ * Plugin Name: Entrepôt
+ * Plugin URI: https://github.com/imath/entrepot/
  * Description: Une liste d'extensions gratuites hébergées sur Github.com.
  * Version: 1.0.0-beta1
  * Requires at least: 4.8
@@ -9,24 +9,24 @@
  * License: GNU/GPL 2
  * Author: imath
  * Author URI: https://imathi.eu/
- * Text Domain: galerie
+ * Text Domain: entrepot
  * Domain Path: /languages/
  * Network: True
- * GitHub Plugin URI: https://github.com/imath/galerie/
+ * GitHub Plugin URI: https://github.com/imath/entrepot/
  */
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'Galerie' ) ) :
+if ( ! class_exists( 'Entrepot' ) ) :
 /**
  * Main plugin's class
  *
- * @package Galerie
+ * @package Entrepôt
  *
  * @since 1.0.0
  */
-final class Galerie {
+final class Entrepot {
 
 	/**
 	 * Plugin's main instance
@@ -72,7 +72,7 @@ final class Galerie {
 		$this->version = '1.0.0-beta1';
 
 		// Domain
-		$this->domain = 'galerie';
+		$this->domain = 'entrepot';
 
 		// Base name
 		$this->file      = __FILE__;
@@ -137,7 +137,7 @@ endif;
  *
  * @since 1.0.0
  */
-function galerie() {
-	return Galerie::start();
+function entrepot() {
+	return Entrepot::start();
 }
-add_action( 'plugins_loaded', 'galerie', 1 );
+add_action( 'plugins_loaded', 'entrepot', 1 );

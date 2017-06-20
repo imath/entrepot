@@ -1,0 +1,18 @@
+{
+	"name": "Entrepôt",
+	"author": "imath",
+	"slug": "entrepot",
+	"icon": "https://raw.githubusercontent.com/imath/entrepot/master/icon.png",
+	"tags": [
+	  "plugins",
+	  "repositories"
+	],
+	"country": "fr_FR",
+	"releases": "https://github.com/imath/entrepot/releases",
+	"issues": "https://github.com/imath/entrepot/issues",
+	"description": {
+		"en_US" : "Entrepôt, a list of free Github.com hosted plugins.",
+		"fr_FR" : "Entrepôt, une liste d'extensions gratuites hébergées sur Github.com."
+	},
+	"README": "https://raw.githubusercontent.com/imath/entrepot/master/README.md"
+}
