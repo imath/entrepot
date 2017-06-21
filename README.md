@@ -1,6 +1,6 @@
 # Entrepôt
 
-![Onglet Entrepôt](https://cldup.com/TJX56I5die.png)
+![Onglet Entrepôt](https://cldup.com/UClN7C5nqq.png)
 
 ## Français 🇫🇷
 *Inscrivez vos extensions WordPress gratuites dans l'Entrepôt.*
