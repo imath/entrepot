@@ -3,9 +3,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Galerie 1.0.0-beta1\n"
-"Report-Msgid-Bugs-To: https://github.com/imath/galerie/issues\n"
-"POT-Creation-Date: 2017-06-07 06:14:25+00:00\n"
-"PO-Revision-Date: 2017-06-07 08:15+0100\n"
+"Report-Msgid-Bugs-To: https://github.com/imath/entrepot/issues\n"
+"POT-Creation-Date: 2017-06-23 05:22:42+00:00\n"
+"PO-Revision-Date: 2017-06-23 07:25+0100\n"
 "Last-Translator: imath <mathchristo@yahoo.fr>\n"
 "Language-Team: imath <contact@imathi.eu>\n"
 "Language: en_US\n"
@@ -32,8 +32,8 @@ msgid "Dépôts"
 msgstr "Repositories"
 
 #. Plugin Name of the plugin/theme
-msgid "Galerie"
-msgstr "Galerie"
+msgid "Entrepôt"
+msgstr "Entrepôt"
 
 #: inc/admin.php:258
 msgid "Liste des dépôts"
@@ -95,52 +95,50 @@ msgid ""
 "moment."
 msgstr "Sorry, details about this repository are currently not available."
 
-#: inc/admin.php:421
+#: inc/admin.php:427
 msgid "Rapporter une anomalie"
 msgstr "Report an issue"
 
-#: inc/admin.php:422
+#: inc/admin.php:428
 msgid "Voir sur Github"
 msgstr "View on Github"
 
-#: inc/admin.php:423
+#: inc/admin.php:429
 msgid "Contribuer"
 msgstr "Contribute"
 
-#: inc/admin.php:424
+#: inc/admin.php:430
 msgid "Signaler"
 msgstr "Flag"
 
 #. translators: do not translate this string, WordPress already handles it.
-#: inc/classes/class-galerie-atom.php:64
+#: inc/classes/class-entrepot-atom.php:64
 msgid ""
 "PHP's XML extension is not available. Please contact your hosting provider "
 "to enable PHP's XML extension."
 msgstr ""
 
 #. translators: do not translate this string, WordPress already handles it.
-#: inc/classes/class-galerie-atom.php:98
+#: inc/classes/class-entrepot-atom.php:98
 msgid "XML Error: %1$s at line %2$s"
 msgstr ""
 
-#: inc/classes/class-galerie-atom.php:128
+#: inc/classes/class-entrepot-atom.php:128
 msgid "Erreur de transport - le code de réponse HTTP n'est pas 200 (%s)"
 msgstr "Transport error -the HTTP response code is not 200 (%s)"
 
 #. translators: do not translate this string, WordPress already handles it.
-#: inc/classes/class-galerie-atom.php:140
+#: inc/classes/class-entrepot-atom.php:140
 msgid "Erreur XML durant l'analyse."
 msgstr "XML Error while parsing the file."
 
 #. Plugin URI of the plugin/theme
-msgid "https://github.com/imath/galerie/"
-msgstr "https://github.com/imath/galerie/"
+msgid "https://github.com/imath/entrepot/"
+msgstr "https://github.com/imath/entrepot/"
 
 #. Description of the plugin/theme
-msgid ""
-"Galerie, une salle d'exposition d'extensions créées par des Artistes Codeurs "
-"WordPress."
-msgstr "A WordPress plugins gallery crafted by Coding Artists"
+msgid "Une liste d'extensions gratuites hébergées sur Github.com."
+msgstr "A list of free Github.com hosted plugins."
 
 #. Author of the plugin/theme
 msgid "imath"
