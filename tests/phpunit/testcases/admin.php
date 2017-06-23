@@ -50,18 +50,21 @@ class entrepot_Admin_Tests extends WP_UnitTestCase {
 		$slugs        = array();
 
 		foreach ( $repositories as $repository ) {
-			$this->assertNotEmpty( $repository->slug );
-			$this->assertNotEmpty( $repository->author );
+			$this->assertNotEmpty( $repository->slug, 'The slug property of the plugin should be set.' );
+			$this->assertNotEmpty( $repository->author, 'The author property of the plugin should be set.' );
 
 			if ( 'entrepot' !== $repository->slug ) {
-				$this->assertNotEmpty( $repository->releases );
-				$this->assertTrue( rtrim( $repository->releases, '/' ) === 'https://github.com/' . $repository->author . '/' . $repository->slug . '/releases' );
+				$this->assertNotEmpty( $repository->releases, 'The releases URL property of the plugin should be set.' );
+				$this->assertTrue(
+					rtrim( $repository->releases, '/' ) === 'https://github.com/' . $repository->author . '/' . $repository->slug . '/releases',
+					'The releases URL property should have this form https://github.com/{author}/{slug}/releases.'
+				);
 			}
 
 			$slugs[] = $repository->slug;
 			$this->assertTrue( file_exists( entrepot_plugins_dir() . $repository->slug . '.json' ) );
-			$this->assertNotEmpty( $repository->description->en_US );
-			$this->assertNotEmpty( $repository->README );
+			$this->assertNotEmpty( $repository->description->en_US, 'An american (en_US) description should be provided for the plugin.' );
+			$this->assertNotEmpty( $repository->README, 'The README property of the plugin should be set.' );
 		}
 
 		$this->assertTrue( count( $repositories ) === count( array_unique( $slugs ) ), 'Plugin slugs should be unique.' );
