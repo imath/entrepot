@@ -1,18 +1,19 @@
-# Entrepôt
+[![Build Status](https://travis-ci.org/imath/entrepot.svg?branch=master)](https://travis-ci.org/imath/entrepot)
 
-![Onglet Entrepôt](https://cldup.com/UClN7C5nqq.png)
+# Entrepôt
 
 ## Français 🇫🇷
 *Inscrivez vos extensions WordPress gratuites dans l'Entrepôt.*
 
 Cette extension WordPress vous propose de recenser vos propres extensions gratuites hébergées sur Github.com directement depuis l'onglet **Entrepôt** de l'écran d'administration de l'ajout d'extensions de WordPress. Elle prendra en charge l'installation et la mise à jour de vos extensions.
 
-Les utilisateurs peuvent télécharger cette extension pour disposer d'une' source alternative d'extensions gratuites.
+Les utilisateurs peuvent télécharger cette extension pour disposer d'une source alternative d'extensions gratuites.
 
 Les *auteurs* peuvent, à l'aide d'une "Pull Request" particulière référencée leurs extensions gratuites hébergées sur Github.com. Pour en savoir plus, reporter vous à la [documentation](https://github.com/imath/entrepot/wiki).
 
 Cette extension nécessite WordPress 4.8.
 
+![Onglet Entrepôt](https://cldup.com/UClN7C5nqq.png)
 
 ## English 🇬🇧
 *Register your free WordPress plugins into Entrepôt*
