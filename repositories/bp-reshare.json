@@ -1,0 +1,22 @@
+{
+	"name": "BP Reshare",
+	"author": "imath",
+	"slug": "bp-reshare",
+	"dependencies": [
+		"bp_activity_get_current_context"
+	],
+	"icon": "https://raw.githubusercontent.com/imath/bp-reshare/master/icon.png",
+	"tags": [
+	  "BuddyPress",
+	  "activity",
+	  "share"
+	],
+	"country": "fr_FR",
+	"releases": "https://github.com/imath/bp-reshare/releases",
+	"issues": "https://github.com/imath/bp-reshare/issues",
+	"description": {
+		"en_US" : "Give your BuddyPress powered community members a feature to reshare their activities",
+		"fr_FR" : "Equipez les membres de votre communauté motorisée par BuddyPress d'une fonctionnalité de repartage des activités."
+	},
+	"README": "https://raw.githubusercontent.com/imath/bp-reshare/master/README.md"
+}

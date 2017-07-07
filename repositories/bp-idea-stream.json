@@ -1,0 +1,23 @@
+{
+	"name": "BP Idea Stream",
+	"author": "imath",
+	"slug": "bp-idea-stream",
+	"dependencies": [
+		"bp_get_displayed_user",
+		"wp_idea_stream_upgrade_to_2_4"
+	],
+	"icon": "https://raw.githubusercontent.com/imath/bp-idea-stream/master/icon.png",
+	"tags": [
+	  "BuddyPress",
+	  "ideas",
+	  "share"
+	],
+	"country": "fr_FR",
+	"releases": "https://github.com/imath/bp-idea-stream/releases",
+	"issues": "https://github.com/imath/bp-idea-stream/issues",
+	"description": {
+		"en_US" : "WP Idea Stream addon to share ideas within a BuddyPress powered community",
+		"fr_FR" : "Addon de WP Idea Stream pour partager des idées au sein de communautés motorisées par BuddyPress"
+	},
+	"README": "https://raw.githubusercontent.com/imath/bp-idea-stream/master/README.md"
+}

@@ -176,7 +176,7 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 
 		$entrepot = entrepot_get_repositories( 'entrepot' );
 		$check   = wp_list_pluck( $repositories, 'releases' );
-		$this->assertEquals( $entrepot->releases, $check[0] );
+		$this->assertContains( $entrepot->releases, $check );
 
 		$foo = entrepot_get_repositories( 'foo' );
 		$this->assertEmpty( $foo );
