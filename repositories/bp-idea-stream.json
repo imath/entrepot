@@ -3,8 +3,8 @@
 	"author": "imath",
 	"slug": "bp-idea-stream",
 	"dependencies": [
-		"bp_get_displayed_user",
-		"wp_idea_stream_upgrade_to_2_4"
+		{ "bp_get_displayed_user": "BuddyPress 2.6+" },
+		{ "wp_idea_stream_upgrade_to_2_4": "WP Idea Stream 2.4+" }
 	],
 	"icon": "https://raw.githubusercontent.com/imath/bp-idea-stream/master/icon.png",
 	"tags": [

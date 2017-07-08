@@ -181,4 +181,19 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 		$foo = entrepot_get_repositories( 'foo' );
 		$this->assertEmpty( $foo );
 	}
+
+	/**
+	 * @group dependencies
+	 */
+	public function test_entrepot_get_repository_dependencies() {
+		$dependencies = array(
+			(object) array( 'foo_bar_function' => 'Foo Bar Plugin' ),
+			(object) array( 'taz_function'     => 'Taz Plugin' ),
+			(object) array( 'entrepot_version' => 'Entrepôt' ),
+		);
+
+		$dependencies_data = entrepot_get_repository_dependencies( $dependencies );
+
+		$this->assertSame( array( 'Foo Bar Plugin', 'Taz Plugin' ), $dependencies_data );
+	}
 }

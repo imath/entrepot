@@ -3,7 +3,7 @@
 	"author": "imath",
 	"slug": "bp-reshare",
 	"dependencies": [
-		"bp_activity_get_current_context"
+		{ "bp_activity_get_current_context": "BuddyPress 2.8+" }
 	],
 	"icon": "https://raw.githubusercontent.com/imath/bp-reshare/master/icon.png",
 	"tags": [

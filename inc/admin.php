@@ -77,6 +77,12 @@ function entrepot_admin_get_repositories_list() {
 			}
 		}
 
+		if ( isset( $repositories[ $k ]->dependencies ) ) {
+			$repositories[ $k ]->unsatisfied_dependencies = entrepot_get_repository_dependencies( (array) $repositories[ $k ]->dependencies );
+		} else {
+			$repositories[ $k ]->unsatisfied_dependencies = array();
+		}
+
 		$repositories[ $k ]->description = (object) array_map( 'entrepot_sanitize_repository_text', (array) $repositories[ $k ]->description );
 
 		$data = install_plugin_install_status( $repository );
@@ -272,7 +278,7 @@ function entrepot_admin_repositories_print_templates() {
 			</div>
 			<div class="action-links">
 				<ul class="plugin-action-buttons">
-				<# if ( data.status ) { #>
+				<# if ( data.status && ! data.unsatisfied_dependencies.length ) { #>
 					<li>
 						<# if ( 'install' === data.status && data.url ) { #>
 							<a class="install-now button" data-slug="{{data.slug}}" href="{{{data.url}}}" aria-label="<?php esc_attr_e( 'Installer maintenant', 'entrepot' ); ?>" data-name="{{data.name}}"><?php esc_html_e( 'Installer', 'entrepot' ); ?></a>
@@ -304,6 +310,22 @@ function entrepot_admin_repositories_print_templates() {
 				</p>
 			</div>
 		</div>
+
+		<# if ( data.unsatisfied_dependencies.length ) { #>
+			<div class="plugin-card-bottom">
+				<div class="column-downloaded">
+					<?php esc_html_e( 'Dépendances insatisfaites :', 'entrepot' ); ?>
+				</div>
+				<div class="column-compatibility">
+					<ul style="margin: 0">
+						<# _.each( data.unsatisfied_dependencies, function( dependency ) { #>
+							<li style="text-align: left"><strong>{{ dependency }}</strong></li>
+						<# } ); #>
+					</ul>
+				</div>
+			</div>
+		<# } #>
+
 	</script>
 	<?php
 }

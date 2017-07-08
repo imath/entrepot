@@ -415,3 +415,30 @@ function entrepot_sanitize_repository_content( $content = '' ) {
 		'pre' => true, 'code' => true, 'p' => true, 'strong' => true, 'bold' => true, 'em' => true, 'i' => true,
 	) ) );
 }
+
+/**
+ * Checks each dependency & returns the ones that are not satisfied.
+ *
+ * @since 1.1.0
+ *
+ * @param  array  $dependencies An array of objects.
+ * @return array                An empty array or the list of unsatisfied dependencies.
+ */
+function entrepot_get_repository_dependencies( $dependencies = array() ) {
+	if ( ! $dependencies ) {
+		return array();
+	}
+
+	$dependencies_data = array();
+
+	$d = array_map( 'get_object_vars', $dependencies );
+	foreach ( $d as $kd => $dependency ) {
+		if ( function_exists( key( $dependency ) ) ) {
+			continue;
+		}
+
+		$dependencies_data[] = reset( $dependency );
+	}
+
+	return $dependencies_data;
+}
