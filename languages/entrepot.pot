@@ -2,9 +2,9 @@
 # This file is distributed under the GNU/GPL 2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Entrepôt 1.0.0\n"
+"Project-Id-Version: Entrepôt 1.1.0-beta1\n"
 "Report-Msgid-Bugs-To: https://github.com/imath/entrepot/issues\n"
-"POT-Creation-Date: 2017-06-23 05:26:21+00:00\n"
+"POT-Creation-Date: 2017-07-08 23:12:16+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13,19 +13,19 @@ msgstr ""
 "Language-Team: FRENCH <contact@imathi.eu>\n"
 "X-Generator: grunt-wp-i18n 0.5.4\n"
 
-#: inc/admin.php:87
+#: inc/admin.php:93
 msgid "Plus d'informations sur %s"
 msgstr ""
 
-#: inc/admin.php:122
+#: inc/admin.php:128
 msgid "Vous n'êtes pas autorisé à réaliser cette action."
 msgstr ""
 
-#: inc/admin.php:128
+#: inc/admin.php:134
 msgid "Un problème est survenu lors de la récupération des dépôts de plugin."
 msgstr ""
 
-#: inc/admin.php:141 inc/admin.php:142
+#: inc/admin.php:147 inc/admin.php:148
 msgid "Dépôts"
 msgstr ""
 
@@ -33,79 +33,83 @@ msgstr ""
 msgid "Entrepôt"
 msgstr ""
 
-#: inc/admin.php:258
+#: inc/admin.php:264
 msgid "Liste des dépôts"
 msgstr ""
 
-#: inc/admin.php:278
+#: inc/admin.php:284
 msgid "Installer maintenant"
 msgstr ""
 
-#: inc/admin.php:278
+#: inc/admin.php:284
 msgid "Installer"
 msgstr ""
 
-#: inc/admin.php:281
+#: inc/admin.php:287
 msgid "Mettre à jour maintenant"
 msgstr ""
 
-#: inc/admin.php:281
+#: inc/admin.php:287
 msgid "Mettre à jour"
 msgstr ""
 
-#: inc/admin.php:284
+#: inc/admin.php:290
 msgid "Activer sur le réseau"
 msgstr ""
 
-#: inc/admin.php:284
+#: inc/admin.php:290
 msgid "Activer"
 msgstr ""
 
-#: inc/admin.php:287
+#: inc/admin.php:293
 msgid "Actif"
 msgstr ""
 
-#: inc/admin.php:290
+#: inc/admin.php:296
 msgid "Installé"
 msgstr ""
 
-#: inc/admin.php:296
+#: inc/admin.php:302
 msgid "Plus de détails"
 msgstr ""
 
-#: inc/admin.php:327
+#: inc/admin.php:317 inc/admin.php:548
+msgid "Dépendance(s) insatisfaite(s):"
+msgstr ""
+
+#: inc/admin.php:349
 msgid "Détails du dépôt"
 msgstr ""
 
-#: inc/admin.php:346
+#: inc/admin.php:368
 msgid "Détails de la mise à jour"
 msgstr ""
 
-#: inc/admin.php:355
+#: inc/admin.php:377
 msgid ""
 "Désolé ce dépôt n'a pas inclu d'informations de mise à jour pour cette "
 "version."
 msgstr ""
 
-#: inc/admin.php:364
+#: inc/admin.php:386
 msgid ""
 "Désolé, les détails concernant ce dépôt ne sont pas disponibles pour le "
 "moment."
 msgstr ""
 
-#: inc/admin.php:427
+#: inc/admin.php:449
 msgid "Rapporter une anomalie"
 msgstr ""
 
-#: inc/admin.php:428
+#: inc/admin.php:450
 msgid "Voir sur Github"
 msgstr ""
 
-#: inc/admin.php:429
+#: inc/admin.php:451
 msgid "Contribuer"
 msgstr ""
 
-#: inc/admin.php:430
+#: inc/admin.php:452
 msgid "Signaler"
 msgstr ""
 
@@ -146,7 +150,7 @@ msgstr ""
 msgid "https://imathi.eu/"
 msgstr ""
 
-#: inc/admin.php:185
+#: inc/admin.php:191
 msgctxt "plugin"
 msgid "De %s"
 msgstr ""
