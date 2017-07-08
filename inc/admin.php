@@ -314,7 +314,7 @@ function entrepot_admin_repositories_print_templates() {
 		<# if ( data.unsatisfied_dependencies.length ) { #>
 			<div class="plugin-card-bottom">
 				<div class="column-downloaded">
-					<?php esc_html_e( 'Dépendances insatisfaites :', 'entrepot' ); ?>
+					<?php esc_html_e( 'Dépendance(s) insatisfaite(s):', 'entrepot' ); ?>
 				</div>
 				<div class="column-compatibility">
 					<ul style="margin: 0">
@@ -490,4 +490,63 @@ function entrepot_all_installed_repositories_list( $plugins = array() ) {
 	}
 
 	return $plugins;
+}
+
+/**
+ * Remove the Activate action links if dependencies are unsatisfied for a repository.
+ *
+ * @since 1.1.0
+ *
+ * @param  array  $actions     The list of available actions for a plugin row.
+ * @param  string $plugin_file Path to the plugin file relative to the plugins directory.
+ * @param  array  $plugin_data An array of plugin data.
+ * @return array               The list of available actions for a plugin row.
+ */
+function entrepot_plugin_action_links( $actions = array(), $plugin_file = '', $plugin_data = array() ) {
+	if ( empty( $plugin_data['GitHub Plugin URI'] ) || empty( $plugin_data['slug'] ) ) {
+		return $actions;
+	}
+
+	$repository = entrepot_get_repositories( $plugin_data['slug'] );
+
+	if ( empty( $repository->dependencies ) ) {
+		return $actions;
+	}
+
+	$dependencies = entrepot_get_repository_dependencies( $repository->dependencies );
+	if ( $dependencies ) {
+		entrepot()->miss_deps[ $plugin_data['slug'] ] = $dependencies;
+		unset( $actions['activate'] );
+	}
+
+	return $actions;
+}
+
+/**
+ * Add a new meta to inform about unsatisfied dependencies for a repository.
+ *
+ * @since 1.1.0
+ * 
+ * @param  array  $plugin_meta An array of the plugin's metadata.
+ * @param  string $plugin_file Path to the plugin file relative to the plugins directory.
+ * @param  array  $plugin_data An array of plugin data.
+ * @return array               An array of the plugin's metadata.
+ */
+function entrepot_plugin_row_meta( $plugin_meta = array(), $plugin_file = '', $plugin_data = array() ) {
+	if ( empty( $plugin_data['GitHub Plugin URI'] ) || empty( $plugin_data['slug'] ) ) {
+		return $plugin_meta;
+	}
+
+	$entrepot = entrepot();
+
+	if ( ! isset( $entrepot->miss_deps[ $plugin_data['slug'] ] ) ) {
+		return $plugin_meta;
+	}
+
+	return array_merge( $plugin_meta, array(
+		'entrepot_dependencies' => sprintf( '<span class="attention"> %1$s</span> %2$s.',
+			esc_html__( 'Dépendance(s) insatisfaite(s):', 'entrepot' ),
+			join( ', ', $entrepot->miss_deps[ $plugin_data['slug'] ] )
+		),
+	) );
 }

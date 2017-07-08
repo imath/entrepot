@@ -86,6 +86,9 @@ final class Entrepot {
 		$this->assets_dir       = trailingslashit( $this->dir . 'assets' );
 		$this->inc_dir          = trailingslashit( $this->dir . 'inc' );
 		$this->repositories_dir = trailingslashit( $this->dir . 'repositories' );
+
+		// Plugins missing dependencies
+		$this->miss_deps = array();
 	}
 
 	/**
