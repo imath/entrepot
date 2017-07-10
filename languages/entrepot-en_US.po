@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Galerie 1.0.0-beta1\n"
 "Report-Msgid-Bugs-To: https://github.com/imath/entrepot/issues\n"
-"POT-Creation-Date: 2017-07-08 23:12:16+00:00\n"
-"PO-Revision-Date: 2017-07-09 01:13+0100\n"
+"POT-Creation-Date: 2017-07-10 21:30:11+00:00\n"
+"PO-Revision-Date: 2017-07-10 23:38+0100\n"
 "Last-Translator: imath <mathchristo@yahoo.fr>\n"
 "Language-Team: imath <contact@imathi.eu>\n"
 "Language: en_US\n"
@@ -15,19 +15,19 @@ msgstr ""
 "X-Generator: Poedit 1.7.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: inc/admin.php:93
+#: inc/admin.php:97
 msgid "Plus d'informations sur %s"
 msgstr "Read more about %s"
 
-#: inc/admin.php:128
+#: inc/admin.php:132
 msgid "Vous n'êtes pas autorisé à réaliser cette action."
 msgstr "You are not allowed to perform this action."
 
-#: inc/admin.php:134
+#: inc/admin.php:138
 msgid "Un problème est survenu lors de la récupération des dépôts de plugin."
 msgstr "A problem occured while loading the plugin repositories."
 
-#: inc/admin.php:147 inc/admin.php:148
+#: inc/admin.php:151 inc/admin.php:152
 msgid "Dépôts"
 msgstr "Repositories"
 
@@ -35,85 +35,127 @@ msgstr "Repositories"
 msgid "Entrepôt"
 msgstr "Entrepôt"
 
-#: inc/admin.php:264
+#: inc/admin.php:284
 msgid "Liste des dépôts"
 msgstr "Repositories list"
 
-#: inc/admin.php:284
+#: inc/admin.php:304
 msgid "Installer maintenant"
 msgstr "Install now"
 
-#: inc/admin.php:284
+#: inc/admin.php:304
 msgid "Installer"
 msgstr "Install"
 
-#: inc/admin.php:287
+#: inc/admin.php:307
 msgid "Mettre à jour maintenant"
 msgstr "Ugrade now"
 
-#: inc/admin.php:287
+#: inc/admin.php:307
 msgid "Mettre à jour"
 msgstr "Upgrade"
 
-#: inc/admin.php:290
+#: inc/admin.php:310
 msgid "Activer sur le réseau"
 msgstr "Activate on the network"
 
-#: inc/admin.php:290
+#: inc/admin.php:310
 msgid "Activer"
 msgstr "Activate"
 
-#: inc/admin.php:293
+#: inc/admin.php:313
 msgid "Actif"
 msgstr "Active"
 
-#: inc/admin.php:296
+#: inc/admin.php:316
 msgid "Installé"
 msgstr "Installed"
 
-#: inc/admin.php:302
+#: inc/admin.php:322
 msgid "Plus de détails"
 msgstr "More details"
 
-#: inc/admin.php:317 inc/admin.php:548
+#: inc/admin.php:337 inc/admin.php:568
 msgid "Dépendance(s) insatisfaite(s):"
 msgstr "Unsatisfied dependencies:"
 
-#: inc/admin.php:349
+#: inc/admin.php:369
 msgid "Détails du dépôt"
 msgstr "Repository's details"
 
-#: inc/admin.php:368
+#: inc/admin.php:388
 msgid "Détails de la mise à jour"
 msgstr "Upgrade's details"
 
-#: inc/admin.php:377
+#: inc/admin.php:397
 msgid ""
 "Désolé ce dépôt n'a pas inclu d'informations de mise à jour pour cette "
 "version."
 msgstr "Sorry this repository is not providing details about this upgrade."
 
-#: inc/admin.php:386
+#: inc/admin.php:406
 msgid ""
 "Désolé, les détails concernant ce dépôt ne sont pas disponibles pour le "
 "moment."
 msgstr "Sorry, details about this repository are currently not available."
 
-#: inc/admin.php:449
+#: inc/admin.php:469
 msgid "Rapporter une anomalie"
 msgstr "Report an issue"
 
-#: inc/admin.php:450
+#: inc/admin.php:470
 msgid "Voir sur Github"
 msgstr "View on Github"
 
-#: inc/admin.php:451
+#: inc/admin.php:471
 msgid "Contribuer"
 msgstr "Contribute"
 
-#: inc/admin.php:452
+#: inc/admin.php:472
 msgid "Signaler"
 msgstr "Flag"
+
+#: inc/admin.php:667
+msgid "<span class=\"count\">%d</span> Alerte"
+msgid_plural "<span class=\"count\">%d</span> Alertes"
+msgstr[0] "<span class=\"count\">%d</span> Notice"
+msgstr[1] "<span class=\"count\">%d</span> Notices"
+
+#: inc/admin.php:669
+msgid "<span class=\"count\">%d</span> Mise à niveau"
+msgid_plural "<span class=\"count\">%d</span> Mises à niveau"
+msgstr[0] "<span class=\"count\">%d</span> Upgrade"
+msgstr[1] "<span class=\"count\">%d</span> Upgrades"
+
+#: inc/admin.php:670
+msgid "<span class=\"count\">%d</span> Info"
+msgid_plural "<span class=\"count\">%d</span> Infos"
+msgstr[0] "<span class=\"count\">%d</span> Info"
+msgstr[1] "<span class=\"count\">%d</span> Infos"
+
+#: inc/admin.php:671
+msgid "<span class=\"count\">%d</span> Erreur"
+msgid_plural "<span class=\"count\">%d</span> Erreurs"
+msgstr[0] "<span class=\"count\">%d</span> Error"
+msgstr[1] "<span class=\"count\">%d</span> Errors"
+
+#: inc/admin.php:673
+msgid "Ne plus afficher cette alerte"
+msgstr "Do not show this notice anymore"
+
+#: inc/admin.php:691
+msgid ""
+"Voici votre nouveau gestionnaires d'alertes. Toutes vos prochaines alertes "
+"s'y afficheront. Les alertes d'information ou d'erreur peuvent être "
+"définitivement supprimée grâce à l'icône poubelle. Prenez garde, malgré "
+"tout, à ne supprimer que ce que vous considérez comme étant des éléments "
+"indésirables."
+msgstr ""
+"Here is your new Notices center. All your next notices will now be "
+"displayed there. Notices about informations or errors can be trashed "
+"thanks to the recycle bin icon. You just need to make sure, before "
+"trashing notices, that they have nothing to do with the features of the "
+"plugin (e.g.: commercials)."
 
 #. translators: do not translate this string, WordPress already handles it.
 #: inc/classes/class-entrepot-atom.php:64
@@ -152,7 +194,7 @@ msgstr "imath"
 msgid "https://imathi.eu/"
 msgstr "https://imathi.eu/"
 
-#: inc/admin.php:191
+#: inc/admin.php:195
 msgctxt "plugin"
 msgid "De %s"
 msgstr "By %s"

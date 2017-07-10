@@ -1,3 +1,4 @@
+/* global JSON, entrepotNoticesl10n */
 window.entrepot = window.entrepot || {};
 
 ( function( $ ) {
@@ -119,7 +120,7 @@ window.entrepot = window.entrepot || {};
 			}
 
 			notice = notice.replace( new RegExp( /\n*\t*\s*/, 'g'), '' ).substring( 3, 23 );
-			return window.btoa( unescape( encodeURIComponent( notice ) ) );
+			return window.btoa( decodeURI( encodeURIComponent( notice ) ) );
 		},
 
 		/**
@@ -136,12 +137,12 @@ window.entrepot = window.entrepot || {};
 				                  .append( $( '<div></div>' ).prop( 'id', 'entrepot-notices-back' ) )
 				                  .append(
 				                  	$( '<div></div>' ).prop( 'id', 'entrepot-notices-columns' )
-				                  	                  .append(
-									                  	$( '<div></div>' ).addClass( 'contextual-help-tabs' ).html( $( '<ul></ul>' ) )
-									                  )
-									                  .append(
-									                  	$( '<div></div>' ).addClass( 'contextual-help-tabs-wrap' )
-									                  )
+				                                      .append(
+				                                      	$( '<div></div>' ).addClass( 'contextual-help-tabs' ).html( $( '<ul></ul>' ) )
+				                                      )
+				                                      .append(
+				                                      	$( '<div></div>' ).addClass( 'contextual-help-tabs-wrap' )
+				                                      )
 				                  )
 			);
 
@@ -150,13 +151,13 @@ window.entrepot = window.entrepot || {};
 				                  .addClass( 'hide-if-no-js screen-meta-toggle' )
 				                  .html(
 				                  	$( '<button></button>' ).prop( {
-										                  		type : 'button',
-										                  		id   : 'show-entrepot-notices-link',
-										                  	} )
-				                  	                        .attr( 'aria-controls', 'screen-entrepot-notices-wrap' )
-										                  	.attr( 'aria-expanded', false )
-				                  	                        .addClass( 'button show-entrepot-notices show-settings' )
-				                  	                        .html( self.strings.tabTitle )
+				                                            	type : 'button',
+				                                            	id   : 'show-entrepot-notices-link'
+				                                            } )
+				                                            .attr( 'aria-controls', 'screen-entrepot-notices-wrap' )
+				                                            .attr( 'aria-expanded', false )
+				                                            .addClass( 'button show-entrepot-notices show-settings' )
+				                                            .html( self.strings.tabTitle )
 				                  )
 			);
 		},
@@ -187,8 +188,8 @@ window.entrepot = window.entrepot || {};
 					                .addClass( type )
 					                .html(
 					                	$( '<a></a>' ).prop( 'href', '#tab-panel-entrepot-notice-' + type )
-					                	              .attr( 'aria-controls', 'tab-panel-entrepot-notice-' + type )
-					                	              .html( self.strings.tabLiTitles[ type ] )
+					                                  .attr( 'aria-controls', 'tab-panel-entrepot-notice-' + type )
+					                                  .html( self.strings.tabLiTitles[ type ] )
 					                )
 				);
 
@@ -234,10 +235,10 @@ window.entrepot = window.entrepot || {};
 				$el.append(
 					$( '<button></button>' ).prop( 'type', 'button' )
 					                        .addClass( 'entrepot-notice-trash' )
-											.html(
-												$( '<span></span>' ).addClass( 'screen-reader-text' )
-												                    .text( self.strings.trash || '' )
-											)
+					                        .html(
+					                        	$( '<span></span>' ).addClass( 'screen-reader-text' )
+					                                                .text( self.strings.trash || '' )
+					                        )
 				);
 			} );
 		},
@@ -299,7 +300,7 @@ window.entrepot = window.entrepot || {};
 
 		/**
 		 * Init the UI and listen to user actions.
-		 * 
+		 *
 		 * @return {void}
 		 */
 		init: function() {
@@ -326,7 +327,7 @@ window.entrepot = window.entrepot || {};
 			$( '#screen-entrepot-notices-wrap .contextual-help-tabs' ).on( 'click', 'a', this.switchActiveTab );
 			$( '#screen-entrepot-notices-wrap' ).on( 'click', 'button.entrepot-notice-trash', this.trashNotice.bind( this ) );
 		}
-	}
+	};
 
 	window.entrepot.Notices.init();
 

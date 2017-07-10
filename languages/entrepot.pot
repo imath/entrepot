@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Entrepôt 1.1.0-beta1\n"
 "Report-Msgid-Bugs-To: https://github.com/imath/entrepot/issues\n"
-"POT-Creation-Date: 2017-07-08 23:12:16+00:00\n"
+"POT-Creation-Date: 2017-07-10 21:30:11+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13,19 +13,19 @@ msgstr ""
 "Language-Team: FRENCH <contact@imathi.eu>\n"
 "X-Generator: grunt-wp-i18n 0.5.4\n"
 
-#: inc/admin.php:93
+#: inc/admin.php:97
 msgid "Plus d'informations sur %s"
 msgstr ""
 
-#: inc/admin.php:128
+#: inc/admin.php:132
 msgid "Vous n'êtes pas autorisé à réaliser cette action."
 msgstr ""
 
-#: inc/admin.php:134
+#: inc/admin.php:138
 msgid "Un problème est survenu lors de la récupération des dépôts de plugin."
 msgstr ""
 
-#: inc/admin.php:147 inc/admin.php:148
+#: inc/admin.php:151 inc/admin.php:152
 msgid "Dépôts"
 msgstr ""
 
@@ -33,84 +33,121 @@ msgstr ""
 msgid "Entrepôt"
 msgstr ""
 
-#: inc/admin.php:264
+#: inc/admin.php:284
 msgid "Liste des dépôts"
 msgstr ""
 
-#: inc/admin.php:284
+#: inc/admin.php:304
 msgid "Installer maintenant"
 msgstr ""
 
-#: inc/admin.php:284
+#: inc/admin.php:304
 msgid "Installer"
 msgstr ""
 
-#: inc/admin.php:287
+#: inc/admin.php:307
 msgid "Mettre à jour maintenant"
 msgstr ""
 
-#: inc/admin.php:287
+#: inc/admin.php:307
 msgid "Mettre à jour"
 msgstr ""
 
-#: inc/admin.php:290
+#: inc/admin.php:310
 msgid "Activer sur le réseau"
 msgstr ""
 
-#: inc/admin.php:290
+#: inc/admin.php:310
 msgid "Activer"
 msgstr ""
 
-#: inc/admin.php:293
+#: inc/admin.php:313
 msgid "Actif"
 msgstr ""
 
-#: inc/admin.php:296
+#: inc/admin.php:316
 msgid "Installé"
 msgstr ""
 
-#: inc/admin.php:302
+#: inc/admin.php:322
 msgid "Plus de détails"
 msgstr ""
 
-#: inc/admin.php:317 inc/admin.php:548
+#: inc/admin.php:337 inc/admin.php:568
 msgid "Dépendance(s) insatisfaite(s):"
 msgstr ""
 
-#: inc/admin.php:349
+#: inc/admin.php:369
 msgid "Détails du dépôt"
 msgstr ""
 
-#: inc/admin.php:368
+#: inc/admin.php:388
 msgid "Détails de la mise à jour"
 msgstr ""
 
-#: inc/admin.php:377
+#: inc/admin.php:397
 msgid ""
 "Désolé ce dépôt n'a pas inclu d'informations de mise à jour pour cette "
 "version."
 msgstr ""
 
-#: inc/admin.php:386
+#: inc/admin.php:406
 msgid ""
 "Désolé, les détails concernant ce dépôt ne sont pas disponibles pour le "
 "moment."
 msgstr ""
 
-#: inc/admin.php:449
+#: inc/admin.php:469
 msgid "Rapporter une anomalie"
 msgstr ""
 
-#: inc/admin.php:450
+#: inc/admin.php:470
 msgid "Voir sur Github"
 msgstr ""
 
-#: inc/admin.php:451
+#: inc/admin.php:471
 msgid "Contribuer"
 msgstr ""
 
-#: inc/admin.php:452
+#: inc/admin.php:472
 msgid "Signaler"
+msgstr ""
+
+#: inc/admin.php:667
+msgid "<span class=\"count\">%d</span> Alerte"
+msgid_plural "<span class=\"count\">%d</span> Alertes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: inc/admin.php:669
+msgid "<span class=\"count\">%d</span> Mise à niveau"
+msgid_plural "<span class=\"count\">%d</span> Mises à niveau"
+msgstr[0] ""
+msgstr[1] ""
+
+#: inc/admin.php:670
+msgid "<span class=\"count\">%d</span> Info"
+msgid_plural "<span class=\"count\">%d</span> Infos"
+msgstr[0] ""
+msgstr[1] ""
+
+#: inc/admin.php:671
+msgid "<span class=\"count\">%d</span> Erreur"
+msgid_plural "<span class=\"count\">%d</span> Erreurs"
+msgstr[0] ""
+msgstr[1] ""
+
+#: inc/admin.php:673
+msgid "Ne plus afficher cette alerte"
+msgstr ""
+
+#: inc/admin.php:691
+msgid ""
+"Voici votre nouveau gestionnaires d'alertes. Toutes vos prochaines alertes "
+"s'y afficheront. Les alertes d'information ou d'erreur peuvent être "
+"définitivement supprimée grâce à l'icône poubelle. Prenez garde, malgré "
+"tout, à ne supprimer que ce que vous considérez comme étant des éléments "
+"indésirables."
 msgstr ""
 
 #: inc/classes/class-entrepot-atom.php:64
@@ -150,7 +187,7 @@ msgstr ""
 msgid "https://imathi.eu/"
 msgstr ""
 
-#: inc/admin.php:191
+#: inc/admin.php:195
 msgctxt "plugin"
 msgid "De %s"
 msgstr ""
