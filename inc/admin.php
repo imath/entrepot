@@ -23,6 +23,10 @@ function entrepot_admin_updater() {
 	// New repositories can be added each time the Entrepôt has a new release.
 	wp_cache_delete( 'repositories', 'entrepot' );
 
+	if ( 1.1 === (float) entrepot_version() ) {
+		set_site_transient( 'entrepot_notice_example', true, DAY_IN_SECONDS );
+	}
+
 	// Update Entrepôt version.
 	update_network_option( 0, '_entrepot_version', entrepot_version() );
 }
@@ -190,6 +194,22 @@ function entrepot_admin_register_scripts() {
 		'defaultIcon'  => esc_url_raw( entrepot_assets_url() . 'repo.svg' ),
 		'byAuthor'     => _x( 'De %s', 'plugin', 'entrepot' ),
 	) );
+
+	wp_register_script(
+		'entrepot-notices',
+		sprintf( '%1$snotices%2$s.js', entrepot_js_url(), entrepot_min_suffix() ),
+		array( 'common' ),
+		entrepot_version(),
+		true
+	);
+
+	wp_register_style(
+		'entrepot-notices',
+		sprintf( '%1$snotices%2$s.css', entrepot_assets_url(), entrepot_min_suffix() ),
+		array( 'common' ),
+		entrepot_version(),
+		'all'
+	);
 }
 
 /**
@@ -526,7 +546,7 @@ function entrepot_plugin_action_links( $actions = array(), $plugin_file = '', $p
  * Add a new meta to inform about unsatisfied dependencies for a repository.
  *
  * @since 1.1.0
- * 
+ *
  * @param  array  $plugin_meta An array of the plugin's metadata.
  * @param  string $plugin_file Path to the plugin file relative to the plugins directory.
  * @param  array  $plugin_data An array of plugin data.
@@ -550,3 +570,127 @@ function entrepot_plugin_row_meta( $plugin_meta = array(), $plugin_file = '', $p
 		),
 	) );
 }
+
+/**
+ * Catches the Plugins admin notices to move them into the Notices center.
+ *
+ * @since 1.1.0
+ */
+function entrepot_catch_all_notices() {
+	if ( empty( $GLOBALS['wp_filter'] ) ) {
+		return;
+	}
+
+	$notice_actions = array_filter( array(
+		'network_admin_notices' => is_network_admin(),
+		'user_admin_notices'    => is_user_admin(),
+		'admin_notices'         => true,
+		'all_admin_notices'     => true,
+	) );
+
+	$registered_notices = array_intersect_key( $GLOBALS['wp_filter'], $notice_actions );
+	$core_hooks = array_fill_keys( array(
+		'update_nag',
+		'default_password_nag',
+		'maintenance_nag',
+		'new_user_email_admin_notice',
+		'site_admin_notice'
+	), 0 );
+
+	foreach ( $registered_notices as $hook_key => $priorities ) {
+		foreach ( $priorities->callbacks as $priority => $hooks ) {
+			foreach ( $hooks as $hook_name => $hook_data ) {
+				if ( isset( $core_hooks[ $hook_name ] ) ) {
+					continue;
+				} else {
+					// Remove the action on the core hook
+					remove_action( $hook_key, $hook_name, $priority );
+
+					// Add it to the entrepôt hook
+					add_action( 'entrepot_notices', $hook_name, $priority );
+				}
+			}
+		}
+	}
+
+	ob_start();
+
+	do_action( 'entrepot_notices' );
+
+	$notices = ob_get_clean();
+
+	if ( ! $notices ) {
+		return;
+	}
+
+	$notices = str_replace(
+		array( "<div>\n", "<p>\n", "</p>\n" ),
+		array( '<div>', '<p>', '</p>' ),
+	$notices );
+
+	$entrepot_notices = array_fill_keys( array( 'upgrade', 'error', 'updated' ), array() );
+	preg_match_all( '/\s*<div.*class=\"(.*?)\"[.*|>]\s*(.*?)\s*<\/div>/', $notices, $results );
+
+	if ( empty( $results[1] ) || empty( $results[2] ) ) {
+		return;
+	}
+
+	$allowed_tags = wp_kses_allowed_html( 'entrepot' );
+	$allowed_tags['p'] = true;
+
+	$all_notices_count = 0;
+	$upgrade_notices_count = 0;
+	$updated_notices_count = 0;
+	$error_notices_count   = 0;
+
+	foreach ( $results[1] as $kt => $type ) {
+		$classes = explode( ' ', $type );
+
+		if ( in_array( 'update-nag', $classes, true ) ) {
+			$entrepot_notices['upgrade'][] = wp_kses( $results[2][ $kt ], $allowed_tags );
+			$upgrade_notices_count += 1;
+		} else if ( in_array( 'error', $classes, true ) ) {
+			$entrepot_notices['error'][] = wp_kses( $results[2][ $kt ], $allowed_tags );
+			$error_notices_count += 1;
+		}  else if ( in_array( 'updated', $classes, true ) ) {
+			$entrepot_notices['updated'][] = wp_kses( $results[2][ $kt ], $allowed_tags );
+			$updated_notices_count += 1;
+		}
+
+		$all_notices_count += 1;
+	}
+
+	wp_enqueue_style( 'entrepot-notices' );
+	wp_enqueue_script ( 'entrepot-notices' );
+	wp_localize_script( 'entrepot-notices', 'entrepotNoticesl10n', array(
+		'strings' => array(
+			'tabTitle' => sprintf( _n( '<span class="count">%d</span> Alerte', '<span class="count">%d</span> Alertes', $all_notices_count, 'entrepot' ), $all_notices_count ),
+			'tabLiTitles' => array(
+				'upgrade' => sprintf( _n( '<span class="count">%d</span> Mise à niveau', '<span class="count">%d</span> Mises à niveau', $upgrade_notices_count, 'entrepot' ), $upgrade_notices_count ),
+				'updated' => sprintf( _n( '<span class="count">%d</span> Info', '<span class="count">%d</span> Infos', $updated_notices_count, 'entrepot' ), $updated_notices_count ),
+				'error'   => sprintf( _n( '<span class="count">%d</span> Erreur', '<span class="count">%d</span> Erreurs', $error_notices_count, 'entrepot' ), $error_notices_count ),
+			),
+			'trash' => __( 'Ne plus afficher cette alerte', 'entrepot' ),
+		),
+		'notices' => $entrepot_notices,
+	) );
+}
+
+/**
+ * Use a new notice to show the user the Notices center.
+ *
+ * @since 1.1.0
+ */
+function entrepot_about_notices_center() {
+	if ( ! get_site_transient( 'entrepot_notice_example' ) ) {
+		return;
+	}
+	?>
+	<div id="message" class="updated">
+		<p>
+			<?php esc_html_e( 'Voici votre nouveau gestionnaires d\'alertes. Toutes vos prochaines alertes s\'y afficheront. Les alertes d\'information ou d\'erreur peuvent être définitivement supprimée grâce à l\'icône poubelle. Prenez garde, malgré tout, à ne supprimer que ce que vous considérez comme étant des éléments indésirables.', 'entrepot' ); ?>
+		</p>
+	</div>
+	<?php
+}
+add_action( 'all_admin_notices', 'entrepot_about_notices_center' );
