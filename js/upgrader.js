@@ -57,6 +57,10 @@ window.entrepot = window.entrepot || _.extend( {}, _.pick( window.wp, 'Backbone'
 	} );
 
 	entrepot.Views.Cards = entrepot.View.extend( {
+		events: {
+			'click .repository-do-upgrade' : 'initUpgrade'
+		},
+
 		initialize: function() {
 			_.each( this.collection.models, function( repository ) {
 				this.displayRepository( repository );
@@ -65,6 +69,20 @@ window.entrepot = window.entrepot || _.extend( {}, _.pick( window.wp, 'Backbone'
 
 		displayRepository: function( repository ) {
 			this.views.add( new entrepot.Views.Card( { model: repository } ) );
+		},
+
+		initUpgrade: function( event ) {
+			event.preventDefault();
+
+			var currentBtn = $( event.currentTarget ), slug = currentBtn.data( 'slug' );
+
+			if ( currentBtn.hasClass( 'disabled' ) || ! slug || _.isUndefined( this.views._views[''] ) ) {
+				return;
+			}
+
+			_.each( this.views._views[''], function( view ) {
+				view.$el.find( 'button.repository-do-upgrade' ).addClass( 'disabled' );
+			} );
 		}
 	} );
 

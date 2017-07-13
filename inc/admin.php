@@ -774,7 +774,9 @@ function entrepot_admin_upgrade() {
 		if ( empty( $repo_tasks['info'] ) ) {
 			continue;
 		} else {
-			$infos[] = $repo_tasks['info'];
+			$infos[] = array_merge( $repo_tasks['info'], array(
+				'description' => sprintf( _n( '%d tâche de mise à niveau à effectuer.', '%d tâches de mise à niveau à effectuer.', count( $repo_tasks['tasks'] ), 'entrepot' ), count( $repo_tasks['tasks'] ) ),
+			) );
 		}
 
 		foreach ( $repo_tasks['tasks'] as $repo_task ) {
@@ -812,12 +814,13 @@ function entrepot_admin_upgrade() {
 		<script type="text/html" id="tmpl-repository-card">
 			<div class="repository-info">
 				<# if ( data.icon ) { #>
-					<img src="{{data.icon}}" width="64px" height="64px">
+					<img src="{{data.icon}}" width="100px" height="100px">
 				<# } #>
 
 				<h2>{{data.name}}</h2>
+				<p class="description">{{data.description}}</p>
 
-				<button type="button" class="button secondary button repository-do-upgrade">
+				<button type="button" class="button secondary button repository-do-upgrade" data-slug="{{data.slug}}">
 					<?php esc_html_e( 'Mettre à niveau', 'bp-reshare' ); ?>
 				</button>
 			</div>
