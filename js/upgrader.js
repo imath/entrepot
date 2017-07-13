@@ -61,6 +61,7 @@ window.entrepot = window.entrepot || _.extend( {}, _.pick( window.wp, 'Backbone'
 			}
 
 			this.listenToOnce( this.model, 'change:do_upgrade', this.displayTasks );
+			this.listenToOnce( this.model, 'change:did_upgrade', this.emptyTasks );
 		},
 
 		/**
@@ -96,6 +97,14 @@ window.entrepot = window.entrepot || _.extend( {}, _.pick( window.wp, 'Backbone'
 			this.views.add( '.repository-tasks', new entrepot.Views.Upgrader( { collection: this.tasks, repository: this.model } ) );
 
 			this.setUpTasks();
+		},
+
+		emptyTasks: function() {
+			var self = this;
+
+			window.setTimeout( function() {
+				_.first( self.views._views['.repository-tasks'] ).remove();
+			}, 1000 );
 		}
 	} );
 
@@ -108,6 +117,8 @@ window.entrepot = window.entrepot || _.extend( {}, _.pick( window.wp, 'Backbone'
 			_.each( this.collection.models, function( repository ) {
 				this.displayRepository( repository );
 			}, this );
+
+			this.listenTo( this.collection, 'change:did_upgrade', this.resetButtons );
 		},
 
 		displayRepository: function( repository ) {
@@ -130,6 +141,24 @@ window.entrepot = window.entrepot || _.extend( {}, _.pick( window.wp, 'Backbone'
 					view.model.set( 'do_upgrade', true );
 				}
 			} );
+		},
+
+		resetButtons: function( model ) {
+			_.each( this.views._views[''], function( view ) {
+				var btn = view.$el.find( 'button.repository-do-upgrade' );
+
+				btn.removeClass( 'disabled' );
+
+				if ( model.get( 'slug' ) === view.model.get( 'slug' ) ) {
+					view.$el.find( '.description' ).remove();
+					btn.remove();
+
+					view.$el.find( '.repository-info' ).append(
+						$( '<div></div>' ).addClass( 'repository-upgraded' )
+						                  .html( '<span class="dashicons dashicons-yes"></span>' + entrepotUpgraderl10n.upgraded )
+					)
+				}
+			} );
 		}
 	} );
 
@@ -150,8 +179,6 @@ window.entrepot = window.entrepot || _.extend( {}, _.pick( window.wp, 'Backbone'
 		taskSuccess: function( response ) {
 			var task, next, nextTask;
 
-			console.log( this );
-
 			if ( response.done && response.callback ) {
 				task = this.tasks.get( response.callback );
 
@@ -165,6 +192,8 @@ window.entrepot = window.entrepot || _.extend( {}, _.pick( window.wp, 'Backbone'
 
 					if ( _.isObject( nextTask ) ) {
 						nextTask.set( 'active', true );
+					} else {
+						this.repository.set( 'did_upgrade', true );
 					}
 				}
 			}

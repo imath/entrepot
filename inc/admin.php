@@ -803,6 +803,7 @@ function entrepot_admin_upgrade() {
 			'tasks'          => array_map( 'array_values', $tasks ),
 			'repositories'   => $infos,
 			'entrepot_nonce' => wp_create_nonce( 'entrepot-upgrader' ),
+			'upgraded'       => __( 'Mis à niveau', 'entrepot' ),
 		) );
 	}
 	?>
