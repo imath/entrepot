@@ -442,3 +442,56 @@ function entrepot_get_repository_dependencies( $dependencies = array() ) {
 
 	return $dependencies_data;
 }
+
+function entrepot_get_upgrader_tasks() {
+	$upgrade = array();
+
+	/**
+	 * Filter here to populate your upgrade tasks
+	 *
+	 * @param array $value list of tasks to perform
+	 *
+	 * eg array( $slug => array(
+	 * 		$slug        string The plugin slug
+	 * 		$db_version  string The current database version (before the upgrade)
+	 *		$tasks       array (
+	 *			A list of arguments for each plugin version
+	 *			$version array (
+	 * 			 $callback  string The Upgrade routine
+	 *			 $count     int    The total number of items to upgrade
+	 *			 $message   string The message to display in the progress bar
+	 *			 $number    int    Number of items to upgrade per ajax request,
+	 *      )
+	 *    )
+	 * ) )
+	 */
+	$tasks = (array) apply_filters( 'entrepot_add_upgrader_tasks', array() );
+
+	foreach ( $tasks as $t ) {
+		$repository = entrepot_get_repositories( $t->slug );
+
+		if ( ! $repository ) {
+			continue;
+		}
+
+		foreach ( $t->tasks as $version => $list ) {
+			if ( version_compare( $version, $t->db_version, '>' ) ) {
+				if ( empty( $upgrade[ $t->slug ] ) ) {
+					$upgrade[ $t->slug ]['tasks'] = $list;
+				} else {
+					$upgrade[ $t->slug ]['tasks'] = array_merge( $upgrade[ $t->slug ], $list );
+				}
+			}
+		}
+
+		if ( ! empty( $upgrade[ $t->slug ]['tasks'] ) ) {
+			$upgrade[ $t->slug ]['info'] = array_intersect_key( get_object_vars( $repository ), array(
+				'name' => true,
+				'icon' => true,
+				'slug' => true,
+			) );
+		}
+	}
+
+	return $upgrade;
+}

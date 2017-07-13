@@ -1,0 +1,75 @@
+#entrepot-cards .repository-card {
+	background: #fff;
+	border: 1px solid #e5e5e5;
+	-webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+	box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+	margin: 1em 0;
+}
+
+#entrepot-cards .repository-card .repository-info {
+	overflow: hidden;
+}
+
+#entrepot-cards .repository-card .repository-info img {
+	float: left;
+	padding: 1em;
+}
+
+#entrepot-cards .repository-tasks li.entrepot-upgrader-task {
+	list-style: none;
+	margin: 0;
+	padding: 1em 0.4em;
+}
+
+#entrepot-cards .repository-tasks li:not(:first-child) {
+ 	border-top: dotted 1px #f1f1f1;
+}
+
+#entrepot-cards .repository-tasks li.entrepot-upgrader-task .task-description {
+	text-align: left;
+	line-height: 1.3em;
+	font-size: 14px;
+	padding: 0.4em;
+	color: #aaa;
+}
+
+#entrepot-cards .repository-tasks li.entrepot-upgrader-task.active .task-description {
+	color: #555;
+}
+
+#entrepot-cards .repository-tasks li.entrepot-upgrader-task .upgrade-progress {
+	background: none;
+	border: 1px solid #d1d1d1;
+	height: 5px;
+	margin: 0 auto;
+	margin-bottom: 2px;
+	padding: 0;
+	overflow: hidden;
+	width: 98%;
+}
+
+#entrepot-cards .repository-tasks li.entrepot-upgrader-task .upgrade-progress.warning,
+#entrepot-cards .repository-tasks li.entrepot-upgrader-task .upgrade-progress.error {
+	height: auto;
+	padding: 10px;
+	font-weight: bold;
+}
+
+#entrepot-cards .repository-tasks li.entrepot-upgrader-task .upgrade-progress.error {
+	background-color: #fdc;
+	border-color: #a00;
+	color: #800;
+}
+
+#entrepot-cards .repository-tasks li.entrepot-upgrader-task .upgrade-progress.warning {
+	background-color: #ffd;
+	border-color: #cb2;
+	color: #440;
+}
+
+#entrepot-cards .repository-tasks li.entrepot-upgrader-task .upgrade-bar {
+	background-color: #0073aa;
+	width: 0;
+	height: 100%;
+	z-index: 9;
+}

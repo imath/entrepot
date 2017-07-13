@@ -87,8 +87,11 @@ final class Entrepot {
 		$this->inc_dir          = trailingslashit( $this->dir . 'inc' );
 		$this->repositories_dir = trailingslashit( $this->dir . 'repositories' );
 
-		// Plugins missing dependencies
+		// Plugins missing dependencies.
 		$this->miss_deps = array();
+
+		// Plugins upgrade tasks.
+		$this->upgrades = array();
 	}
 
 	/**
