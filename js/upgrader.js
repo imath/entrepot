@@ -53,7 +53,50 @@ window.entrepot = window.entrepot || _.extend( {}, _.pick( window.wp, 'Backbone'
 
 	entrepot.Views.Card = entrepot.View.extend( {
 		className:  'repository-card',
-		template: entrepot.template( 'repository-card' )
+		template: entrepot.template( 'repository-card' ),
+
+		initialize: function() {
+			if ( this.model.get( 'did_upgrade' ) ) {
+				return;
+			}
+
+			this.listenToOnce( this.model, 'change:do_upgrade', this.displayTasks );
+		},
+
+		/**
+		 * Populate the tasks collection
+		 */
+		setUpTasks: function() {
+			var self = this;
+
+			if ( _.isUndefined( entrepotUpgraderl10n.tasks[ this.model.get( 'slug' ) ] ) ) {
+				return;
+			}
+
+			_.each( entrepotUpgraderl10n.tasks[ this.model.get( 'slug' ) ], function( task, index ) {
+				if ( ! _.isObject( task ) ) {
+					return;
+				}
+
+				self.tasks.add( {
+					id      : task.callback,
+					order   : index,
+					message : task.message,
+					count   : task.count,
+					number  : task.number,
+					done    : 0,
+					active  : false
+				} );
+			} );
+		},
+
+		displayTasks: function() {
+			this.tasks = new entrepot.Collections.Tasks();
+
+			this.views.add( '.repository-tasks', new entrepot.Views.Upgrader( { collection: this.tasks, repository: this.model } ) );
+
+			this.setUpTasks();
+		}
 	} );
 
 	entrepot.Views.Cards = entrepot.View.extend( {
@@ -82,6 +125,10 @@ window.entrepot = window.entrepot || _.extend( {}, _.pick( window.wp, 'Backbone'
 
 			_.each( this.views._views[''], function( view ) {
 				view.$el.find( 'button.repository-do-upgrade' ).addClass( 'disabled' );
+
+				if ( slug === view.model.get( 'slug' ) ) {
+					view.model.set( 'do_upgrade', true );
+				}
 			} );
 		}
 	} );
@@ -103,8 +150,10 @@ window.entrepot = window.entrepot || _.extend( {}, _.pick( window.wp, 'Backbone'
 		taskSuccess: function( response ) {
 			var task, next, nextTask;
 
+			console.log( this );
+
 			if ( response.done && response.callback ) {
-				task = this.get( response.callback );
+				task = this.tasks.get( response.callback );
 
 				task.set( 'done', Number( response.done ) + Number( task.get( 'done' ) ) );
 
@@ -112,7 +161,7 @@ window.entrepot = window.entrepot || _.extend( {}, _.pick( window.wp, 'Backbone'
 					task.set( 'active', false );
 
 					next     = Number( task.get( 'order' ) ) + 1;
-					nextTask = this.findWhere( { order: next } );
+					nextTask = this.tasks.findWhere( { order: next } );
 
 					if ( _.isObject( nextTask ) ) {
 						nextTask.set( 'active', true );
@@ -137,11 +186,16 @@ window.entrepot = window.entrepot || _.extend( {}, _.pick( window.wp, 'Backbone'
 		},
 
 		manageQueue: function( task ) {
+			var options = {
+				tasks: this.collection,
+				repository: this.options.repository
+			};
+
 			if ( true === task.get( 'active' ) ) {
 				this.collection.proceed( {
 					data    : _.pick( task.attributes, ['id', 'count', 'number', 'done'] ),
-					success : this.taskSuccess,
-					error   : this.taskError
+					success : _.bind( this.taskSuccess, options ),
+					error   : _.bind( this.taskError, options )
 				} );
 			}
 		}
@@ -182,29 +236,6 @@ window.entrepot = window.entrepot || _.extend( {}, _.pick( window.wp, 'Backbone'
 	 * The Upgrader!
 	 */
 	entrepot.Upgrader = {
-		/**
-		 * Populate the tasks collection
-		 */
-		setUpTasks: function() {
-			var self = this;
-
-			_.each( entrepotUpgraderl10n.tasks, function( task, index ) {
-				if ( ! _.isObject( task ) ) {
-					return;
-				}
-
-				self.tasks.add( {
-					id      : task.callback,
-					order   : index,
-					message : task.message,
-					count   : task.count,
-					number  : task.number,
-					done    : 0,
-					active  : false
-				} );
-			} );
-		},
-
 		/**
 		 * Launcher
 		 */

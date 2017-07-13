@@ -758,7 +758,7 @@ function entrepot_admin_upgrade_load() {
 		wp_send_json( __( 'Un problème est survenu lors de la récupération des dépôts de plugin.', 'entrepot' ), 500 );
 	}
 
-	wp_send_json( $repositories, 200 );
+	wp_send_json_success( array( 'done' => 1, 'callback' => $_POST['id'] ) );
 }
 
 function entrepot_admin_upgrade() {
