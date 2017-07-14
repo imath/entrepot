@@ -704,7 +704,7 @@ function entrepot_catch_all_notices() {
 	if ( $repository_upgrades_count ) {
 		array_push( $entrepot_notices['upgrade'], sprintf( '<p>%1$s. %2$s</p>',
 			sprintf( _n( '%d extension nécessite une mise à niveau', '%d extensions nécessitent une mise à niveau.', $repository_upgrades_count, 'entrepot' ), $repository_upgrades_count ),
-			sprintf( __( 'Merci de visiter la page d\'administration des %s pour effecuer les opérations nécessaires' ), sprintf( '<a href="%1$s">%2$s</a>',
+			sprintf( __( 'Merci de visiter la page d\'administration des %s pour effecuer les opérations nécessaires.', 'entrepot' ), sprintf( '<a href="%1$s">%2$s</a>',
 				esc_url( add_query_arg( 'page', 'upgrade-repositories', self_admin_url( 'plugins.php' ) ) ),
 				__( 'mises à niveau', 'entrepot' )
 			) )
@@ -875,7 +875,7 @@ function entrepot_admin_upgrade() {
 					<p class="description">{{data.description}}</p>
 
 					<button type="button" class="button secondary button repository-do-upgrade" data-slug="{{data.slug}}">
-						<?php esc_html_e( 'Mettre à niveau', 'bp-reshare' ); ?>
+						<?php esc_html_e( 'Mettre à niveau', 'entrepot' ); ?>
 					</button>
 				</div>
 				<div class="repository-tasks"></div>

@@ -1,3 +1,5 @@
+/* global entrepotUpgraderl10n */
+
 window.wp       = window.wp || {};
 window.entrepot = _.extend( window.entrepot || {}, _.pick( window.wp, 'Backbone', 'ajax', 'template' ) );
 
@@ -37,7 +39,7 @@ window.entrepot = _.extend( window.entrepot || {}, _.pick( window.wp, 'Backbone'
 			};
 
 			return entrepot.ajax.send( options );
-		},
+		}
 	} );
 
 	/**
@@ -183,7 +185,7 @@ window.entrepot = _.extend( window.entrepot || {}, _.pick( window.wp, 'Backbone'
 
 			// Asks once the user for a confirmation
 			if ( ! entrepot.Upgrader.isWarned ) {
-				var carryOn = confirm( entrepotUpgraderl10n.confirm );
+				var carryOn = window.confirm( entrepotUpgraderl10n.confirm );
 				entrepot.Upgrader.isWarned = true;
 
 				if ( ! carryOn ) {
@@ -419,4 +421,4 @@ window.entrepot = _.extend( window.entrepot || {}, _.pick( window.wp, 'Backbone'
 
 	entrepot.Upgrader.start();
 
-} )( entrepot, jQuery );
+} )( window.entrepot, jQuery );
