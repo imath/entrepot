@@ -10,6 +10,11 @@
 	overflow: hidden;
 }
 
+#entrepot-cards .repository-card .repository-upgraded {
+	color: #46b450;
+	font-weight: bold;
+}
+
 #entrepot-cards .repository-card .repository-info img {
 	float: left;
 	padding: 1em;

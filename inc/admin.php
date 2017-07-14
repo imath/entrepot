@@ -161,7 +161,10 @@ function entrepot_admin_add_menu() {
 			),
 			'load_callback' => 'entrepot_admin_send_json',
 		),
-		'upgrades' => array(
+	);
+
+	if ( $entrepot->upgrades ) {
+		$screens['upgrades'] = array(
 			'page_hook' =>add_plugins_page(
 				__( 'Mise à niveau des Extensions', 'entrepot' ),
 				__( 'Mettre à niveau', 'entrepot' ),
@@ -170,11 +173,7 @@ function entrepot_admin_add_menu() {
 				'entrepot_admin_upgrade'
 			),
 			'load_callback' => 'entrepot_admin_upgrade_load',
-		),
-	);
-
-	if ( ! $entrepot->upgrades ) {
-		unset( $screens['upgrades'] );
+		);
 	}
 
 	foreach ( $screens as $screen ) {
@@ -662,22 +661,7 @@ function entrepot_catch_all_notices() {
 	do_action( 'entrepot_notices' );
 
 	$notices = ob_get_clean();
-
-	if ( ! $notices ) {
-		return;
-	}
-
-	$notices = str_replace( array("<p>", "</p>" ), '',	$notices );
-
-	$entrepot_notices = array_fill_keys( array( 'upgrade', 'error', 'updated' ), array() );
-	preg_match_all( '/\s*<div.*class=\"(.*?)\"[.*|>]\s*(.*?)\s*<\/div>/', trim( $notices, "\n\t" ), $results );
-
-	if ( empty( $results[1] ) || empty( $results[2] ) ) {
-		return;
-	}
-
-	$allowed_tags      = wp_kses_allowed_html( 'entrepot' );
-	$allowed_tags['p'] = true;
+	$entrepot_notices  = array_fill_keys( array( 'upgrade', 'error', 'updated' ), array() );
 
 	// Counts
 	$all_notices_count     = 0;
@@ -685,22 +669,53 @@ function entrepot_catch_all_notices() {
 	$updated_notices_count = 0;
 	$error_notices_count   = 0;
 
-	foreach ( $results[1] as $kt => $type ) {
-		$classes = explode( ' ', $type );
-		$text    = wp_kses( sprintf( '<p>%s</p>', $results[2][ $kt ] ), $allowed_tags );
+	if ( ! empty( $notices ) ) {
+		$notices = str_replace( array("<p>", "</p>" ), '',	$notices );
+		preg_match_all( '/\s*<div.*class=\"(.*?)\"[.*|>]\s*(.*?)\s*<\/div>/', trim( $notices, "\n\t" ), $results );
 
-		if ( in_array( 'update-nag', $classes, true ) ) {
-			$entrepot_notices['upgrade'][] = $text;
-			$upgrade_notices_count += 1;
-		} else if ( in_array( 'error', $classes, true ) ) {
-			$entrepot_notices['error'][] = $text;
-			$error_notices_count += 1;
-		}  else if ( in_array( 'updated', $classes, true ) ) {
-			$entrepot_notices['updated'][] = $text;
-			$updated_notices_count += 1;
+		if ( empty( $results[1] ) || empty( $results[2] ) ) {
+			return;
 		}
 
-		$all_notices_count += 1;
+		$allowed_tags      = wp_kses_allowed_html( 'entrepot' );
+		$allowed_tags['p'] = true;
+
+		foreach ( $results[1] as $kt => $type ) {
+			$classes = explode( ' ', $type );
+			$text    = wp_kses( sprintf( '<p>%s</p>', $results[2][ $kt ] ), $allowed_tags );
+
+			if ( in_array( 'update-nag', $classes, true ) ) {
+				$entrepot_notices['upgrade'][] = $text;
+				$upgrade_notices_count += 1;
+			} else if ( in_array( 'error', $classes, true ) ) {
+				$entrepot_notices['error'][] = $text;
+				$error_notices_count += 1;
+			}  else if ( in_array( 'updated', $classes, true ) ) {
+				$entrepot_notices['updated'][] = $text;
+				$updated_notices_count += 1;
+			}
+
+			$all_notices_count += 1;
+		}
+	}
+
+	$repository_upgrades_count = count( entrepot()->upgrades );
+
+	if ( $repository_upgrades_count ) {
+		array_push( $entrepot_notices['upgrade'], sprintf( '<p>%1$s. %2$s</p>',
+			sprintf( _n( '%d extension nécessite une mise à niveau', '%d extensions nécessitent une mise à niveau.', $repository_upgrades_count, 'entrepot' ), $repository_upgrades_count ),
+			sprintf( __( 'Merci de visiter la page d\'administration des %s pour effecuer les opérations nécessaires' ), sprintf( '<a href="%1$s">%2$s</a>',
+				esc_url( add_query_arg( 'page', 'upgrade-repositories', self_admin_url( 'plugins.php' ) ) ),
+				__( 'mises à niveau', 'entrepot' )
+			) )
+		) );
+
+		$upgrade_notices_count += 1;
+		$all_notices_count     += 1;
+	}
+
+	if ( ! $all_notices_count ) {
+		return;
 	}
 
 	wp_enqueue_style( 'entrepot-notices' );
@@ -738,29 +753,60 @@ function entrepot_about_notices_center() {
 }
 add_action( 'all_admin_notices', 'entrepot_about_notices_center' );
 
+/**
+ * Check the request headers of the Plugins Upgrade screen before sending the right reply.
+ *
+ * @since 1.1.0
+ */
 function entrepot_admin_upgrade_load() {
 	$headers = array_intersect_key( apache_request_headers(), array(
 		'Accept'           => true,
 		'X-Entrepot-Nonce' => true,
 	) );
 
+	// It's a regular Administration screen display.
 	if ( 'application/json' !== $headers['Accept'] || ! isset( $headers['X-Entrepot-Nonce'] ) ) {
 		return;
 	}
 
-	if ( ! current_user_can( 'update_plugins' ) ) {
-		wp_send_json( __( 'Vous n\'êtes pas autorisé à réaliser cette action.', 'entrepot' ), 403 );
+	$error = array(
+		'message'   => __( 'La mise à niveau a été interrompue en raison d\'une erreur.', 'entrepot' ),
+		'type'      => 'error',
+	);
+
+	if ( empty( $_POST['id'] ) || ! isset( $_POST['count'] ) || ! isset( $_POST['done'] ) ) {
+		wp_send_json_error( $error );
 	}
 
-	$repositories = 1;
+	// Add the action to the error
+	$callback          = sanitize_key( $_POST['id'] );
+	$error['callback'] = $callback;
 
-	if ( empty( $repositories ) ) {
-		wp_send_json( __( 'Un problème est survenu lors de la récupération des dépôts de plugin.', 'entrepot' ), 500 );
+	if ( ! current_user_can( 'update_plugins' ) || ! wp_verify_nonce( $headers['X-Entrepot-Nonce'], 'entrepot-upgrader' ) ) {
+		$error['message'] = __( 'Vous n\'êtes pas autorisé à réaliser cette mise à niveau.', 'entrepot' );
+		wp_send_json_error( $error );
 	}
 
-	wp_send_json_success( array( 'done' => 1, 'callback' => $_POST['id'] ) );
+	if ( ! is_callable( $callback ) ) {
+		$error['message'] = __( 'La fonction de mise à niveau pour cette tâche est inexistante.', 'entrepot' );
+		wp_send_json_error( $error );
+	}
+
+	$number = 20;
+	if ( ! empty( $_POST['number'] ) ) {
+		$number = (int) $_POST['number'];
+	}
+
+	$did = call_user_func_array( $callback, array( $number ) );
+
+	wp_send_json_success( array( 'done' => $did, 'callback' => $callback ) );
 }
 
+/**
+ * Plugins upgrade screen.
+ *
+ * @since 1.1.0
+ */
 function entrepot_admin_upgrade() {
 	$tasks    = array();
 	$infos    = array();
@@ -791,8 +837,8 @@ function entrepot_admin_upgrade() {
 				continue;
 			}
 
-			$tasks[ $kr ][ $repo_task['callback'] ] = $repo_task;
-			$tasks[ $kr ][ $repo_task['callback'] ]['message'] = sprintf( $repo_task['message'], $repo_task['count'] );
+			$tasks[ $kr ][ $repo_task['callback'] ]            = $repo_task;
+			$tasks[ $kr ][ $repo_task['callback'] ]['message'] = $repo_task['message'];
 		}
 	}
 
@@ -804,38 +850,47 @@ function entrepot_admin_upgrade() {
 			'repositories'   => $infos,
 			'entrepot_nonce' => wp_create_nonce( 'entrepot-upgrader' ),
 			'upgraded'       => __( 'Mis à niveau', 'entrepot' ),
+			'confirm'        => __( 'Attention, vous ne pourrez pas faire machine arrière à moins d\'avoir fait une sauvegarde de votre base de données. Souhaitez-vous poursuivre ?', 'entrepot' ),
 		) );
 	}
 	?>
 	<div class="wrap">
 		<h1><?php echo esc_html( _n( 'Mise à niveau', 'Mises à niveau', count( $infos ), 'entrepot' ) ); ?></h1>
 
-		<div id="entrepot-cards"></div>
+		<?php if ( empty( $tasks ) || empty( $infos ) ) : ?>
+			<p class="description"><?php esc_html_e( 'Aucune opération de mise à niveau à réaliser.', 'entrepot' ); ?></p>
 
-		<script type="text/html" id="tmpl-repository-card">
-			<div class="repository-info">
-				<# if ( data.icon ) { #>
-					<img src="{{data.icon}}" width="100px" height="100px">
-				<# } #>
+		<?php else : ?>
+			<p class="description"><?php esc_html_e( 'Une fois votre base de données sauvegardée, utilisez le bouton de Mise à niveau pour procéder aux opérations correspondantes.', 'entrepot' ); ?></p>
 
-				<h2>{{data.name}}</h2>
-				<p class="description">{{data.description}}</p>
+			<div id="entrepot-cards"></div>
 
-				<button type="button" class="button secondary button repository-do-upgrade" data-slug="{{data.slug}}">
-					<?php esc_html_e( 'Mettre à niveau', 'bp-reshare' ); ?>
-				</button>
-			</div>
-			<div class="repository-tasks"></div>
-		</script>
+			<script type="text/html" id="tmpl-repository-card">
+				<div class="repository-info">
+					<# if ( data.icon ) { #>
+						<img src="{{data.icon}}" width="100px" height="100px">
+					<# } #>
 
-		<script type="text/html" id="tmpl-progress-window">
-			<div id="{{data.id}}">
-				<div class="task-description">{{data.message}}</div>
-				<div class="upgrade-progress">
-					<div class="upgrade-bar"></div>
+					<h2>{{data.name}}</h2>
+					<p class="description">{{data.description}}</p>
+
+					<button type="button" class="button secondary button repository-do-upgrade" data-slug="{{data.slug}}">
+						<?php esc_html_e( 'Mettre à niveau', 'bp-reshare' ); ?>
+					</button>
 				</div>
-			</div>
-		</script>
+				<div class="repository-tasks"></div>
+			</script>
+
+			<script type="text/html" id="tmpl-progress-window">
+				<div id="{{data.id}}">
+					<div class="task-description">{{data.message}}</div>
+					<div class="upgrade-progress">
+						<div class="upgrade-bar"></div>
+					</div>
+				</div>
+			</script>
+
+		<?php endif ; ?>
 	</div>
 	<?php
 }
