@@ -443,11 +443,20 @@ function entrepot_get_repository_dependencies( $dependencies = array() ) {
 	return $dependencies_data;
 }
 
+/**
+ * Gets the repositories upgrade tasks.
+ *
+ * @since 1.1.0
+ *
+ * @return array The list of upgrade tasks to perform for each repository.
+ */
 function entrepot_get_upgrader_tasks() {
 	$upgrade = array();
 
 	/**
-	 * Filter here to populate your upgrade tasks
+	 * Filter here to populate your upgrade tasks.
+	 *
+	 * @since 1.1.0
 	 *
 	 * @param array $value list of tasks to perform
 	 *
