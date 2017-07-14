@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Entrepôt 1.1.0-beta1\n"
 "Report-Msgid-Bugs-To: https://github.com/imath/entrepot/issues\n"
-"POT-Creation-Date: 2017-07-10 21:30:11+00:00\n"
+"POT-Creation-Date: 2017-07-14 13:49:55+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -25,129 +25,197 @@ msgstr ""
 msgid "Un problème est survenu lors de la récupération des dépôts de plugin."
 msgstr ""
 
-#: inc/admin.php:151 inc/admin.php:152
+#: inc/admin.php:156 inc/admin.php:157
 msgid "Dépôts"
+msgstr ""
+
+#: inc/admin.php:169
+msgid "Mise à niveau des Extensions"
+msgstr ""
+
+#: inc/admin.php:170 inc/admin.php:878
+msgid "Mettre à niveau"
 msgstr ""
 
 #. Plugin Name of the plugin/theme
 msgid "Entrepôt"
 msgstr ""
 
-#: inc/admin.php:284
+#: inc/admin.php:327
 msgid "Liste des dépôts"
 msgstr ""
 
-#: inc/admin.php:304
+#: inc/admin.php:347
 msgid "Installer maintenant"
 msgstr ""
 
-#: inc/admin.php:304
+#: inc/admin.php:347
 msgid "Installer"
 msgstr ""
 
-#: inc/admin.php:307
+#: inc/admin.php:350
 msgid "Mettre à jour maintenant"
 msgstr ""
 
-#: inc/admin.php:307
+#: inc/admin.php:350
 msgid "Mettre à jour"
 msgstr ""
 
-#: inc/admin.php:310
+#: inc/admin.php:353
 msgid "Activer sur le réseau"
 msgstr ""
 
-#: inc/admin.php:310
+#: inc/admin.php:353
 msgid "Activer"
 msgstr ""
 
-#: inc/admin.php:313
+#: inc/admin.php:356
 msgid "Actif"
 msgstr ""
 
-#: inc/admin.php:316
+#: inc/admin.php:359
 msgid "Installé"
 msgstr ""
 
-#: inc/admin.php:322
+#: inc/admin.php:365
 msgid "Plus de détails"
 msgstr ""
 
-#: inc/admin.php:337 inc/admin.php:568
+#: inc/admin.php:380 inc/admin.php:611
 msgid "Dépendance(s) insatisfaite(s):"
 msgstr ""
 
-#: inc/admin.php:369
+#: inc/admin.php:412
 msgid "Détails du dépôt"
 msgstr ""
 
-#: inc/admin.php:388
+#: inc/admin.php:431
 msgid "Détails de la mise à jour"
 msgstr ""
 
-#: inc/admin.php:397
+#: inc/admin.php:440
 msgid ""
 "Désolé ce dépôt n'a pas inclu d'informations de mise à jour pour cette "
 "version."
 msgstr ""
 
-#: inc/admin.php:406
+#: inc/admin.php:449
 msgid ""
 "Désolé, les détails concernant ce dépôt ne sont pas disponibles pour le "
 "moment."
 msgstr ""
 
-#: inc/admin.php:469
+#: inc/admin.php:512
 msgid "Rapporter une anomalie"
 msgstr ""
 
-#: inc/admin.php:470
+#: inc/admin.php:513
 msgid "Voir sur Github"
 msgstr ""
 
-#: inc/admin.php:471
+#: inc/admin.php:514
 msgid "Contribuer"
 msgstr ""
 
-#: inc/admin.php:472
+#: inc/admin.php:515
 msgid "Signaler"
 msgstr ""
 
-#: inc/admin.php:667
+#: inc/admin.php:706
+msgid "%d extension nécessite une mise à niveau"
+msgid_plural "%d extensions nécessitent une mise à niveau."
+msgstr[0] ""
+msgstr[1] ""
+
+#: inc/admin.php:707
+msgid ""
+"Merci de visiter la page d'administration des %s pour effecuer les "
+"opérations nécessaires."
+msgstr ""
+
+#: inc/admin.php:709
+msgid "mises à niveau"
+msgstr ""
+
+#: inc/admin.php:725
 msgid "<span class=\"count\">%d</span> Alerte"
 msgid_plural "<span class=\"count\">%d</span> Alertes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/admin.php:669
+#: inc/admin.php:727
 msgid "<span class=\"count\">%d</span> Mise à niveau"
 msgid_plural "<span class=\"count\">%d</span> Mises à niveau"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/admin.php:670
+#: inc/admin.php:728
 msgid "<span class=\"count\">%d</span> Info"
 msgid_plural "<span class=\"count\">%d</span> Infos"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/admin.php:671
+#: inc/admin.php:729
 msgid "<span class=\"count\">%d</span> Erreur"
 msgid_plural "<span class=\"count\">%d</span> Erreurs"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/admin.php:673
+#: inc/admin.php:731
 msgid "Ne plus afficher cette alerte"
 msgstr ""
 
-#: inc/admin.php:691
+#: inc/admin.php:749
 msgid ""
 "Voici votre nouveau gestionnaires d'alertes. Toutes vos prochaines alertes "
 "s'y afficheront. Les alertes d'information ou d'erreur peuvent être "
 "définitivement supprimée grâce à l'icône poubelle. Prenez garde, malgré "
 "tout, à ne supprimer que ce que vous considérez comme étant des éléments "
 "indésirables."
+msgstr ""
+
+#: inc/admin.php:773
+msgid "La mise à niveau a été interrompue en raison d'une erreur."
+msgstr ""
+
+#: inc/admin.php:786
+msgid "Vous n'êtes pas autorisé à réaliser cette mise à niveau."
+msgstr ""
+
+#: inc/admin.php:791
+msgid "La fonction de mise à niveau pour cette tâche est inexistante."
+msgstr ""
+
+#: inc/admin.php:824
+msgid "%d tâche de mise à niveau à effectuer."
+msgid_plural "%d tâches de mise à niveau à effectuer."
+msgstr[0] ""
+msgstr[1] ""
+
+#: inc/admin.php:852
+msgid "Mis à niveau"
+msgstr ""
+
+#: inc/admin.php:853
+msgid ""
+"Attention, vous ne pourrez pas faire machine arrière à moins d'avoir fait "
+"une sauvegarde de votre base de données. Souhaitez-vous poursuivre ?"
+msgstr ""
+
+#: inc/admin.php:858
+msgid "Mise à niveau"
+msgid_plural "Mises à niveau"
+msgstr[0] ""
+msgstr[1] ""
+
+#: inc/admin.php:861
+msgid "Aucune opération de mise à niveau à réaliser."
+msgstr ""
+
+#: inc/admin.php:864
+msgid ""
+"Une fois votre base de données sauvegardée, utilisez le bouton de Mise à "
+"niveau pour procéder aux opérations correspondantes."
 msgstr ""
 
 #: inc/classes/class-entrepot-atom.php:64
@@ -187,7 +255,7 @@ msgstr ""
 msgid "https://imathi.eu/"
 msgstr ""
 
-#: inc/admin.php:195
+#: inc/admin.php:222
 msgctxt "plugin"
 msgid "De %s"
 msgstr ""
