@@ -150,30 +150,38 @@ function entrepot_admin_add_menu() {
 	$entrepot = entrepot();
 	$entrepot->upgrades = entrepot_get_upgrader_tasks();
 
-	$screens = array(
-		'admin' => array(
+	// Init an empty array for admin screens
+	$screens = array();
+
+	// The admin screen should not be displayed in subsites.
+	if ( ! is_multisite() || 'network_admin_menu' === current_action() ) {
+		$screens['admin'] = array(
 			'page_hook' => add_plugins_page(
 				__( 'Dépôts', 'entrepot' ),
 				__( 'Dépôts', 'entrepot' ),
-				'manage_options',
+				'install_plugins',
 				'repositories',
 				'entrepot_admin_menu'
 			),
 			'load_callback' => 'entrepot_admin_send_json',
-		),
-	);
+		);
+	}
 
 	if ( $entrepot->upgrades ) {
 		$screens['upgrades'] = array(
 			'page_hook' =>add_plugins_page(
 				__( 'Mise à niveau des Extensions', 'entrepot' ),
 				__( 'Mettre à niveau', 'entrepot' ),
-				'manage_options',
+				'install_plugins',
 				'upgrade-repositories',
 				'entrepot_admin_upgrade'
 			),
 			'load_callback' => 'entrepot_admin_upgrade_load',
 		);
+	}
+
+	if ( empty( $screens ) ) {
+		return;
 	}
 
 	foreach ( $screens as $screen ) {
@@ -701,7 +709,8 @@ function entrepot_catch_all_notices() {
 
 	$repository_upgrades_count = count( entrepot()->upgrades );
 
-	if ( $repository_upgrades_count ) {
+	// Only display the notice to people who can access the screen.
+	if ( $repository_upgrades_count && current_user_can( 'install_plugins' ) ) {
 		array_push( $entrepot_notices['upgrade'], sprintf( '<p>%1$s. %2$s</p>',
 			sprintf( _n( '%d extension nécessite une mise à niveau', '%d extensions nécessitent une mise à niveau.', $repository_upgrades_count, 'entrepot' ), $repository_upgrades_count ),
 			sprintf( __( 'Merci de visiter la page d\'administration des %s pour effecuer les opérations nécessaires.', 'entrepot' ), sprintf( '<a href="%1$s">%2$s</a>',

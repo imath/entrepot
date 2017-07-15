@@ -22,12 +22,13 @@ add_action( 'admin_init',          'entrepot_admin_init',       999 );
 add_action( 'entrepot_admin_init', 'entrepot_admin_updater'         );
 add_action( 'plugins_loaded',      'entrepot_setup_cache_group'     );
 
+// Always hook these, even in multisite configs.
+add_action( 'admin_menu',          'entrepot_admin_add_menu'             );
+add_filter( 'plugin_action_links', 'entrepot_plugin_action_links', 10, 3 );
+
 if ( is_multisite() ) {
 	add_action( 'network_admin_menu',                'entrepot_admin_add_menu'             );
 	add_filter( 'network_admin_plugin_action_links', 'entrepot_plugin_action_links', 10, 3 );
-} else {
-	add_action( 'admin_menu',          'entrepot_admin_add_menu'             );
-	add_filter( 'plugin_action_links', 'entrepot_plugin_action_links', 10, 3 );
 }
 
 add_action( 'admin_head',      'entrepot_admin_head'                            );
