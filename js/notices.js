@@ -131,6 +131,10 @@ window.entrepot = window.entrepot || {};
 		injectNoticesCenter: function() {
 			var self = this;
 
+			if ( ! $( '#screen-meta-links' ).length ) {
+				$( '#screen-meta' ).after( $( '<div></div>' ).prop( 'id', 'screen-meta-links' ) );
+			}
+
 			$( '#screen-meta' ).append(
 				$( '<div></div>' ).prop( { id: 'screen-entrepot-notices-wrap', tabindex: '-1' } )
 				                  .addClass( 'hidden' )
