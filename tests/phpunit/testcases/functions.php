@@ -262,4 +262,161 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 
 		$this->assertSame( array( 'Foo Bar Plugin', 'Taz Plugin' ), $dependencies_data );
 	}
+
+	/**
+	 * @group upgrades
+	 */
+	public function test_entrepot_get_upgrader_tasks_filter() {
+		global $test_upgrade_db_version;
+		$reset_global = $test_upgrade_db_version;
+
+		$test_upgrade_db_version = '1.0.0';
+
+		require_once( PR_TESTING_ASSETS . '/test-upgrade.php' );
+
+		add_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+		add_filter( 'entrepot_add_upgrader_tasks', 'test_upgrade_add_upgrade_routines' );
+
+		$upgrade = entrepot_get_upgrader_tasks();
+
+		$this->assertTrue( isset( $upgrade['test-upgrade'] ) );
+		$this->assertTrue( isset( $upgrade['test-upgrade']['info']['icon'] ) );
+		$this->assertTrue( 1 === count( $upgrade['test-upgrade']['tasks'] ) );
+
+		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+		remove_filter( 'entrepot_add_upgrader_tasks', 'test_upgrade_add_upgrade_routines' );
+		$test_upgrade_db_version = $reset_global;
+	}
+
+	/**
+	 * @group upgrades
+	 */
+	public function test_entrepot_get_upgrader_tasks_filter_none() {
+		global $test_upgrade_db_version;
+		$reset_global = $test_upgrade_db_version;
+
+		$test_upgrade_db_version = '2.0.0';
+
+		require_once( PR_TESTING_ASSETS . '/test-upgrade.php' );
+
+		add_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+		add_filter( 'entrepot_add_upgrader_tasks', 'test_upgrade_add_upgrade_routines' );
+
+		$upgrade = entrepot_get_upgrader_tasks();
+
+		$this->assertFalse( isset( $upgrade['test-upgrade'] ) );
+
+		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+		remove_filter( 'entrepot_add_upgrader_tasks', 'test_upgrade_add_upgrade_routines' );
+		$test_upgrade_db_version = $reset_global;
+	}
+
+	/**
+	 * @group upgrades
+	 */
+	public function test_entrepot_register_upgrade_tasks() {
+		$reset = entrepot()->upgrades;
+
+		entrepot_register_upgrade_tasks( 'foo-bar', '1.0.0', array(
+			'1.1.0' => array( array(
+				'callback' => '__return_true',
+				'count'    => '__return_true',
+				'message'  => 'foobar',
+				'number'   => 1,
+			), ),
+		) );
+
+		entrepot_register_upgrade_tasks( 'bar-foo', '1.0.0', array(
+			'1.1.0' => array( array(
+				'callback' => '__return_true',
+				'count'    => '__return_true',
+				'message'  => 'barfoo',
+				'number'   => 1,
+			), ),
+		) );
+
+		$this->assertSame( array( 'foo-bar', 'bar-foo' ), array_keys( wp_list_pluck( entrepot()->upgrades, 'slug' ) ) );
+
+		entrepot()->upgrades = $reset;
+	}
+
+	/**
+	 * @group upgrades
+	 */
+	public function test_entrepot_register_upgrade_tasks_unique_slug() {
+		$reset = entrepot()->upgrades;
+
+		entrepot_register_upgrade_tasks( 'foo-bar', '1.0.0', array(
+			'1.1.0' => array( array(
+				'callback' => '__return_true',
+				'count'    => '__return_true',
+				'message'  => 'foobar',
+				'number'   => 1,
+			), ),
+		) );
+
+		entrepot_register_upgrade_tasks( 'foo-bar', '1.0.0', array(
+			'1.1.0' => array( array(
+				'callback' => '__return_true',
+				'count'    => '__return_true',
+				'message'  => 'barfoo',
+				'number'   => 1,
+			), ),
+		) );
+
+		$this->assertTrue( 'foobar' === entrepot()->upgrades['foo-bar']->tasks['1.1.0'][0]['message'] );
+
+		entrepot()->upgrades = $reset;
+	}
+
+	/**
+	 * @group upgrades
+	 */
+	public function test_entrepot_unregister_upgrade_tasks() {
+		$reset = entrepot()->upgrades;
+
+		entrepot_register_upgrade_tasks( 'foo-bar', '1.0.0', array(
+			'1.1.0' => array( array(
+				'callback' => '__return_true',
+				'count'    => '__return_true',
+				'message'  => 'foobar',
+				'number'   => 1,
+			), ),
+		) );
+
+		entrepot_unregister_upgrade_tasks( 'foo-bar' );
+		
+		$this->assertEmpty( entrepot()->upgrades );
+	}
+
+	/**
+	 * @group upgrades
+	 */
+	public function test_entrepot_get_upgrader_tasks_action() {
+		global $test_upgrade_db_version;
+		$reset_global = $test_upgrade_db_version;
+		$reset = entrepot()->upgrades;
+
+		$test_upgrade_db_version = '1.0.0';
+
+		require_once( PR_TESTING_ASSETS . '/test-upgrade.php' );
+
+		add_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+		add_filter( 'entrepot_add_upgrader_tasks', 'test_upgrade_add_upgrade_routines' );
+
+		$upgrade_filter = entrepot_get_upgrader_tasks();
+
+		remove_filter( 'entrepot_add_upgrader_tasks', 'test_upgrade_add_upgrade_routines' );
+		add_action( 'entrepot_register_upgrade_tasks', 'test_upgrade_register_upgrade_routines' );
+
+		$upgrade_action = entrepot_get_upgrader_tasks();
+
+		$this->assertEquals( $upgrade_action, $upgrade_filter );
+
+		remove_action( 'entrepot_register_upgrade_tasks', 'test_upgrade_register_upgrade_routines' );
+		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+
+		$test_upgrade_db_version = $reset_global;
+		entrepot()->upgrades = $reset;
+	}
 }

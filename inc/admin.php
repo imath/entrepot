@@ -148,6 +148,8 @@ function entrepot_admin_send_json() {
  */
 function entrepot_admin_add_menu() {
 	$entrepot = entrepot();
+
+	// Get upgrade tasks if any.
 	$entrepot->upgrades = entrepot_get_upgrader_tasks();
 
 	// Init an empty array for admin screens

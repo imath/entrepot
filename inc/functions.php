@@ -475,6 +475,76 @@ function entrepot_get_repository_dependencies( $dependencies = array() ) {
 }
 
 /**
+ * Registers new upgrade tasks.
+ *
+ * @see https://github.com/imath/entrepot/wiki/03-Enjoying-the-Entrepôt-Upgrade-API for more infos.
+ *
+ * @since 1.1.0
+ *
+ * @param  string  $slug       The Entrepôt registered plugin slug. Required.
+ * @param  string  $db_version The Current DB version for the Entrepôt registered plugin slug. Required.
+ * @param  array   $tasks      The list of upgrade tasks for the Entrepôt registered plugin. Required.
+ * @return boolean             True if the Tasks were successfully registered false otherwise.
+ */
+function entrepot_register_upgrade_tasks( $slug = '', $db_version = '', $tasks = array() ) {
+	$entrepot = entrepot();
+
+	if ( ! $slug || ! $db_version || ! $tasks ) {
+		return false;
+	}
+
+	if ( isset( $entrepot->upgrades[ $slug ] ) ) {
+		return false;
+	}
+
+	/**
+	 * NB: Tasks should be an array keyed by version number containing arrays of parameters
+	 *
+	 * eg: array( '1.1.0', array(
+	 * 	array(
+	 * 	 @type string  $callback The Upgrade routine
+	 *	 @type integer $count    The total number of items to upgrade
+	 *	 @type string  $message  The message to display in the progress bar
+	 *	 @type integer $number   Number of items to upgrade per ajax request,
+	 * 	),
+	 * 	array(
+	 * 	 @type string  $callback The Upgrade routine
+	 *	 @type integer $count    The total number of items to upgrade
+	 *	 @type string  $message  The message to display in the progress bar
+	 *	 @type integer $number   Number of items to upgrade per ajax request,
+	 * 	),
+	 * 	etc..
+	 * ) );
+	 */
+	$entrepot->upgrades = array_merge( $entrepot->upgrades, array( $slug => (object) array(
+		'slug'       => $slug,
+		'db_version' => $db_version,
+		'tasks'      => (array) $tasks,
+	) ) );
+
+	return true;
+}
+
+/**
+ * Unregister a specific plugin's upgrade tasks.
+ *
+ * @since 1.1.0
+ *
+ * @param  string  $slug The Entrepôt registered plugin slug. Required.
+ * @return boolean       True if the Tasks were successfully unregistered false otherwise.
+ */
+function entrepot_unregister_upgrade_tasks( $slug = '' ) {
+	$entrepot = entrepot();
+
+	if ( ! $slug || ! isset( $entrepot->upgrades[ $slug ] ) ) {
+		return false;
+	}
+
+	unset( $entrepot->upgrades[ $slug ] );
+	return true;
+}
+
+/**
  * Gets the repositories upgrade tasks.
  *
  * @since 1.1.0
@@ -483,6 +553,13 @@ function entrepot_get_repository_dependencies( $dependencies = array() ) {
  */
 function entrepot_get_upgrader_tasks() {
 	$upgrade = array();
+
+	/**
+	 * Hook here to register your uprade tasks.
+	 *
+	 * @since 1.1.0
+	 */
+	do_action( 'entrepot_register_upgrade_tasks' );
 
 	/**
 	 * Filter here to populate your upgrade tasks.
@@ -497,18 +574,18 @@ function entrepot_get_upgrader_tasks() {
 	 *		$tasks       array (
 	 *			A list of arguments for each plugin version
 	 *			$version array (
-	 * 			 $callback  string The Upgrade routine
-	 *			 $count     int    The total number of items to upgrade
-	 *			 $message   string The message to display in the progress bar
-	 *			 $number    int    Number of items to upgrade per ajax request,
+	 * 			 @type string  $callback The Upgrade routine
+	 *			 @type integer $count    The total number of items to upgrade
+	 *			 @type string  $message  The message to display in the progress bar
+	 *			 @type integer $number   Number of items to upgrade per ajax request,
 	 *      )
 	 *    )
 	 * ) )
 	 */
-	$tasks = (array) apply_filters( 'entrepot_add_upgrader_tasks', array() );
+	$tasks = (array) apply_filters( 'entrepot_add_upgrader_tasks', entrepot()->upgrades );
 
 	foreach ( $tasks as $t ) {
-		$repository = entrepot_get_repositories( $t->slug );
+		$repository = entrepot_get_repository_json( $t->slug );
 
 		if ( ! $repository ) {
 			continue;
@@ -530,6 +607,10 @@ function entrepot_get_upgrader_tasks() {
 				'icon' => true,
 				'slug' => true,
 			) );
+
+			if ( empty( $upgrade[ $t->slug ]['info']['icon'] ) ) {
+				$upgrade[ $t->slug ]['info']['icon'] = esc_url_raw( entrepot_assets_url() . 'repo.svg' );
+			}
 		}
 	}
 
