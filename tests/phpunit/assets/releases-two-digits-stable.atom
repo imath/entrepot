@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" xml:lang="en-US">
+  <id>tag:github.com,2008:https://github.com/imath/test-plugin/releases</id>
+  <link type="text/html" rel="alternate" href="https://github.com/imath/test-plugin/releases"/>
+  <link type="application/atom+xml" rel="self" href="https://github.com/imath/test-plugin/releases.atom"/>
+  <title>Release notes from test-plugin</title>
+  <updated>2017-05-23T16:42:21Z</updated>
+  <entry>
+    <id>tag:github.com,2008:Repository/91361325/1.1</id>
+    <updated>2017-05-23T19:51:55Z</updated>
+    <link rel="alternate" type="text/html" href="/imath/test-plugin/releases/tag/1.1"/>
+    <title>Test Plugin 1.1</title>
+    <content type="html">Test plugin changelog for 1.1</content>
+    <author>
+      <name>imath</name>
+    </author>
+    <media:thumbnail height="30" width="30" url="https://avatars1.githubusercontent.com/u/1834524?v=3&amp;s=60"/>
+  </entry>
+</feed>

@@ -209,6 +209,34 @@ function entrepot_get_repository_slug( $path = '' ) {
 }
 
 /**
+ * Make sure a version string is standardized.
+ *
+ * @since 1.1.0
+ *
+ * @param  string $version The version number to standardize.
+ * @return false|string    The standardized version or false on fail.
+ */
+function entrepot_get_standardized_version_number( $version = '' ) {
+	$return        = false;
+	$version_count = count( explode( '.', $version ) );
+
+	if ( 3 === $version_count ) {
+		$return = $version;
+
+	} elseif ( 3 > $version_count ) {
+		while ( 3 !== count( explode( '.', $version ) ) ) {
+			$version .= '.0';
+		}
+
+		$return = $version;
+	} else {
+		error_log( 'Version numbers should be standardized like \'1.0.0\'' );
+	}
+
+	return $version;
+}
+
+/**
  * Checks with the Github releases of the Repository if there a new stable version available.
  *
  * @since 1.0.0
@@ -260,7 +288,10 @@ function entrepot_get_plugin_latest_stable_release( $atom_url = '', $plugin = ar
 		);
 
 		if ( ! empty( $plugin['Version'] ) ) {
-			if ( version_compare( $tag, $plugin['Version'], '<=' ) ) {
+			$std_tag     = entrepot_get_standardized_version_number( $tag );
+			$std_version = entrepot_get_standardized_version_number( $plugin['Version'] );
+
+			if ( ! $std_tag || ! $std_version || version_compare( $std_tag, $std_version, '<=' ) ) {
 				continue;
 			}
 

@@ -37,6 +37,72 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 	/**
 	 * @group update
 	 */
+	public function test_entrepot_get_plugin_latest_stable_release_two_digits_in_atom_for_update() {
+		$stable = PR_TESTING_ASSETS . '/releases-two-digits-stable.atom';
+
+		add_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+
+		$json = entrepot_get_repository_json( 'test-plugin' );
+
+		$release = entrepot_get_plugin_latest_stable_release( $stable, array(
+			'plugin'            => $json->name,
+			'slug'              => 'test-plugin',
+			'Version'           => '1.0.0',
+			'GitHub Plugin URI' => rtrim( $json->releases, '/releases' ),
+		) );
+
+		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+
+		$this->assertTrue( $release->is_update );
+	}
+
+	/**
+	 * @group update
+	 */
+	public function test_entrepot_get_plugin_latest_stable_release_two_digits_in_version_for_update() {
+		$stable = PR_TESTING_ASSETS . '/releases-stable.atom';
+
+		add_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+
+		$json = entrepot_get_repository_json( 'test-plugin' );
+
+		$release = entrepot_get_plugin_latest_stable_release( $stable, array(
+			'plugin'            => $json->name,
+			'slug'              => 'test-plugin',
+			'Version'           => '1.0',
+			'GitHub Plugin URI' => rtrim( $json->releases, '/releases' ),
+		) );
+
+		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+
+		$this->assertFalse( $release->is_update );
+	}
+
+	/**
+	 * @group update
+	 */
+	public function test_entrepot_get_plugin_latest_stable_release_no_dots_in_version_for_update() {
+		$stable = PR_TESTING_ASSETS . '/releases.atom';
+
+		add_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+
+		$json = entrepot_get_repository_json( 'test-plugin' );
+
+		$release = entrepot_get_plugin_latest_stable_release( $stable, array(
+			'plugin'            => $json->name,
+			'slug'              => 'test-plugin',
+			'Version'           => '39',
+			'GitHub Plugin URI' => rtrim( $json->releases, '/releases' ),
+		) );
+
+		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+
+		$this->assertTrue( $release->is_update );
+	}
+
+	/**
+	 * @group update
+	 */
 	public function test_entrepot_get_plugin_not_stable_release_for_update() {
 		$stable = PR_TESTING_ASSETS . '/releases-not-stable.atom';
 
