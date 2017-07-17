@@ -596,7 +596,7 @@ function entrepot_get_upgrader_tasks() {
 				if ( empty( $upgrade[ $t->slug ] ) ) {
 					$upgrade[ $t->slug ]['tasks'] = $list;
 				} else {
-					$upgrade[ $t->slug ]['tasks'] = array_merge( $upgrade[ $t->slug ], $list );
+					$upgrade[ $t->slug ]['tasks'] = array_merge( $upgrade[ $t->slug ]['tasks'], $list );
 				}
 			}
 		}

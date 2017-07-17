@@ -385,7 +385,7 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 		) );
 
 		entrepot_unregister_upgrade_tasks( 'foo-bar' );
-		
+
 		$this->assertEmpty( entrepot()->upgrades );
 	}
 
@@ -414,6 +414,32 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 		$this->assertEquals( $upgrade_action, $upgrade_filter );
 
 		remove_action( 'entrepot_register_upgrade_tasks', 'test_upgrade_register_upgrade_routines' );
+		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+
+		$test_upgrade_db_version = $reset_global;
+		entrepot()->upgrades = $reset;
+	}
+
+	/**
+	 * @group upgrades
+	 */
+	public function test_entrepot_get_upgrader_tasks_multiple_versions() {
+		global $test_upgrade_db_version;
+		$reset_global = $test_upgrade_db_version;
+		$reset = entrepot()->upgrades;
+
+		$test_upgrade_db_version = '1.9.0';
+
+		require_once( PR_TESTING_ASSETS . '/test-upgrade.php' );
+
+		add_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+		add_action( 'entrepot_register_upgrade_tasks', 'test_upgrade_register_upgrade_multiple_versions' );
+
+		$upgrade_action = entrepot_get_upgrader_tasks();
+
+		$this->assertEquals( array( 'Upgrading to 2.0.0', 'Upgrading to 2.1.0' ), wp_list_pluck( $upgrade_action['test-upgrade']['tasks'], 'message' ) );
+
+		remove_action( 'entrepot_register_upgrade_tasks', 'test_upgrade_register_upgrade_multiple_versions' );
 		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
 
 		$test_upgrade_db_version = $reset_global;

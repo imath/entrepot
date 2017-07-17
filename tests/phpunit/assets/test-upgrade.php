@@ -41,6 +41,35 @@ function test_upgrade_get_tasks() {
 	);
 }
 
+function test_upgrade_get_multiple_versions() {
+	return array(
+		'1.9.0' => array(
+			array(
+				'callback' => 'test_upgrade_dummy_task',
+				'count'    => 'test_upgrade_dummy_task',
+				'message'  => 'Upgrading to 1.9.0',
+				'number'   => 1,
+			),
+		),
+		'2.0.0' => array(
+			array(
+				'callback' => 'test_upgrade_dummy_task',
+				'count'    => 'test_upgrade_dummy_task',
+				'message'  => 'Upgrading to 2.0.0',
+				'number'   => 1,
+			),
+		),
+		'2.1.0' => array(
+			array(
+				'callback' => 'test_upgrade_dummy_task',
+				'count'    => 'test_upgrade_dummy_task',
+				'message'  => 'Upgrading to 2.1.0',
+				'number'   => 1,
+			),
+		),
+	);
+}
+
 function test_upgrade_add_upgrade_routines( $tasks = array() ) {
 	$db_version = test_upgrade_get_db_version();
 
@@ -62,4 +91,8 @@ function test_upgrade_add_upgrade_routines( $tasks = array() ) {
 
 function test_upgrade_register_upgrade_routines() {
 	entrepot_register_upgrade_tasks( 'test-upgrade', test_upgrade_get_db_version(), test_upgrade_get_tasks() );
+}
+
+function test_upgrade_register_upgrade_multiple_versions() {
+	entrepot_register_upgrade_tasks( 'test-upgrade', test_upgrade_get_db_version(), test_upgrade_get_multiple_versions() );
 }
