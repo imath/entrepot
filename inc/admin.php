@@ -735,9 +735,21 @@ function entrepot_catch_all_notices() {
 		'strings' => array(
 			'tabTitle' => sprintf( _n( '<span class="count">%d</span> Alerte', '<span class="count">%d</span> Alertes', $all_notices_count, 'entrepot' ), $all_notices_count ),
 			'tabLiTitles' => array(
-				'upgrade' => sprintf( _n( '<span class="count">%d</span> <span class="text">Mise à niveau</span>', '<span class="count">%d</span> <span class="text">Mises à niveau</span>', $upgrade_notices_count, 'entrepot' ), $upgrade_notices_count ),
-				'updated' => sprintf( _n( '<span class="count">%d</span> <span class="text">Info</span>', '<span class="count">%d</span> <span class="text">Infos</span>', $updated_notices_count, 'entrepot' ), $updated_notices_count ),
-				'error'   => sprintf( _n( '<span class="count">%d</span> <span class="text">Erreur</span>', '<span class="count">%d</span> <span class="text">Erreurs</span>', $error_notices_count, 'entrepot' ), $error_notices_count ),
+				'upgrade' => sprintf(
+					'<span class="count">%1$d</span> <span class="text">%2$s</span>',
+					$upgrade_notices_count,
+					_nx( 'Mise à niveau', 'Mises à niveau', $upgrade_notices_count, 'Admin Notices Center tab', 'entrepot' )
+				),
+				'updated' => sprintf(
+					'<span class="count">%1$d</span> <span class="text">%2$s</span>',
+					$updated_notices_count,
+					_nx( 'Info', 'Infos', $updated_notices_count, 'Admin Notices Center tab', 'entrepot' )
+				),
+				'error'   => sprintf(
+					'<span class="count">%1$d</span> <span class="text">%2$s</span>',
+					$error_notices_count,
+					_nx( 'Erreur', 'Erreurs', $error_notices_count, 'Admin Notices Center tab', 'entrepot' )
+				),
 			),
 			'trash' => __( 'Ne plus afficher cette alerte', 'entrepot' ),
 		),
