@@ -112,3 +112,31 @@
 	color: #dc3232;
 	cursor: pointer;
 }
+
+@media screen and ( max-width: 782px ) {
+	#screen-meta,
+	#screen-meta-links {
+		display: inherit !important;
+	}
+
+	/* Hidden Elements */
+	#contextual-help-link-wrap,
+	#screen-options-link-wrap,
+	#contextual-help-wrap,
+	#screen-options-wrap,
+	#entrepot-notices-columns .contextual-help-tabs li a span.text {
+		display: none;
+	}
+
+	#entrepot-notices-back {
+		left: 30px;
+	}
+
+	#entrepot-notices-columns .contextual-help-tabs {
+		max-width: 30px;
+	}
+
+	#entrepot-notices-columns .contextual-help-tabs li a {
+		padding-left: 5px;
+	}
+}

@@ -735,9 +735,9 @@ function entrepot_catch_all_notices() {
 		'strings' => array(
 			'tabTitle' => sprintf( _n( '<span class="count">%d</span> Alerte', '<span class="count">%d</span> Alertes', $all_notices_count, 'entrepot' ), $all_notices_count ),
 			'tabLiTitles' => array(
-				'upgrade' => sprintf( _n( '<span class="count">%d</span> Mise à niveau', '<span class="count">%d</span> Mises à niveau', $upgrade_notices_count, 'entrepot' ), $upgrade_notices_count ),
-				'updated' => sprintf( _n( '<span class="count">%d</span> Info', '<span class="count">%d</span> Infos', $updated_notices_count, 'entrepot' ), $updated_notices_count ),
-				'error'   => sprintf( _n( '<span class="count">%d</span> Erreur', '<span class="count">%d</span> Erreurs', $error_notices_count, 'entrepot' ), $error_notices_count ),
+				'upgrade' => sprintf( _n( '<span class="count">%d</span> <span class="text">Mise à niveau</span>', '<span class="count">%d</span> <span class="text">Mises à niveau</span>', $upgrade_notices_count, 'entrepot' ), $upgrade_notices_count ),
+				'updated' => sprintf( _n( '<span class="count">%d</span> <span class="text">Info</span>', '<span class="count">%d</span> <span class="text">Infos</span>', $updated_notices_count, 'entrepot' ), $updated_notices_count ),
+				'error'   => sprintf( _n( '<span class="count">%d</span> <span class="text">Erreur</span>', '<span class="count">%d</span> <span class="text">Erreurs</span>', $error_notices_count, 'entrepot' ), $error_notices_count ),
 			),
 			'trash' => __( 'Ne plus afficher cette alerte', 'entrepot' ),
 		),
