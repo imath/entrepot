@@ -2,10 +2,10 @@
 # This file is distributed under the GNU/GPL 2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Entrepôt 1.1.0-beta1\n"
+"Project-Id-Version: Entrepôt 1.1.0-rc1\n"
 "Report-Msgid-Bugs-To: https://github.com/imath/entrepot/issues\n"
-"POT-Creation-Date: 2017-07-17 17:21:24+00:00\n"
-"PO-Revision-Date: 2017-07-17 19:23+0100\n"
+"POT-Creation-Date: 2017-07-18 04:10:30+00:00\n"
+"PO-Revision-Date: 2017-07-18 06:11+0100\n"
 "Last-Translator: imath <mathchristo@yahoo.fr>\n"
 "Language-Team: imath <contact@imathi.eu>\n"
 "Language: en_US\n"

@@ -137,7 +137,7 @@ module.exports = function( grunt ) {
 						'!CONTRIBUTING.md',
 						'!CODE_OF_CONDUCT.md',
 						'!PULL_REQUEST_TEMPLATE.md',
-						'LICENSE',
+						'!LICENSE',
 						'!icon.png',
 						'!repositories/**',
 						'!suspended/**'
