@@ -9,7 +9,7 @@ Cette extension WordPress vous propose de recenser vos propres extensions gratui
 
 Les utilisateurs peuvent télécharger cette extension pour disposer d'une source alternative d'extensions gratuites.
 
-Les *auteurs* peuvent, à l'aide d'une "Pull Request" particulière référencée leurs extensions gratuites hébergées sur Github.com. Pour en savoir plus, reporter vous à la [documentation](https://github.com/imath/entrepot/wiki).
+Les *auteurs* peuvent, à l'aide d'une "Pull Request" particulière référencer leurs extensions gratuites hébergées sur Github.com. Pour en savoir plus, reporter vous à la [documentation](https://github.com/imath/entrepot/wiki).
 
 Cette extension nécessite WordPress 4.8.
 
