@@ -78,12 +78,7 @@ module.exports = function( grunt ) {
 				extDot: 'last',
 				expand: true,
 				ext: '.min.css',
-				src: ['assets/*.css', '!*.min.css'],
-				options: {
-					banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
-					'<%= grunt.template.today("UTC:yyyy-mm-dd h:MM:ss TT Z") %> - ' +
-					'https://imathi.eu/tag/entrepot */'
-				}
+				src: ['assets/*.css', '!*.min.css']
 			}
 		},
 		jsvalidate:{
@@ -111,39 +106,13 @@ module.exports = function( grunt ) {
 				}
 			}
 		},
-		compress: {
-			main: {
+		'git-archive': {
+			archive: {
 				options: {
-					archive: '<%= pkg.name %>.zip'
-				},
-				files: [{
-					expand: true,
-					src: [
-						'**/*',
-						'!node_modules/**',
-						'!npm-debug.log',
-						'!tests/**',
-						'!.editorconfig',
-						'!.git/**',
-						'!.gitignore',
-						'!.gitattributes',
-						'!grunt/**',
-						'!.jshintrc',
-						'!.jshintignore',
-						'!.travis.yml',
-						'!Gruntfile.js',
-						'!package.json',
-						'!phpunit.xml.dist',
-						'!CONTRIBUTING.md',
-						'!CODE_OF_CONDUCT.md',
-						'!PULL_REQUEST_TEMPLATE.md',
-						'!LICENSE',
-						'!icon.png',
-						'!repositories/**',
-						'!suspended/**'
-					],
-					dest: './'
-				}]
+					'format'  : 'zip',
+					'output'  : '<%= pkg.name %>.zip',
+					'tree-ish': 'HEAD@{0}'
+				}
 			}
 		}
 	} );
@@ -165,11 +134,13 @@ module.exports = function( grunt ) {
 
 	grunt.registerTask( 'shrink', ['cssmin', 'uglify', 'minjson'] );
 
+	grunt.registerTask( 'compress', ['git-archive'] );
+
 	grunt.registerTask( 'release', ['checktextdomain', 'makepot', 'clean', 'jstest', 'shrink', 'compress'] );
 
 	// Travis CI Tasks.
 	grunt.registerTask( 'travis:build', ['jstest', 'checktextdomain', 'clean:entrepot', 'minjson', 'phpunit'] );
 
 	// Default task.
-	grunt.registerTask( 'default', ['commit'] );
+	grunt.registerTask( 'default', ['checktextdomain'] );
 };
