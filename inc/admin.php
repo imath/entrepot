@@ -290,6 +290,52 @@ function entrepot_admin_repositories_tab_args( $args = false ) {
 }
 
 /**
+ * Temporary private function to fix WordPress Plugin Updates count
+ * on the Plugin Install screen.
+ *
+ * @see  https://core.trac.wordpress.org/ticket/41407
+ *
+ * @since  1.1.0
+ */
+function _entrepot_admin_fix_plugin_updates_count() {
+	$updates = get_site_transient( 'update_plugins' );
+
+	if ( empty( $updates->response ) ) {
+		return;
+	}
+
+	$installed_repositories = array_keys( entrepot_get_installed_repositories() );
+	$repository_updates     = array();
+	$js_plugins             = array_fill_keys(
+		array( 'all', 'search', 'active', 'inactive', 'recently_activated', 'mustuse', 'dropins' ),
+		array()
+	);
+
+	if ( ! empty( $updates->checked ) ) {
+		$js_plugins['all'] = array_keys( $updates->checked );
+	}
+
+	foreach ( $updates->response as $update ) {
+		$js_plugins['upgrade'][] = $update->plugin;
+	}
+
+	$repository_updates = array_intersect( $js_plugins['upgrade'], $installed_repositories );
+
+	if ( empty( $repository_updates ) ) {
+		return;
+	}
+
+	if ( empty( $js_plugins['all'] ) ) {
+		$js_plugins['all'] = $js_plugins['upgrade'];
+	}
+
+	wp_localize_script( 'updates', '_wpUpdatesItemCounts', array(
+		'plugins' => $js_plugins,
+		'totals'  => wp_get_update_data(),
+	) );
+}
+
+/**
  * Shortcircuits the Plugins API for repositories
  *
  * @since 1.0.0
@@ -307,6 +353,14 @@ function entrepot_repositories_api( $res = false, $action = '', $args = null ) {
 			'plugins' => array(),
 			'info'    => array( 'results' => 0 ),
 		);
+
+		/**
+		 * A JavaScript Error can be thrown by WordPress as some plugin
+		 * informations are not localized. Untill the upstream ticket is not fixed
+		 * we are making sure Upgrading from the Entrepôt tab is not throwing this
+		 * error.
+		 */
+		_entrepot_admin_fix_plugin_updates_count();
 	} elseif ( 'plugin_information' === $action && ! empty( $args->slug ) ) {
 		$json = entrepot_get_repository_json( $args->slug );
 
