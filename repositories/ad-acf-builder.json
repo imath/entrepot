@@ -1,0 +1,21 @@
+{
+	"name": "AD ACF Builder",
+	"author": "anybodesign",
+	"slug": "ad-acf-builder",
+	"icon": "https://raw.githubusercontent.com/anybodesign/ad-acf-builder/master/img/icon.png",
+	"tags": [
+	  "page builder",
+	  "acf"
+	],
+	"country": "fr_FR",
+	"releases": "https://github.com/anybodesign/ad-acf-builder/releases",
+	"issues": "https://github.com/anybodesign/ad-acf-builder/issues",
+	"description": {
+		"en_US" : "Add a Page Builder to your pages and posts, based on ACF flexible fields.",
+		"fr_FR" : "Ajoute un constructeur de page à vos pages et articles, basés sur les champs flexibles ACF.."
+	},
+	"dependencies": [
+		{ "acf_add_local_field_group": "Advanced Custom Fields Pro 5.6+" }
+	],
+	"README": "https://raw.githubusercontent.com/anybodesign/ad-acf-builder/master/readme.md"
+}
