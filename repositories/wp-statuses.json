@@ -14,5 +14,9 @@
 		"en_US" : "Add custom statuses very easily to your post types.",
 		"fr_FR" : "Ajoutez, très simplement, des statuts personnalisés à vos types de contenu."
 	},
-	"README": "https://raw.githubusercontent.com/imath/wp-statuses/master/README.md"
+	"README": "https://raw.githubusercontent.com/imath/wp-statuses/master/README.md",
+	"urls": {
+		"history": "https://raw.githubusercontent.com/imath/wp-statuses/master/CHANGELOG.md",
+		"donate": "https://paypal.me/imath"
+	}
 }

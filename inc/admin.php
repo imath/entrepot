@@ -461,6 +461,7 @@ function entrepot_admin_repositories_print_templates() {
  * Displays the repository's modal content.
  *
  * @since 1.0.0
+ * @since 1.2.0 Use a split button to list all Repository links.
  *
  * @return string The repository's modal content.
  */
@@ -479,7 +480,12 @@ function entrepot_admin_repository_information() {
 		'context' => 'repository_information',
 	);
 
-	if ( isset( $_REQUEST['section'] ) && 'changelog' === $_REQUEST['section'] ) {
+	$section  = '';
+	if ( isset( $_REQUEST['section'] ) ) {
+		$section = $_REQUEST['section'];
+	}
+
+	if ( 'changelog' === $section ) {
 		$repository_updates = get_site_transient( 'update_plugins' );
 
 		if ( empty( $repository_updates->response ) ) {
@@ -510,11 +516,51 @@ function entrepot_admin_repository_information() {
 			return;
 		}
 
-		$output['text'] = __( 'Désolé, les détails concernant ce dépôt ne sont pas disponibles pour le moment.', 'entrepot' );
-		$has_readme     = false;
+		$output['text']  = __( 'Désolé, les détails concernant ce dépôt ne sont pas disponibles pour le moment.', 'entrepot' );
+		$uri             = '';
+		$sections        = array();
+		$allowed_section = array(
+			'donate'  => __( 'Faire une donation', 'entrepot' ),
+			'history' => __( 'Voir l\'historique', 'entrepot' ),
+			'wiki'    => __( 'Lire la documentation', 'entrepot' ),
+		);
 
-		if ( ! empty( $repository_data->README ) ) {
-			$request  = wp_remote_get( $repository_data->README, array(
+		if ( ! empty( $repository_data->urls ) ) {
+			foreach ( (array) $repository_data->urls as $k_url => $v_url ) {
+				// Validate sections.
+				if ( ! isset( $allowed_section[ $k_url ] ) ) {
+					continue;
+				}
+
+				$sections[ $k_url ] = array(
+					'text' => $allowed_section[ $k_url ],
+					'type' => 'external',
+					'url'  => $v_url,
+				);
+
+				$is_md = wp_check_filetype( $v_url, array( 'md' => 'text/x-markdown' ) );
+				if ( 'md' === $is_md['ext'] ) {
+					$sections[ $k_url ]['type'] = 'iframe';
+				}
+			}
+		}
+
+		if ( isset( $repository_data->README ) ) {
+			$uri = $repository_data->README;
+
+			array_unshift( $sections, array(
+				'text' => __( 'Présentation', 'entrepot' ),
+				'type' => 'iframe',
+				'url'  => $repository_data->README,
+			) );
+		}
+
+		if ( $section && isset( $sections[ $section ] ) ) {
+			$uri = $sections[ $section ]['url'];
+		}
+
+		if ( $uri ) {
+			$request  = wp_remote_get( $uri, array(
 				'timeout'    => 30,
 				'user-agent' => 'Entrepôt/WordPress-Plugin-Updater; ' . get_bloginfo( 'url' ),
 			) );
@@ -533,6 +579,14 @@ function entrepot_admin_repository_information() {
 		array( 'common' ),
 		entrepot_version()
 	);
+	wp_add_inline_script( 'common', '
+		( function( $ ) {
+			$( \'#plugin-information-footer .split-button\' ).on( \'click\', \'.split-button-toggle\', function( event ) {
+				$( event.delegateTarget ).toggleClass( \'is-open\' );
+			} );
+		} )( jQuery );
+	' );
+
 	iframe_header( strip_tags( $output['title'] ) ); ?>
 
 	<div id="plugin-information-scrollable" class="entrepot">
@@ -571,12 +625,47 @@ function entrepot_admin_repository_information() {
 		}
 
 		$flag_url = add_query_arg( 'repository', $plugin, $imathieu );
+
+		$sections = array_merge( array(
+			'issues' => array(
+				'text' => __( 'Rapporter une anomalie', 'entrepot' ),
+				'type' => 'external',
+				'url'  => $repository_data->issues,
+			),
+			'pulls' => array(
+				'text' => __( 'Contribuer', 'entrepot' ),
+				'type' => 'external',
+				'url'  => $base_url . 'pulls',
+			),
+		), $sections );
 	?>
 		<div id='<?php echo esc_attr( $tab ); ?>-footer'>
-			<a class="button button-primary right" href="<?php echo esc_url( $repository_data->issues ); ?>" target="_blank"><?php esc_html_e( 'Rapporter une anomalie', 'entrepot' ); ?></a>
-			<a class="button button-secondary" href="<?php echo esc_url( $base_url ); ?>" target="_blank"><?php esc_html_e( 'Voir sur Github', 'entrepot' ); ?></a>
-			<a class="button button-secondary" href="<?php echo esc_url( $base_url . 'pulls' ); ?>" target="_blank"><?php esc_html_e( 'Contribuer', 'entrepot' ); ?></a>
-			<a class="button button-primary entrepot-warning" href="<?php echo esc_url( $flag_url ); ?>#respond" target="_blank"><?php esc_html_e( 'Signaler', 'entrepot' ); ?></a>
+			<div class="split-button">
+				<div class="split-button-head">
+					<a href="<?php echo esc_url( $base_url ); ?>" target="_blank" class="button split-button-primary" aria-live="polite"><?php esc_html_e( 'Voir sur Github', 'entrepot' ); ?></a>
+					<button type="button" class="split-button-toggle" aria-haspopup="true" aria-expanded="false">
+						<i class="dashicons dashicons-arrow-down-alt2"></i>
+						<span class="screen-reader-text"><?php esc_html_e( 'Plus d\'actions', 'entrepot' ); ?></span>
+					</button>
+				</div>
+				<ul class="split-button-body">
+					<?php foreach( $sections as $k_section => $d_section ) :
+						$link   = $d_section['url'];
+						$target = ' target="_blank"';
+
+						if ( 'iframe' === $d_section['type'] ) {
+							$link   = add_query_arg( array( 'tab' => 'plugin-information', 'section' => $k_section ) );
+							$target = '';
+						}
+						?>
+						<li>
+							<?php printf( '<a href="%1$s"%2$s class="button-link %3$s-button split-button-option">%4$s</a>', esc_url( $link ), $target, esc_attr( $k_section ), esc_html( $d_section['text'] ) ); ?>
+						</li>
+					<?php endforeach; ?>
+				</ul>
+			</div>
+
+			<a class="button button-primary entrepot-warning right" href="<?php echo esc_url( $flag_url ); ?>#respond" target="_blank"><?php esc_html_e( 'Signaler', 'entrepot' ); ?></a>
 		</div>
 	<?php endif ; ?>
 

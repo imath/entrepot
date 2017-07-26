@@ -14,5 +14,10 @@
 		"en_US" : "Entrepôt, a list of free Github.com hosted plugins.",
 		"fr_FR" : "Entrepôt, une liste d'extensions gratuites hébergées sur Github.com."
 	},
-	"README": "https://raw.githubusercontent.com/imath/entrepot/master/README.md"
+	"README": "https://raw.githubusercontent.com/imath/entrepot/master/README.md",
+	"urls": {
+		"history": "https://raw.githubusercontent.com/imath/entrepot/master/CHANGELOG.md",
+		"donate": "https://paypal.me/imath",
+		"wiki": "https://github.com/imath/entrepot/wiki"
+	}
 }
