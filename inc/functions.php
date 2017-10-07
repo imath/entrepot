@@ -318,6 +318,12 @@ function entrepot_get_plugin_latest_stable_release( $atom_url = '', $plugin = ar
 				$tag_data->is_install = true;
 			} else {
 				$tag_data->is_update = true;
+
+				$repository_data = entrepot_get_repositories( $response['slug'] );
+
+				if ( ! empty( $repository_data->icon ) ) {
+					$tag_data->icons = array( '1x' => esc_url_raw( $repository_data->icon ) );
+				}
 			}
 		}
 
