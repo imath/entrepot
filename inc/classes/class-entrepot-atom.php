@@ -11,7 +11,7 @@
 defined( 'ABSPATH' ) || exit;
 
 if ( ! class_exists( 'AtomParser') ) {
-	require_once( ABSPATH . WPINC . '/atomlib.php' );
+	require_once ABSPATH . WPINC . '/atomlib.php';
 }
 
 /**

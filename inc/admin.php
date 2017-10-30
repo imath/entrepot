@@ -48,7 +48,7 @@ function entrepot_admin_get_repositories_list() {
 	}
 
 	if ( ! function_exists( 'install_plugin_install_status' ) ) {
-		require_once( ABSPATH . 'wp-admin/includes/plugin-install.php' );
+		require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
 	}
 
 	$thickbox_link = self_admin_url( 'plugin-install.php?tab=plugin-information&amp;plugin=%s&amp;TB_iframe=true&amp;width=600&amp;height=550' );

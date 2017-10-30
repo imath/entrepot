@@ -9,7 +9,7 @@
 class entrepot_Admin_Tests extends WP_UnitTestCase {
 
 	public function setUp() {
-		require_once( entrepot()->inc_dir . 'admin.php' );
+		require_once entrepot()->inc_dir . 'admin.php';
 
 		parent::setUp();
 	}

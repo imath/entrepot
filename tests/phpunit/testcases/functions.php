@@ -272,7 +272,7 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 
 		$test_upgrade_db_version = '1.0.0';
 
-		require_once( PR_TESTING_ASSETS . '/test-upgrade.php' );
+		require_once PR_TESTING_ASSETS . '/test-upgrade.php';
 
 		add_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
 		add_filter( 'entrepot_add_upgrader_tasks', 'test_upgrade_add_upgrade_routines' );
@@ -297,7 +297,7 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 
 		$test_upgrade_db_version = '2.0.0';
 
-		require_once( PR_TESTING_ASSETS . '/test-upgrade.php' );
+		require_once PR_TESTING_ASSETS . '/test-upgrade.php';
 
 		add_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
 		add_filter( 'entrepot_add_upgrader_tasks', 'test_upgrade_add_upgrade_routines' );
@@ -399,7 +399,7 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 
 		$test_upgrade_db_version = '1.0.0';
 
-		require_once( PR_TESTING_ASSETS . '/test-upgrade.php' );
+		require_once PR_TESTING_ASSETS . '/test-upgrade.php';
 
 		add_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
 		add_filter( 'entrepot_add_upgrader_tasks', 'test_upgrade_add_upgrade_routines' );
@@ -430,7 +430,7 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 
 		$test_upgrade_db_version = '1.9.0';
 
-		require_once( PR_TESTING_ASSETS . '/test-upgrade.php' );
+		require_once PR_TESTING_ASSETS . '/test-upgrade.php';
 
 		add_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
 		add_action( 'entrepot_register_upgrade_tasks', 'test_upgrade_register_upgrade_multiple_versions' );
