@@ -59,5 +59,30 @@ add_filter( 'entrepot_repository_modal_content', 'links_add_target'             
 // Registers REST API routes.
 add_action( 'rest_api_init', 'entrepot_rest_routes', 100 );
 
+/**
+ * Restricts the Plugins editor to only allow Plugin or custom functions file edits
+ * when they use a "Allow File Edits:" Plugin Header Tag set to true.
+ *
+ * @since 1.2.0
+ */
+function entrepot_plugins_code_editor_restrictions() {
+	/**
+	 * Filter here returning false to disable these restrictions
+	 *
+	 * @since 1.2.0
+	 *
+	 * @param boolean $value True to restrict Plugins editor. False otherwise.
+	 */
+	if ( false === apply_filters( 'entrepot_plugins_code_editor_restrictions', true ) ) {
+		return;
+	}
+
+	add_action( 'load-plugin-editor.php',         'entrepot_admin_plugin_editor_load'        );
+	add_action( 'wp_ajax_edit-theme-plugin-file', 'entrepot_ajax_before_edit_plugin_file', 0 );
+	add_action( 'admin_footer-plugin-editor.php', 'entrepot_admin_plugin_editor_footer'      );
+	add_action( 'wp_ajax_edit-theme-plugin-file', 'entrepot_ajax_after_edit_plugin_file',  2 );
+}
+add_action( 'entrepot_admin_init', 'entrepot_plugins_code_editor_restrictions' );
+
 // Load translations
 add_action( 'plugins_loaded', 'entrepot_load_textdomain', 9 );

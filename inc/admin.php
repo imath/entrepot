@@ -1169,3 +1169,97 @@ function entrepot_admin_versions() {
 
 	printf( '<div class="wrap"><h1>%1$s</h1>%2$s</div>', esc_html__( 'Gestion des versions', 'entrepot' ), $output );
 }
+
+/**
+ * Overrides the Plugins list when displaying the Plugin Editor Administration screen.
+ *
+ * @since 1.2.0
+ */
+function entrepot_admin_plugin_editor_load() {
+	$entrepot = entrepot();
+
+	// Init plugins cache.
+	get_plugins();
+
+	// Catch the plugins cache to eventually reset it.
+	$entrepot->plugins_cache = wp_cache_get( 'plugins', 'plugins' );
+
+	if ( ! empty( $entrepot->plugins_cache[''] ) ) {
+		$entrepot_plugins_cache = array( '' => array() );
+
+		foreach ( $entrepot->plugins_cache[''] as $key_plugin => $plugin_data ) {
+			if ( true === (bool) $plugin_data['Allow File Edits'] || 'hello.php' === $key_plugin ) {
+				$entrepot_plugins_cache[''][ $key_plugin ] = $plugin_data;
+			}
+		}
+
+		// Look for custom function files allowing edits.
+		$plugins_dir = @ opendir( WP_PLUGIN_DIR );
+
+		if ( $plugins_dir ) {
+			while ( ($file = readdir( $plugins_dir ) ) !== false ) {
+				if ( '.' === substr( $file, 0, 1 ) || is_dir( WP_PLUGIN_DIR . '/' . $file ) ) {
+					continue;
+				}
+
+				if ( '.php' === substr( $file, -4 ) && ! isset( $entrepot->plugins_cache[''][ $file ] ) && 'index.php' !== $file ) {
+					$plugin_data = get_plugin_data( WP_PLUGIN_DIR . '/' . $file, false, false );
+
+					if ( true === (bool) $plugin_data['Allow File Edits'] ) {
+						if ( empty( $plugin_data['Name'] ) ) {
+							$plugin_data['Name'] = wp_basename( $file, '.php' );
+						}
+
+						$entrepot_plugins_cache[''][ plugin_basename( $file ) ] = $plugin_data;
+					}
+				}
+			}
+
+			closedir( $plugins_dir );
+		}
+
+		/**
+		 * Use this restricted list of plugins/custom functions files
+		 * instead of regular plugins.
+		 */
+		wp_cache_set( 'plugins', $entrepot_plugins_cache, 'plugins' );
+	}
+}
+
+/**
+ * Use the restricted list of plugins when saving Plugin edits
+ *
+ * @since 1.2.0
+ */
+function entrepot_ajax_before_edit_plugin_file() {
+	if ( ! isset( $_POST['plugin'] ) ) {
+		return;
+	}
+
+	entrepot_admin_plugin_editor_load();
+}
+
+/**
+ * Resets the regular Plugins list.
+ *
+ * @since 1.2.0
+ */
+function entrepot_admin_plugin_editor_footer() {
+	$entrepot = entrepot();
+
+	// Use the catched plugins cach to restore the plugins cache.
+	wp_cache_set( 'plugins', $entrepot->plugins_cache, 'plugins' );
+}
+
+/**
+ * Resets the regular Plugins list after Plugin edits have been saved.
+ *
+ * @since 1.2.0
+ */
+function entrepot_ajax_after_edit_plugin_file() {
+	if ( ! isset( $_POST['plugin'] ) ) {
+		return;
+	}
+
+	entrepot_admin_plugin_editor_footer();
+}

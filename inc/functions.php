@@ -342,6 +342,7 @@ function entrepot_get_plugin_latest_stable_release( $atom_url = '', $plugin = ar
  * within the regular plugins.
  *
  * @since 1.0.0
+ * @since 1.2.0 Add a new Plugin Header Tag to inform the plugin can be edited.
  *
  * @param  array  $headers  The current Plugin's header tag.
  * @return array            The repositories header tag.
@@ -350,6 +351,8 @@ function entrepot_extra_header( $headers = array() ) {
 	if (  ! isset( $headers['GitHub Plugin URI'] ) ) {
 		$headers['GitHub Plugin URI'] = 'GitHub Plugin URI';
 	}
+
+	$headers['Allow File Edits'] = 'Allow File Edits';
 
 	return $headers;
 }
