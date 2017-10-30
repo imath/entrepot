@@ -157,15 +157,27 @@ function entrepot_admin_add_menu() {
 
 	// The admin screen should not be displayed in subsites.
 	if ( ! is_multisite() || 'network_admin_menu' === current_action() ) {
-		$screens['admin'] = array(
-			'page_hook' => add_plugins_page(
-				__( 'Dépôts', 'entrepot' ),
-				__( 'Dépôts', 'entrepot' ),
-				'install_plugins',
-				'repositories',
-				'entrepot_admin_menu'
+		$screens = array(
+			'admin' => array(
+				'page_hook' => add_plugins_page(
+					__( 'Dépôts', 'entrepot' ),
+					__( 'Dépôts', 'entrepot' ),
+					'install_plugins',
+					'repositories',
+					'entrepot_admin_menu'
+				),
+				'load_callback' => 'entrepot_admin_send_json',
 			),
-			'load_callback' => 'entrepot_admin_send_json',
+			'overwrite' => array(
+				'page_hook' => add_plugins_page(
+					__( 'Gestion des versions', 'entrepot' ),
+					__( 'Gestion des versions', 'entrepot' ),
+					'update_plugins',
+					'repositories-manage-versions',
+					'entrepot_admin_versions'
+				),
+				'load_callback' => 'entrepot_admin_versions_load',
+			),
 		);
 	}
 
@@ -248,6 +260,14 @@ function entrepot_admin_register_scripts() {
 		true
 	);
 
+	wp_register_script(
+		'entrepot-plugins-overwrite',
+		sprintf( '%1$splugins-overwrite%2$s.js', entrepot_js_url(), entrepot_min_suffix() ),
+		array( 'wp-util', 'wp-api-request' ),
+		entrepot_version(),
+		true
+	);
+
 	wp_register_style(
 		'entrepot-notices',
 		sprintf( '%1$snotices%2$s.css', entrepot_assets_url(), entrepot_min_suffix() ),
@@ -259,6 +279,14 @@ function entrepot_admin_register_scripts() {
 	wp_register_style(
 		'entrepot-upgrader',
 		sprintf( '%1$supgrader%2$s.css', entrepot_assets_url(), entrepot_min_suffix() ),
+		array(),
+		entrepot_version(),
+		'all'
+	);
+
+	wp_register_style(
+		'entrepot-plugins-overwrite',
+		sprintf( '%1$splugins-overwrite%2$s.css', entrepot_assets_url(), entrepot_min_suffix() ),
 		array(),
 		entrepot_version(),
 		'all'
@@ -1059,4 +1087,85 @@ function entrepot_admin_upgrade() {
 		<?php endif ; ?>
 	</div>
 	<?php
+}
+
+/**
+ * Enqueues the needed JavaScript for the Manage Plugins versions Admin screen.
+ *
+ * @since 1.2.0
+ */
+function entrepot_admin_versions_load() {
+	// Add the help tab to explain what can be done within this screen.
+	get_current_screen()->add_help_tab( array(
+		'id'      => 'bp-group-edit-overview',
+		'title'   => __( 'Overview', 'entrepot' ),
+		'content' => '<p>' . join( '</p><p>', array(
+			esc_html__( 'Depuis cet écran vous pouvez manuellement administrer les versions installées pour vos extensions. Vous pouvez mettre à jour ou revenir à une version plus ancienne chacune des extensions listées.', 'entrepot' ),
+			esc_html__( 'Pour cela, il suffit de cliquer sur le bouton indiquant la version actuelle de l\'extension afin de sélectionner depuis votre appareil l\'archive ZIP contenant la version de remplacement.', 'entrepot' ),
+		) ) . '</p>',
+	) );
+
+	// Enqueues the needed script and style.
+	wp_enqueue_script ( 'entrepot-plugins-overwrite' );
+	wp_localize_script( 'entrepot-plugins-overwrite', 'entrepotl10nPluginsOverwrite', array(
+		'filetypeError' => __( 'Dans WordPress les packages sont au format ZIP, merci de sélectionner ce type de fichier', 'entrepot' ),
+		'unknownError'  => __( 'Erreur inconnue, merci de renouveler un peu plus tard', 'entrepot' ),
+	) );
+	wp_enqueue_style( 'entrepot-plugins-overwrite' );
+}
+
+/**
+ * Displays the Manage Plugins versions Admin screen.
+ *
+ * @since 1.2.0
+ */
+function entrepot_admin_versions() {
+	// Check the wp.apiRequest is available as it was introduced in 4.9.
+	$is_supported = false !== wp_scripts()->query( 'wp-api-request' );
+
+	if ( ! $is_supported ) {
+		$output = sprintf( '<div id="message" class="error"><p>%s</p></div>', esc_html__( 'La gestion manuelle des versions des extensions nécessite WordPress 4.9.', 'entrepot' ) );
+	} else {
+		$output = '<script type="text/html" id="tmpl-entrepot-plugin-version">
+			<div class="plugin-card plugin-version-info">
+				<div class="plugin-card-top">
+					<div class="name column-name">
+					<h3>
+						{{data.name}}
+						<# if ( data.icon ) { #>
+							<img src="{{data.icon}}" width="100px" height="100px" class="plugin-icon">
+						<# } #>
+
+						<span class="dashicons dashicons-admin-plugins plugin-icon <# if ( data.icon ) { #>hide<# } #>"></span>
+					</h3>
+				</div>
+				<div class="action-links">
+					<label for="file-{{data.slug}}" class="button button-primary button-large"><span class="dashicons dashicons-update"></span> {{data.version}}</label>
+					<input id="file-{{data.slug}}" type="file" name="{{data.slug}}" data-plugin-id="{{data.id}}"/>
+					<button class="button button-secondary button-large update-now" disabled="disabled">
+						{{data.version}}
+					</button>
+				</div>
+				<div class="desc column-description">
+					<p>{{{data.description}}}</p>
+					<p class="authors">
+						<cite>{{{data.author}}}</cite>
+					</p>
+				</div>
+			</div>
+		</script>
+		<script type="text/html" id="tmpl-entrepot-notice">
+			<div id="{{ data.id }}" class="notice <# if ( 200 !== data.code ) { #>notice-error<# } else { #>notice-success<# } #> is-dismissible">
+				<p>
+					{{data.message}}
+				</p>
+			</div>
+		</script>';
+
+		$output = "<ul id=\"list-plugin-versions\">
+			<li id=\"entrepot-loading-plugins\"><img src=\"" . esc_url( admin_url( 'images/spinner-2x.gif' ) ) . "\"/></li>
+		</ul>\n" . $output;
+	}
+
+	printf( '<div class="wrap"><h1>%1$s</h1>%2$s</div>', esc_html__( 'Gestion des versions', 'entrepot' ), $output );
 }

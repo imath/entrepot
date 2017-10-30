@@ -56,5 +56,8 @@ add_filter( 'plugins_api', 'entrepot_repositories_api', 10, 3 );
 add_filter( 'entrepot_repository_modal_content', 'entrepot_sanitize_repository_content', 9 );
 add_filter( 'entrepot_repository_modal_content', 'links_add_target'                        );
 
+// Registers REST API routes.
+add_action( 'rest_api_init', 'entrepot_rest_routes', 100 );
+
 // Load translations
 add_action( 'plugins_loaded', 'entrepot_load_textdomain', 9 );

@@ -622,3 +622,14 @@ function entrepot_get_upgrader_tasks() {
 
 	return $upgrade;
 }
+
+/**
+ * Registers a rest route for the Installed plugins.
+ *
+ * @since 1.2.0
+ */
+function entrepot_rest_routes() {
+	// Plugins.
+	$controller = new Entrepot_REST_Plugins_Controller;
+	$controller->register_routes();
+}
