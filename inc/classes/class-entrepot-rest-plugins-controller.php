@@ -71,7 +71,7 @@ class Entrepot_REST_Plugins_Controller extends WP_REST_Controller {
 		register_rest_route( $this->namespace, '/' . $this->rest_base . '/(?P<slug>[\w-]+)', array(
 			'args' => array(
 				'slug' => array(
-					'description' => __( 'An alphanumeric identifier for the slug of the plugin.', 'entrepot' ),
+					'description' => __( 'Un identifiant alphanumérique unique par rapport à la terminaison de l\'extension.', 'entrepot' ),
 					'type'        => 'string',
 				),
 			),
@@ -523,12 +523,12 @@ class Entrepot_REST_Plugins_Controller extends WP_REST_Controller {
 			'type'       => 'object',
 			'properties' => array(
 				'id'            => array(
-					'description' => __( 'An alphanumeric identifier for the object unique to its directory and main php file.', 'entrepot' ),
+					'description' => __( 'Un identifiant alphanumérique unique par rapport au répertoire et au fichier principal de l\'extension.', 'entrepot' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit', 'embed' ),
 				),
 				'slug'            => array(
-					'description' => __( 'An alphanumeric identifier for the object unique to its slug.', 'entrepot' ),
+					'description' => __( 'Un identifiant alphanumérique unique par rapport à la terminaison de l\'extension.', 'entrepot' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit', 'embed' ),
 				),

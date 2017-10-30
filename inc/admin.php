@@ -1098,7 +1098,7 @@ function entrepot_admin_versions_load() {
 	// Add the help tab to explain what can be done within this screen.
 	get_current_screen()->add_help_tab( array(
 		'id'      => 'bp-group-edit-overview',
-		'title'   => __( 'Overview', 'entrepot' ),
+		'title'   => __( 'Vue d’ensemble', 'entrepot' ),
 		'content' => '<p>' . join( '</p><p>', array(
 			esc_html__( 'Depuis cet écran vous pouvez manuellement administrer les versions installées pour vos extensions. Vous pouvez mettre à jour ou revenir à une version plus ancienne chacune des extensions listées.', 'entrepot' ),
 			esc_html__( 'Pour cela, il suffit de cliquer sur le bouton indiquant la version actuelle de l\'extension afin de sélectionner depuis votre appareil l\'archive ZIP contenant la version de remplacement.', 'entrepot' ),
@@ -1131,7 +1131,7 @@ function entrepot_admin_versions() {
 				<div class="plugin-card-top">
 					<div class="name column-name">
 					<h3>
-						{{data.name}}
+						{{{data.name}}}
 						<# if ( data.icon ) { #>
 							<img src="{{data.icon}}" width="100px" height="100px" class="plugin-icon">
 						<# } #>
