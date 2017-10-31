@@ -1,0 +1,17 @@
+{
+	"name": "SecuPress Free — WordPress Security Plugin",
+	"author": "SecuPress",
+	"slug": "secupress",
+	"icon": "https://ps.w.org/secupress/assets/icon-128x128.png",
+	"tags": [
+	  "hack", "malware", "secure", "security plugin", "wordpress security"
+	],
+	"country": "fr_FR",
+	"releases": "https://github.com/BoiteAWeb/secupress/releases",
+	"issues": "https://github.com/BoiteAWeb/secupress/issues",
+	"description": {
+		"en_US" : "Ensuring the security of your website is now easy.",
+		"fr_FR" : "Assurer la sécurité de votre site est maintenant facile."
+	},
+	"README": "https://github.com/BoiteAWeb/secupress/blob/master/readme.txt"
+}
