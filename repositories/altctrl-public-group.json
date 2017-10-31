@@ -1,0 +1,25 @@
+{
+    "name": "Alternative Public Group Control",
+    "author": "imath",
+    "slug": "altctrl-public-group",
+    "dependencies": [
+        { "bp_get_user_groups": "BuddyPress 2.6+" }
+    ],
+    "icon": "https://raw.githubusercontent.com/imath/altctrl-public-group/master/icon.png",
+    "tags": [
+      "BuddyPress",
+      "groups"
+    ],
+    "country": "fr_FR",
+    "releases": "https://github.com/imath/altctrl-public-group/releases",
+    "issues": "https://github.com/imath/altctrl-public-group/issues",
+    "description": {
+        "en_US" : "Adds visibility levels to BuddyPress public groups.",
+        "fr_FR" : "Ajoute des niveaux de visibilité à des groupes publics BuddyPress."
+    },
+    "README": "https://raw.githubusercontent.com/imath/altctrl-public-group/master/README.md",
+    "urls": {
+      "history": "https://raw.githubusercontent.com/imath/altctrl-public-group/master/CHANGELOG.md",
+      "donate": "https://paypal.me/imath"
+    }
+}

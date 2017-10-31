@@ -2,10 +2,10 @@
 /**
  * Plugin Name: Entrepôt
  * Plugin URI: https://github.com/imath/entrepot/
- * Description: Une liste d'extensions gratuites hébergées sur Github.com.
+ * Description: Une liste d'extensions gratuites hébergées sur GitHub.com.
  * Version: 1.2.0-alpha
  * Requires at least: 4.8
- * Tested up to: 4.8
+ * Tested up to: 4.9
  * License: GNU/GPL 2
  * Author: imath
  * Author URI: https://imathi.eu/
