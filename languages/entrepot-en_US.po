@@ -2,10 +2,10 @@
 # This file is distributed under the GNU/GPL 2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Entrepôt 1.2.0-alpha\n"
+"Project-Id-Version: Entrepôt 1.2.0\n"
 "Report-Msgid-Bugs-To: https://github.com/imath/entrepot/issues\n"
-"POT-Creation-Date: 2017-10-30 19:39:23+00:00\n"
-"PO-Revision-Date: 2017-10-30 20:42+0100\n"
+"POT-Creation-Date: 2017-11-02 03:28:14+00:00\n"
+"PO-Revision-Date: 2017-11-02 04:29+0100\n"
 "Last-Translator: imath <mathchristo@yahoo.fr>\n"
 "Language-Team: imath <contact@imathi.eu>\n"
 "Language: en_US\n"
@@ -365,8 +365,8 @@ msgid "https://github.com/imath/entrepot/"
 msgstr "https://github.com/imath/entrepot/"
 
 #. Description of the plugin/theme
-msgid "Une liste d'extensions gratuites hébergées sur Github.com."
-msgstr "A list of free Github.com hosted plugins."
+msgid "Une liste d'extensions gratuites hébergées sur GitHub.com."
+msgstr "A list of free GitHub.com hosted plugins."
 
 #. Author of the plugin/theme
 msgid "imath"

@@ -1,5 +1,27 @@
 # Change Log
 
+## 1.2.0
+
+_Requires WordPress 4.8_
+
+### Bug fixes
+
+- Removes extra parenthesis when using require or require_once.
+
+### Features
+
+- More links to inform about Entrepôt repositories into the "More details" modal
+- Use the Entrepôt repository icon into the WordPress Bulk update List Table.
+- Manual WordPress plugin upgrade and downgrade.
+- Restrictions to the WordPress Plugins Code Editor.
+
+### Newly Registered Plugins
+
+- Alternative Control for Public Group
+- Profil de Groupes
+
+---
+
 ## 1.1.0
 
 _Requires WordPress 4.8_
