@@ -1,7 +1,7 @@
 {
 	"name": "WP Tuning",
 	"author": "lriaudel",
-	"slug": "wptuning",
+	"slug": "wp-tuning",
 	"icon": "https://raw.githubusercontent.com/lriaudel/wp-tuning/master/wptuning.svg",
 	"tags": [
 		"tuning",
