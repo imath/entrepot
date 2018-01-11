@@ -1,0 +1,22 @@
+{
+	"name": "WP Tuning",
+	"author": "lriaudel",
+	"slug": "wp-tuning",
+	"icon": "https://raw.githubusercontent.com/lriaudel/wp-tuning/master/wptuning.png",
+	"tags": [
+		"tuning",
+		"hook",
+		"cleaning"
+	],
+	"country": "en_US",
+	"releases": "https://github.com/lriaudel/wp-tuning/releases",
+	"issues": "https://github.com/lriaudel/wp-tuning/issues",
+	"description": {
+		"en_US" : "Differents hooks and functions to improve WordPress and basic customization in a plugin.",
+		"fr_FR" : "Differents hooks et fonctions pour améliorer WordPress dans un plugin !"
+	},
+	"README": "https://raw.githubusercontent.com/lriaudel/wp-tuning/master/README.md",
+  "urls": {
+		"history": "https://raw.githubusercontent.com/lriaudel/wp-tuning/master/CHANGELOG.md"
+	}
+}
