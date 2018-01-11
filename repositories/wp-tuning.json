@@ -2,7 +2,7 @@
 	"name": "WP Tuning",
 	"author": "lriaudel",
 	"slug": "wp-tuning",
-	"icon": "https://raw.githubusercontent.com/lriaudel/wp-tuning/master/wptuning.svg",
+	"icon": "https://raw.githubusercontent.com/lriaudel/wp-tuning/master/wptuning.png",
 	"tags": [
 		"tuning",
 		"hook",
@@ -16,4 +16,7 @@
 		"fr_FR" : "Differents hooks et fonctions pour améliorer WordPress dans un plugin !"
 	},
 	"README": "https://raw.githubusercontent.com/lriaudel/wp-tuning/master/README.md"
+  "urls": {
+		"history": "https://raw.githubusercontent.com/lriaudel/wp-tuning/master/CHANGELOG.md",
+	}
 }
