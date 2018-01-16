@@ -1,5 +1,16 @@
 # Change Log
 
+## 1.2.1
+
+_Requires WordPress 4.8_
+
+### Newly Registered Plugins
+
+- Gutenblocks
+- WP Tuning
+
+---
+
 ## 1.2.0
 
 _Requires WordPress 4.8_
