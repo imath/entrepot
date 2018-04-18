@@ -131,7 +131,7 @@ module.exports = function( grunt ) {
 
 	grunt.registerTask( 'compress', ['git-archive'] );
 
-	grunt.registerTask( 'release', ['checktextdomain', 'makepot', 'clean', 'jstest', 'shrink', 'compress'] );
+	grunt.registerTask( 'release', ['checktextdomain', 'makepot', 'clean', 'jstest', 'shrink'] );
 
 	// Travis CI Tasks.
 	grunt.registerTask( 'travis:build', ['jstest', 'checktextdomain', 'clean:entrepot', 'minjson', 'phpunit'] );

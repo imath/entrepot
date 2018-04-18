@@ -25,15 +25,15 @@
 	background: #fff;
 }
 
-#screen-entrepot-notices-wrap .contextual-help-tabs ul li.upgrade {
+#screen-entrepot-notices-wrap .contextual-help-tabs ul li.upgrade.active {
 	border-left-color: #ffba00;
 }
 
-#screen-entrepot-notices-wrap .contextual-help-tabs ul li.updated {
+#screen-entrepot-notices-wrap .contextual-help-tabs ul li.updated.active {
 	border-left-color: #46b450;
 }
 
-#screen-entrepot-notices-wrap .contextual-help-tabs ul li.error {
+#screen-entrepot-notices-wrap .contextual-help-tabs ul li.error.active {
 	border-left-color: #dc3232;
 }
 
@@ -86,7 +86,8 @@
 	position: relative;
 }
 
-.entrepot-notice-trash:before {
+.entrepot-notice-trash:before,
+.show-notice:before {
 	background: none;
 	color: #dc3232;
 	content: "\f182";
@@ -101,7 +102,13 @@
 	-moz-osx-font-smoothing: grayscale;
 }
 
-.entrepot-notice-trash {
+.show-notice:before {
+	content: "\f179";
+	color: #0073aa;
+}
+
+.entrepot-notice-trash,
+.show-notice {
 	position: absolute;
 	top: -2px;
 	right: -30px;
@@ -111,6 +118,12 @@
 	background: none;
 	color: #dc3232;
 	cursor: pointer;
+}
+
+.show-notice {
+	right: 10px;
+	text-decoration: none;
+	color: #0073aa;
 }
 
 @media screen and ( max-width: 782px ) {

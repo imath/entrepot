@@ -805,6 +805,7 @@ function entrepot_catch_all_notices() {
 		return;
 	}
 
+	$notices        = array();
 	$notice_actions = array_filter( array(
 		'network_admin_notices' => is_network_admin(),
 		'user_admin_notices'    => is_user_admin(),
@@ -818,62 +819,87 @@ function entrepot_catch_all_notices() {
 		'default_password_nag',
 		'maintenance_nag',
 		'new_user_email_admin_notice',
-		'site_admin_notice'
+		'site_admin_notice',
+		'WP_Privacy_Policy_Content::policy_text_changed_notice',
 	), 0 );
+
+	ob_start();
 
 	foreach ( $registered_notices as $hook_key => $priorities ) {
 		foreach ( $priorities->callbacks as $priority => $hooks ) {
 			foreach ( $hooks as $hook_name => $hook_data ) {
 				if ( isset( $core_hooks[ $hook_name ] ) ) {
 					continue;
-				} else {
-					// Remove the action on the core hook
-					remove_action( $hook_key, $hook_name, $priority );
-
-					// Add it to the entrepôt hook
-					add_action( 'entrepot_notices', $hook_name, $priority );
 				}
+
+				// Trigger the callback without altering the hooks count.
+				call_user_func_array( $hook_data['function'], array() );
+
+				$n_key = $hook_name;
+				/**
+				 * To allow all notices to be trashed class methods need
+				 * to use a class::method string as the idx for the hook_name
+				 * is different at every page load.
+				 */
+				if ( is_array( $hook_data['function'] ) ) {
+					$class = get_class( $hook_data['function'][0] );
+					$n_key = $class . '::' . $hook_data['function'][1];
+				}
+
+				$notices[ $n_key ] = ob_get_contents();
+				ob_clean();
+
+				// Remove the action on the core hook
+				remove_action( $hook_key, $hook_name, $priority );
 			}
 		}
 	}
 
-	ob_start();
-
+	/**
+	 * @todo  deprecate
+	 */
 	do_action( 'entrepot_notices' );
 
-	$notices = ob_get_clean();
-	$entrepot_notices  = array_fill_keys( array( 'upgrade', 'error', 'updated' ), array() );
+	ob_end_clean();
+	$entrepot_notices = array_fill_keys( array( 'upgrade', 'error', 'updated' ), array() );
 
 	// Counts
 	$all_notices_count     = 0;
 	$upgrade_notices_count = 0;
 	$updated_notices_count = 0;
 	$error_notices_count   = 0;
+	$info_notices_count    = 0;
 
 	if ( ! empty( $notices ) ) {
-		$notices = str_replace( array("<p>", "</p>" ), '',	$notices );
-		preg_match_all( '/\s*<div.*class=\"(.*?)\"[.*|>]\s*(.*?)\s*<\/div>/', trim( $notices, "\n\t" ), $results );
+		$notices      = array_filter( $notices );
 
-		if ( empty( $results[1] ) || empty( $results[2] ) ) {
-			return;
-		}
+		foreach ( $notices as $notice_key => $notice_text ) {
+			preg_match( '/\s*<div.*class=\"(.*?)\"[.*|>]\s*/', $notice_text, $matches );
 
-		$allowed_tags      = wp_kses_allowed_html( 'entrepot' );
-		$allowed_tags['p'] = true;
+			if ( empty( $matches[1] ) ) {
+				continue;
+			}
 
-		foreach ( $results[1] as $kt => $type ) {
-			$classes = explode( ' ', $type );
-			$text    = wp_kses( sprintf( '<p>%s</p>', $results[2][ $kt ] ), $allowed_tags );
+			$classes = explode( ' ', $matches[1] );
+
+			$notice_object = (object) array(
+				'id'         => $notice_key,
+				'short_text' => sprintf( '<p id="%1$s">%2$s</p>', $notice_key, wp_trim_words( $notice_text, 20, null ) ),
+				'full_text'  => $notice_text,
+			);
 
 			if ( in_array( 'update-nag', $classes, true ) ) {
-				$entrepot_notices['upgrade'][] = $text;
+				$entrepot_notices['upgrade'][] = $notice_object;
 				$upgrade_notices_count += 1;
 			} else if ( in_array( 'error', $classes, true ) ) {
-				$entrepot_notices['error'][] = $text;
+				$entrepot_notices['error'][] = $notice_object;
 				$error_notices_count += 1;
 			}  else if ( in_array( 'updated', $classes, true ) ) {
-				$entrepot_notices['updated'][] = $text;
+				$entrepot_notices['updated'][] = $notice_object;
 				$updated_notices_count += 1;
+			} else {
+				$entrepot_notices['info'][] = $notice_object;
+				$info_notices_count += 1;
 			}
 
 			$all_notices_count += 1;
@@ -911,10 +937,15 @@ function entrepot_catch_all_notices() {
 					$upgrade_notices_count,
 					_nx( 'Mise à niveau', 'Mises à niveau', $upgrade_notices_count, 'Admin Notices Center tab', 'entrepot' )
 				),
+				'info' => sprintf(
+					'<span class="count">%1$d</span> <span class="text">%2$s</span>',
+					$info_notices_count,
+					_nx( 'Info', 'Infos', $info_notices_count, 'Admin Notices Center tab', 'entrepot' )
+				),
 				'updated' => sprintf(
 					'<span class="count">%1$d</span> <span class="text">%2$s</span>',
 					$updated_notices_count,
-					_nx( 'Info', 'Infos', $updated_notices_count, 'Admin Notices Center tab', 'entrepot' )
+					_nx( 'Succès', 'Succès', $updated_notices_count, 'Admin Notices Center tab', 'entrepot' )
 				),
 				'error'   => sprintf(
 					'<span class="count">%1$d</span> <span class="text">%2$s</span>',
@@ -923,6 +954,7 @@ function entrepot_catch_all_notices() {
 				),
 			),
 			'trash' => __( 'Ne plus afficher cette alerte', 'entrepot' ),
+			'show'  => __( 'Ouvrir la notice.', 'entrepot' ),
 		),
 		'notices' => $entrepot_notices,
 	) );

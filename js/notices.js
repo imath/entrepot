@@ -109,21 +109,6 @@ window.entrepot = window.entrepot || {};
 		},
 
 		/**
-		 * Generates an ID for each notice.
-		 *
-		 * @param  {string} notice The notice content.
-		 * @return {string}        The generated ID for the notice.
-		 */
-		getNoticeId: function( notice ) {
-			if ( ! notice ) {
-				return false;
-			}
-
-			notice = notice.replace( new RegExp( /\n*\t*\s*/, 'g'), '' ).substring( 3, 23 );
-			return window.btoa( decodeURI( encodeURIComponent( notice ) ) );
-		},
-
-		/**
 		 * Adds a new WP Screen Meta for the Notices center.
 		 *
 		 * @return {void}
@@ -198,16 +183,20 @@ window.entrepot = window.entrepot || {};
 				);
 
 				$.each( notice, function( i, n ) {
-					var id = self.getNoticeId( n ),
-					    trashedNotices = self.getStorage( 'notices', type );
+					if ( ! n.id ) {
+						return;
+					}
 
-					if ( trashedNotices && -1 !== $.inArray( id, trashedNotices ) ) {
+					var trashedNotices = self.getStorage( 'notices', type );
+
+					if ( trashedNotices && -1 !== $.inArray( n.id, trashedNotices ) ) {
 						return;
 					}
 
 					self.encodedNotices[ type ].push( {
-						'id'      : id,
-						'content' : n
+						'id'          : n.id,
+						'content'     : n.short_text,
+						'fullContent' : n.full_text
 					} );
 				} );
 
@@ -224,7 +213,7 @@ window.entrepot = window.entrepot || {};
 				);
 
 				$.each( self.encodedNotices[ type ], function( j, en ) {
-					$( '#tab-panel-entrepot-notice-' + type ).append( '<div' + trashable + ' data-id="' + en.id + '" data-type="' + type + '">' + en.content + '</div>' );
+					$( '#tab-panel-entrepot-notice-' + type ).append( '<div' + trashable + ' data-id="' + en.id + '" data-type="' + type + '">' + en.content.replace( '</p>', ' <a href="#" class="show-notice"><span class="screen-reader-text">' + self.strings.show + '</span></a></p>'  ) + '</div>' );
 				} );
 			} );
 
@@ -272,6 +261,38 @@ window.entrepot = window.entrepot || {};
 			} );
 
 			this.refreshCount( 1, $el.data( 'type' ) );
+		},
+
+		/**
+		 * Display the full notice.
+		 *
+		 * @param  {object} event The click on the trash icon of a notice.
+		 * @return {void}
+		 */
+		showNotice: function( event ) {
+			event.preventDefault();
+
+			var noticeData = $( event.currentTarget ).closest( '.entrepot-notice-trashable' ).data();
+
+			if ( ! noticeData.type || ! noticeData.id ) {
+				return;
+			}
+
+			if ( this.encodedNotices[ noticeData.type ] ) {
+				var notices = this.encodedNotices[ noticeData.type ];
+
+				$.each( notices, function( n, notice ) {
+					if ( notice.id !== noticeData.id || $( '[data-notice-id="' + noticeData.id + '"]' ).length ) {
+						return;
+					}
+
+					var output = $( notice.fullContent ).addClass( 'notice is-dismissible' ).attr( 'data-notice-id', notice.id );
+
+					// Writes the notice and makes it dismissible.
+					$( '#wpbody-content .wrap h1' ).after( output );
+					$( document ).trigger( 'wp-updates-notice-added' );
+				} );
+			}
 		},
 
 		/**
@@ -330,6 +351,7 @@ window.entrepot = window.entrepot || {};
 			// Events.
 			$( '#screen-entrepot-notices-wrap .contextual-help-tabs' ).on( 'click', 'a', this.switchActiveTab );
 			$( '#screen-entrepot-notices-wrap' ).on( 'click', 'button.entrepot-notice-trash', this.trashNotice.bind( this ) );
+			$( '#screen-entrepot-notices-wrap' ).on( 'click', 'a.show-notice', this.showNotice.bind( this ) );
 		}
 	};
 
