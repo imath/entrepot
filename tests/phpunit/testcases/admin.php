@@ -62,7 +62,7 @@ class entrepot_Admin_Tests extends WP_UnitTestCase {
 			}
 
 			$slugs[] = $repository->slug;
-			$this->assertTrue( file_exists( entrepot_plugins_dir() . $repository->slug . '.json' ) );
+			$this->assertTrue( file_exists( entrepot_plugins_dir() . $repository->slug . '.json' ), 'The slug property should be used as the json file name' );
 			$this->assertNotEmpty( $repository->description->en_US, 'An american (en_US) description should be provided for the plugin.' );
 			$this->assertNotEmpty( $repository->README, 'The README property of the plugin should be set.' );
 		}

@@ -66,11 +66,6 @@ module.exports = function( grunt ) {
 				expand: true,
 				ext: '.min.js',
 				src: ['js/*.js', '!*.min.js']
-			},
-			options: {
-				banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
-				'<%= grunt.template.today("UTC:yyyy-mm-dd h:MM:ss TT Z") %> - ' +
-				'https://imathi.eu/tag/entrepot */\n'
 			}
 		},
 		cssmin: {
