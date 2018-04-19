@@ -1,5 +1,20 @@
 # Change Log
 
+## 1.3.0
+
+_Requires WordPress 4.8_
+
+### Features
+
+- Improve the Admin notifices center by adding a link to fully open notices.
+- Update the URL to flag plugins.
+
+### Bug fixes
+
+- Fix a notice error when notice hooks are hooked from class methods.
+
+---
+
 ## 1.2.1
 
 _Requires WordPress 4.8_
