@@ -649,7 +649,7 @@ function entrepot_admin_repository_information() {
 		$imathieu = 'https://imathi.eu/entrepot/';
 
 		if ( 'fr_FR' !== get_locale() ) {
-			$imathieu = 'https://imathi.eu/entrepot/en-us/';
+			$imathieu = 'https://imathi.eu/entrepot/translate/en-us/';
 		}
 
 		$flag_url = add_query_arg( 'repository', $plugin, $imathieu );
