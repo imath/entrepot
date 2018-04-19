@@ -161,16 +161,18 @@ window.entrepot = window.entrepot || {};
 			    self.encodedNotices = {};
 
 			$.each( self.notices, function( type, notice ) {
-				var trashable = '';
+				var classes = ['entrepot-notice-wrap'], classAttr = '';
 				    self.encodedNotices[ type ] = [];
-
-				if ( type !== 'upgrade' ) {
-					trashable = ' class="entrepot-notice-trashable"';
-				}
 
 				if ( ! notice.length ) {
 					return;
 				}
+
+				if ( type !== 'upgrade' ) {
+					classes.push( 'entrepot-notice-trashable' );
+				}
+
+				classAttr = ' class="' + classes.join( ' ' ) + '"';
 
 				$( '#screen-entrepot-notices-wrap .contextual-help-tabs ul' ).append(
 					$( '<li></li>' ).prop( 'id', 'tab-link-entrepot-notice-' + type )
@@ -213,7 +215,7 @@ window.entrepot = window.entrepot || {};
 				);
 
 				$.each( self.encodedNotices[ type ], function( j, en ) {
-					$( '#tab-panel-entrepot-notice-' + type ).append( '<div' + trashable + ' data-id="' + en.id + '" data-type="' + type + '">' + en.content.replace( '</p>', ' <a href="#" class="show-notice"><span class="screen-reader-text">' + self.strings.show + '</span></a></p>'  ) + '</div>' );
+					$( '#tab-panel-entrepot-notice-' + type ).append( '<div' + classAttr + ' data-id="' + en.id + '" data-type="' + type + '">' + en.content.replace( '</p>', ' <a href="#" class="show-notice"><span class="screen-reader-text">' + self.strings.show + '</span></a></p>'  ) + '</div>' );
 				} );
 			} );
 
@@ -272,9 +274,9 @@ window.entrepot = window.entrepot || {};
 		showNotice: function( event ) {
 			event.preventDefault();
 
-			var noticeData = $( event.currentTarget ).closest( '.entrepot-notice-trashable' ).data();
+			var noticeData = $( event.currentTarget ).closest( '.entrepot-notice-wrap' ).data();
 
-			if ( ! noticeData.type || ! noticeData.id ) {
+			if ( 'undefined' === typeof noticeData.type || 'undefined' === typeof noticeData.id ) {
 				return;
 			}
 
