@@ -49,8 +49,9 @@ add_filter( 'install_plugins_table_api_args_entrepot_repositories', 'entrepot_ad
 add_action( 'install_plugins_entrepot_repositories',                'entrepot_admin_repositories_print_templates'       );
 add_action( 'install_plugins_pre_plugin-information',               'entrepot_admin_repository_information',       5    );
 
-// Override the Plugins API for Repositories.
+// Override the Plugins/Themes API to include Entrepôt repositories.
 add_filter( 'plugins_api', 'entrepot_repositories_api', 10, 3 );
+add_filter( 'themes_api',  'entrepot_repositories_api', 10, 3 );
 
 // Filters for modal content.
 add_filter( 'entrepot_repository_modal_content', 'entrepot_sanitize_repository_content', 9 );

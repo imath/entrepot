@@ -103,6 +103,7 @@ final class Entrepot {
 		spl_autoload_register( array( $this, 'autoload' ) );
 
 		require $this->inc_dir . 'functions.php';
+		require $this->inc_dir . 'customizer.php';
 
 		if ( is_admin() ) {
 			require $this->inc_dir . 'admin.php';

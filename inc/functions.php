@@ -129,20 +129,28 @@ function entrepot_setup_cache_group() {
  * Gets all registered repositories or a specific one.
  *
  * @since 1.0.0
+ * @since 1.4.0 Adds a new $type parameter to look for Theme repositories.
  *
  * @param  string $slug An empty string to get all repositories or
  *                      the repository slug to get a specific repository.
+ * @param  string $type The type of repositories to get. Default to repositories (plugins).
  * @return array|object The list of repository objects or a single repository object.
  */
-function entrepot_get_repositories( $slug = '' ) {
-	$repositories = wp_cache_get( 'repositories', 'entrepot' );
+function entrepot_get_repositories( $slug = '', $type = 'repositories' ) {
+	$repositories = wp_cache_get( $type, 'entrepot' );
 
 	if ( ! $repositories ) {
-		$json            = file_get_contents( entrepot_assets_dir() . 'entrepot.min.json' );
+		$src = 'entrepot.min.json';
+
+		if ( 'repositories' !== $type ) {
+			$src = sprintf( 'entrepot-%s.json', $type );
+		}
+
+		$json            = file_get_contents( entrepot_assets_dir() . $src );
 		$repositories    = json_decode( $json );
 
 		// Cache repositories
-		wp_cache_add( 'repositories', $repositories, 'entrepot' );
+		wp_cache_add( $type, $repositories, 'entrepot' );
 	}
 
 	if ( $slug ) {
@@ -166,21 +174,23 @@ function entrepot_get_repositories( $slug = '' ) {
 }
 
 /**
- * Gets a specific plugin's JSON data.
+ * Gets a specific repository's JSON data.
  *
  * @since 1.0.0
+ * @since 1.4.0 Adds a new $type parameter to look for Theme repositories.
  *
- * @param  string $plugin Name of the plugin.
- * @return string         JSON data.
+ * @param  string $repository Name of the plugin or the theme.
+ * @param  string $type       The type of repositories to get. Default to repositories (plugins).
+ * @return string             JSON data.
  */
-function entrepot_get_repository_json( $plugin = '' ) {
-	if ( ! $plugin ) {
+function entrepot_get_repository_json( $repository = '', $type = 'repositories' ) {
+	if ( ! $repository ) {
 		return false;
 	}
 
 	// Specific to unit tests
 	if ( defined( 'PR_TESTING_ASSETS') && PR_TESTING_ASSETS ) {
-		$json = sprintf( '%1$s/%2$s.json', entrepot_plugins_dir(), sanitize_file_name( $plugin ) );
+		$json = sprintf( '%1$s/%2$s.json', entrepot_plugins_dir(), sanitize_file_name( $repository ) );
 		if ( ! file_exists( $json ) ) {
 			return false;
 		}
@@ -189,7 +199,7 @@ function entrepot_get_repository_json( $plugin = '' ) {
 		return json_decode( $data );
 	}
 
-	return entrepot_get_repositories( $plugin );
+	return entrepot_get_repositories( $repository, $type );
 }
 
 /**

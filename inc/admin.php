@@ -400,6 +400,10 @@ function entrepot_repositories_api( $res = false, $action = '', $args = null ) {
 				'GitHub Plugin URI' => str_replace( '/releases', '', $json->releases ),
 			) );
 		}
+	} elseif ( 'theme_information' === $action && ! empty( $args->slug ) ) {
+		$json = entrepot_get_repository_json( $args->slug, 'themes' );
+
+		return new WP_Error( 'themes_api_failed', __( 'Première étape de développement intégration thèmes', 'entrepot' ) );
 	}
 
 	return $res;
