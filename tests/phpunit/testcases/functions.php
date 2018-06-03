@@ -22,12 +22,12 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 
 		$json = entrepot_get_repository_json( 'test-plugin' );
 
-		$release = entrepot_get_plugin_latest_stable_release( $stable, array(
+		$release = entrepot_get_repository_latest_stable_release( $stable, array(
 			'plugin'            => $json->name,
 			'slug'              => 'test-plugin',
 			'Version'           => '1.0.0-beta1',
 			'GitHub Plugin URI' => rtrim( $json->releases, '/releases' ),
-		) );
+		), 'plugin' );
 
 		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
 
@@ -44,12 +44,12 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 
 		$json = entrepot_get_repository_json( 'test-plugin' );
 
-		$release = entrepot_get_plugin_latest_stable_release( $stable, array(
+		$release = entrepot_get_repository_latest_stable_release( $stable, array(
 			'plugin'            => $json->name,
 			'slug'              => 'test-plugin',
 			'Version'           => '1.0.0',
 			'GitHub Plugin URI' => rtrim( $json->releases, '/releases' ),
-		) );
+		), 'plugin' );
 
 		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
 
@@ -66,12 +66,12 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 
 		$json = entrepot_get_repository_json( 'test-plugin' );
 
-		$release = entrepot_get_plugin_latest_stable_release( $stable, array(
+		$release = entrepot_get_repository_latest_stable_release( $stable, array(
 			'plugin'            => $json->name,
 			'slug'              => 'test-plugin',
 			'Version'           => '1.0',
 			'GitHub Plugin URI' => rtrim( $json->releases, '/releases' ),
-		) );
+		), 'plugin' );
 
 		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
 
@@ -88,12 +88,12 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 
 		$json = entrepot_get_repository_json( 'test-plugin' );
 
-		$release = entrepot_get_plugin_latest_stable_release( $stable, array(
+		$release = entrepot_get_repository_latest_stable_release( $stable, array(
 			'plugin'            => $json->name,
 			'slug'              => 'test-plugin',
 			'Version'           => '39',
 			'GitHub Plugin URI' => rtrim( $json->releases, '/releases' ),
-		) );
+		), 'plugin' );
 
 		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
 
@@ -110,12 +110,12 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 
 		$json = entrepot_get_repository_json( 'test-plugin' );
 
-		$release = entrepot_get_plugin_latest_stable_release( $stable, array(
+		$release = entrepot_get_repository_latest_stable_release( $stable, array(
 			'plugin'            => $json->name,
 			'slug'              => 'test-plugin',
 			'Version'           => '1.0.0-beta1',
 			'GitHub Plugin URI' => rtrim( $json->releases, '/releases' ),
-		) );
+		), 'plugin' );
 
 		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
 
@@ -132,12 +132,12 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 
 		$json = entrepot_get_repository_json( 'test-plugin' );
 
-		$release = entrepot_get_plugin_latest_stable_release( $stable, array(
+		$release = entrepot_get_repository_latest_stable_release( $stable, array(
 			'plugin'            => $json->name,
 			'slug'              => 'test-plugin',
 			'Version'           => '1.7.0',
 			'GitHub Plugin URI' => rtrim( $json->releases, '/releases' ),
-		) );
+		), 'plugin' );
 
 		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
 
@@ -154,12 +154,12 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 
 		$json = entrepot_get_repository_json( 'test-plugin' );
 
-		$release = entrepot_get_plugin_latest_stable_release( $stable, array(
+		$release = entrepot_get_repository_latest_stable_release( $stable, array(
 			'plugin'            => $json->name,
 			'slug'              => 'test-plugin',
 			'Version'           => '1.6.0',
 			'GitHub Plugin URI' => rtrim( $json->releases, '/releases' ),
-		) );
+		), 'plugin' );
 
 		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
 
@@ -176,12 +176,12 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 
 		$json = entrepot_get_repository_json( 'test-plugin' );
 
-		$release = entrepot_get_plugin_latest_stable_release( $stable, array(
+		$release = entrepot_get_repository_latest_stable_release( $stable, array(
 			'plugin'            => $json->name,
 			'slug'              => 'test-plugin',
 			'Version'           => 'latest',
 			'GitHub Plugin URI' => rtrim( $json->releases, '/releases' ),
-		) );
+		), 'plugin' );
 
 		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
 
@@ -198,12 +198,12 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 
 		$json = entrepot_get_repository_json( 'test-plugin' );
 
-		$release = entrepot_get_plugin_latest_stable_release( $stable, array(
+		$release = entrepot_get_repository_latest_stable_release( $stable, array(
 			'plugin'            => $json->name,
 			'slug'              => 'test-plugin',
 			'Version'           => 'latest',
 			'GitHub Plugin URI' => rtrim( $json->releases, '/releases' ),
-		) );
+		), 'plugin' );
 
 		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
 
@@ -221,12 +221,12 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 
 		$json = entrepot_get_repository_json( 'test-plugin' );
 
-		$release = entrepot_get_plugin_latest_stable_release( $stable, array(
+		$release = entrepot_get_repository_latest_stable_release( $stable, array(
 			'plugin'            => $json->name,
 			'slug'              => 'test-plugin',
 			'Version'           => 'latest',
 			'GitHub Plugin URI' => rtrim( $json->releases, '/releases' ),
-		) );
+		), 'plugin' );
 
 		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
 

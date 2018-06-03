@@ -250,18 +250,35 @@ function entrepot_get_standardized_version_number( $version = '' ) {
  * Checks with the Github releases of the Repository if there a new stable version available.
  *
  * @since 1.0.0
+ * @deprecated 1.4.0
  *
  * @param  string $atom_url The Repository's feed URL.
  * @param  array  $plugin   The plugin's data.
  * @return object           The stable release data.
  */
 function entrepot_get_plugin_latest_stable_release( $atom_url = '', $plugin = array() ) {
-	$tag_data = new stdClass;
+	_deprecated_function( __FUNCTION__, '1.4.0', 'entrepot_get_repository_latest_stable_release()' );
+	return entrepot_get_repository_latest_stable_release( $atom_url, $plugin, 'plugin' );
+}
+
+/**
+ * Checks with the Github releases of the Repository if there a new stable version available.
+ *
+ * @since 1.0.0
+ *
+ * @param  string $atom_url   The Repository's feed URL.
+ * @param  array  $repository The plugin's data.
+ * @param  string $type       The repository type (plugin or theme).
+ * @return object             The stable release data.
+ */
+function entrepot_get_repository_latest_stable_release( $atom_url = '', $repository = array(), $type = 'plugin' ) {
+	$tag_data            = new stdClass;
 	$tag_data->is_update = false;
+	$github_uri_key      = sprintf( 'GitHub %s URI', ucfirst( $type ) );
 
 	if ( ! $atom_url  ) {
 		// For Unit Testing purpose only. Do not use this constant in your code.
-		if ( defined( 'PR_TESTING_ASSETS' ) && isset( $plugin['slug'] ) &&  'entrepot' === $plugin['slug'] ) {
+		if ( defined( 'PR_TESTING_ASSETS' ) && isset( $repository['slug'] ) &&  'entrepot' === $repository['slug'] ) {
 			$atom_url = trailingslashit( entrepot()->dir ) . 'tests/phpunit/assets/releases';
 		} else {
 			return $tag_data;
@@ -297,23 +314,28 @@ function entrepot_get_plugin_latest_stable_release( $atom_url = '', $plugin = ar
 			'package'     => '',
 		);
 
-		if ( ! empty( $plugin['Version'] ) ) {
+		if ( 'theme' === $type ) {
+			unset( $response['plugin'] );
+			$response['theme'] = '';
+		}
+
+		if ( ! empty( $repository['Version'] ) ) {
 			$std_tag     = entrepot_get_standardized_version_number( $tag );
-			$std_version = entrepot_get_standardized_version_number( $plugin['Version'] );
+			$std_version = entrepot_get_standardized_version_number( $repository['Version'] );
 
 			if ( ! $std_tag || ! $std_version || version_compare( $std_tag, $std_version, '<=' ) ) {
 				continue;
 			}
 
 			$response = wp_parse_args( array(
-				'id'          => rtrim( str_replace( array( 'https://', 'http://' ), '', $plugin['GitHub Plugin URI'] ), '/' ),
-				'slug'        => $plugin['slug'],
-				'plugin'      => $plugin['plugin'],
-				'url'         => $plugin['GitHub Plugin URI'],
+				'id'          => rtrim( str_replace( array( 'https://', 'http://' ), '', $repository['GitHub Plugin URI'] ), '/' ),
+				'slug'        => $repository['slug'],
+				'plugin'      => $repository['plugin'],
+				'url'         => $repository[ $github_uri_key ],
 				'package'     => sprintf( '%1$sreleases/download/%2$s/%3$s',
-					trailingslashit( $plugin['GitHub Plugin URI'] ),
+					trailingslashit( $repository[ $github_uri_key ] ),
 					$tag,
-					sanitize_file_name( $plugin['slug'] . '.zip' )
+					sanitize_file_name( $repository['slug'] . '.zip' )
 				),
 			), $response );
 
@@ -321,10 +343,35 @@ function entrepot_get_plugin_latest_stable_release( $atom_url = '', $plugin = ar
 				$tag_data->full_upgrade_notice = end( $release->content );
 			}
 
-			if ( 'latest' === $plugin['Version'] ) {
+			if ( 'latest' === $repository['Version'] ) {
 				$response['download_link'] = $response['package'];
 				$response['version']       = $response['new_version'];
 				$response['name']          = $response['slug'];
+
+				// Specific to themes.
+				if ( 'theme' === $type ) {
+					$theme_data = entrepot_get_repositories( $response['slug'], 'themes' );
+
+					$response['preview_url'] = '';
+					if ( ! empty( $theme_data->urls->preview_url ) ) {
+						$response['preview_url'] = set_url_scheme( $theme_data->urls->preview_url );
+					}
+
+					$response['author'] = array();
+					if ( ! empty( $theme_data->author ) ) {
+						$response['author'] = array(
+							'user_nicename' => $theme_data->author,
+							'display_name'  => $theme_data->author,
+						);
+
+						if ( isset( $theme->urls->author_uri ) ) {
+							$response['author']['profile'] = $theme->urls->author_uri;
+						}
+					}
+
+					$response['screenshot_url'] = $theme->screenshot;
+				}
+
 				$tag_data->is_install = true;
 			} else {
 				$tag_data->is_update = true;
@@ -405,10 +452,10 @@ function entrepot_update_repositories( $option = null ) {
 			continue;
 		}
 
-		$response = entrepot_get_plugin_latest_stable_release( $json->releases, array_merge( $dp, array(
+		$response = entrepot_get_repository_latest_stable_release( $json->releases, array_merge( $dp, array(
 			'plugin' => $kr,
 			'slug'   => $repository_name,
-		) ) );
+		) ), 'plugin' );
 
 		$repositories_data[ $kr ] = $response;
 	}

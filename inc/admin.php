@@ -393,17 +393,26 @@ function entrepot_repositories_api( $res = false, $action = '', $args = null ) {
 		$json = entrepot_get_repository_json( $args->slug );
 
 		if ( $json && $json->releases ) {
-			$res = entrepot_get_plugin_latest_stable_release( $json->releases, array(
+			$res = entrepot_get_repository_latest_stable_release( $json->releases, array(
 				'plugin'            => $json->name,
 				'slug'              => $args->slug,
 				'Version'           => 'latest',
 				'GitHub Plugin URI' => str_replace( '/releases', '', $json->releases ),
-			) );
+			), 'plugin' );
 		}
+
+	// @todo merge this statement with previous one.
 	} elseif ( 'theme_information' === $action && ! empty( $args->slug ) ) {
 		$json = entrepot_get_repository_json( $args->slug, 'themes' );
 
-		return new WP_Error( 'themes_api_failed', __( 'Première étape de développement intégration thèmes', 'entrepot' ) );
+		if ( $json && $json->releases ) {
+			$res = entrepot_get_repository_latest_stable_release( $json->releases, array(
+				'theme'             => $json->name,
+				'slug'              => $args->slug,
+				'Version'           => 'latest',
+				'GitHub Theme URI' => str_replace( '/releases', '', $json->releases ),
+			), 'theme' );
+		}
 	}
 
 	return $res;
