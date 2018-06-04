@@ -6,7 +6,7 @@
 	  "plugin"
 	],
 	"country": "fr_FR",
-	"releases": "https://github.com/imath/test-plugin/releases",
+	"releases": "",
 	"issues": "https://github.com/imath/test-plugin/issues",
 	"description": {
 		"en_US" : "Testing description",

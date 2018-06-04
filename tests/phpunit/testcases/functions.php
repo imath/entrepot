@@ -12,6 +12,24 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 		return PR_TESTING_ASSETS;
 	}
 
+	public function repositories_list( $list = array(), $type = '' ) {
+		if ( 'themes' === $type ) {
+			return array( 'test-theme' => array(
+				'theme'            => 'test-theme',
+				'Name'             => 'Test Theme',
+				'Version'          => '1.0.0-alpha',
+				'GitHub Theme URI' => 'https://github.com/imath/test-theme',
+			) );
+		} else {
+			$plugin_data = get_plugin_data( PR_TESTING_ASSETS . '/test-plugin.php', true, false );
+			$plugin_data['Version'] = '1.0.0-alpha';
+
+			return array(
+				'test-plugin/test-plugin.php' => $plugin_data,
+			);
+		}
+	}
+
 	/**
 	 * @group update
 	 */
@@ -26,7 +44,7 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 			'plugin'            => $json->name,
 			'slug'              => 'test-plugin',
 			'Version'           => '1.0.0-beta1',
-			'GitHub Plugin URI' => rtrim( $json->releases, '/releases' ),
+			'GitHub Plugin URI' => 'https://github.com/imath/test-plugin',
 		), 'plugin' );
 
 		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
@@ -48,7 +66,7 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 			'plugin'            => $json->name,
 			'slug'              => 'test-plugin',
 			'Version'           => '1.0.0',
-			'GitHub Plugin URI' => rtrim( $json->releases, '/releases' ),
+			'GitHub Plugin URI' => 'https://github.com/imath/test-plugin',
 		), 'plugin' );
 
 		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
@@ -70,7 +88,7 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 			'plugin'            => $json->name,
 			'slug'              => 'test-plugin',
 			'Version'           => '1.0',
-			'GitHub Plugin URI' => rtrim( $json->releases, '/releases' ),
+			'GitHub Plugin URI' => 'https://github.com/imath/test-plugin',
 		), 'plugin' );
 
 		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
@@ -92,7 +110,7 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 			'plugin'            => $json->name,
 			'slug'              => 'test-plugin',
 			'Version'           => '39',
-			'GitHub Plugin URI' => rtrim( $json->releases, '/releases' ),
+			'GitHub Plugin URI' => 'https://github.com/imath/test-plugin',
 		), 'plugin' );
 
 		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
@@ -114,7 +132,7 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 			'plugin'            => $json->name,
 			'slug'              => 'test-plugin',
 			'Version'           => '1.0.0-beta1',
-			'GitHub Plugin URI' => rtrim( $json->releases, '/releases' ),
+			'GitHub Plugin URI' => 'https://github.com/imath/test-plugin',
 		), 'plugin' );
 
 		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
@@ -136,7 +154,7 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 			'plugin'            => $json->name,
 			'slug'              => 'test-plugin',
 			'Version'           => '1.7.0',
-			'GitHub Plugin URI' => rtrim( $json->releases, '/releases' ),
+			'GitHub Plugin URI' => 'https://github.com/imath/test-plugin',
 		), 'plugin' );
 
 		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
@@ -158,12 +176,86 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 			'plugin'            => $json->name,
 			'slug'              => 'test-plugin',
 			'Version'           => '1.6.0',
-			'GitHub Plugin URI' => rtrim( $json->releases, '/releases' ),
+			'GitHub Plugin URI' => 'https://github.com/imath/test-plugin',
 		), 'plugin' );
 
 		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
 
 		$this->assertTrue( $release->is_update );
+	}
+
+	/**
+	 * @group update
+	 */
+	public function test_entrepot_update_plugin_repositories() {
+		set_current_screen( 'dashboard' );
+
+		add_filter( 'entrepot_get_installed_repositories', array( $this, 'repositories_list' ), 10, 2 );
+		add_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+
+		do_action( 'http_api_debug' );
+
+		$update_plugins = (object) array(
+			'last_checked' => 1528137356,
+			'response'     => array(
+				'plugin/plugin.php' => (object) array(
+					'id'          => 'w.org/plugins/plugin',
+					'slug'        => 'plugin',
+					'plugin'      => 'plugin/plugin.php',
+					'new_version' => '2.0.0',
+					'url'         => 'https://wordpress.org/plugins/plugin/',
+					'package'     => 'https://downloads.wordpress.org/plugin/plugin.2.0.0.zip'
+				)
+			),
+			'translations' => array(),
+			'no_update'    => array(),
+		);
+
+		set_site_transient( 'update_plugins', $update_plugins );
+
+		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+		remove_filter( 'entrepot_get_installed_repositories', array( $this, 'repositories_list' ), 10, 2 );
+
+		$updates = get_site_transient( 'update_plugins' )->response;
+		$this->assertTrue( isset( $updates['plugin/plugin.php'] ) && isset( $updates['test-plugin/test-plugin.php'] ) );
+
+		delete_site_transient( 'update_plugins' );
+
+		set_current_screen( 'front' );
+	}
+
+	/**
+	 * @group update
+	 */
+	public function test_entrepot_update_theme_repositories() {
+		add_filter( 'entrepot_get_installed_repositories', array( $this, 'repositories_list' ), 10, 2 );
+		add_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+
+		do_action( 'http_api_debug' );
+
+		$update_themes = (object) array(
+			'last_checked' => 1528137356,
+			'checked'      => array(),
+			'response'     => array(
+				'theme' => array(
+					'theme'       => 'theme',
+					'new_version' => '2.0.0',
+					'url'         => 'https://wordpress.org/themes/theme/',
+					'package'     => 'https://downloads.wordpress.org/theme/theme.2.0.0.zip',
+				),
+			),
+			'translations' => array(),
+		);
+
+		set_site_transient( 'update_themes', $update_themes );
+
+		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+		remove_filter( 'entrepot_get_installed_repositories', array( $this, 'repositories_list' ), 10, 2 );
+
+		$updates = get_site_transient( 'update_themes' )->response;
+		$this->assertTrue( isset( $updates['theme'] ) && isset( $updates['test-theme'] ) );
+
+		delete_site_transient( 'update_themes' );
 	}
 
 	/**
@@ -180,7 +272,7 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 			'plugin'            => $json->name,
 			'slug'              => 'test-plugin',
 			'Version'           => 'latest',
-			'GitHub Plugin URI' => rtrim( $json->releases, '/releases' ),
+			'GitHub Plugin URI' => 'https://github.com/imath/test-plugin',
 		), 'plugin' );
 
 		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
@@ -202,7 +294,7 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 			'plugin'            => $json->name,
 			'slug'              => 'test-plugin',
 			'Version'           => 'latest',
-			'GitHub Plugin URI' => rtrim( $json->releases, '/releases' ),
+			'GitHub Plugin URI' => 'https://github.com/imath/test-plugin',
 		), 'plugin' );
 
 		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
@@ -225,7 +317,7 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 			'plugin'            => $json->name,
 			'slug'              => 'test-plugin',
 			'Version'           => 'latest',
-			'GitHub Plugin URI' => rtrim( $json->releases, '/releases' ),
+			'GitHub Plugin URI' => 'https://github.com/imath/test-plugin',
 		), 'plugin' );
 
 		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );

@@ -41,10 +41,12 @@ add_action( 'in_admin_header', 'entrepot_catch_all_notices',               1    
 add_action( 'admin_enqueue_scripts', 'entrepot_admin_enqueue_scripts' );
 
 // Ease repositories identification
-add_filter( 'extra_plugin_headers', 'entrepot_extra_header', 10, 1 );
+add_filter( 'extra_plugin_headers', 'entrepot_plugin_extra_header', 10, 1 );
+add_filter( 'extra_theme_headers',  'entrepot_theme_extra_header',  10, 1 );
 
-// Manage repositories Upgrades
-add_filter( 'set_site_transient_update_plugins', 'entrepot_update_repositories' );
+// Manage repository Updates
+add_action( 'set_site_transient_update_plugins', 'entrepot_update_plugin_repositories', 10, 1 );
+add_action( 'set_site_transient_update_themes',  'entrepot_update_theme_repositories',  10, 1 );
 
 // Plugins Install Screen > Entrepôt Tab.
 add_filter( 'install_plugins_tabs',                                 'entrepot_admin_repositories_tab',            10, 1 );
