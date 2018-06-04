@@ -43,10 +43,10 @@ class entrepot_Admin_Tests extends WP_UnitTestCase {
 		$this->assertTrue( $updates['entrepot/entrepot.php']->is_update );
 	}
 
-	public function test_entrepot_admin_get_repositories_list() {
+	public function test_entrepot_admin_get_plugin_repositories_list() {
 		set_current_screen( 'dashboard' );
 
-		$repositories = entrepot_admin_get_repositories_list();
+		$repositories = entrepot_admin_get_plugin_repositories_list();
 		$slugs        = array();
 
 		foreach ( $repositories as $repository ) {

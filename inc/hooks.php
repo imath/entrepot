@@ -37,6 +37,9 @@ add_filter( 'all_plugins',     'entrepot_all_installed_repositories_list'       
 add_filter( 'plugin_row_meta', 'entrepot_plugin_row_meta',                10, 3 );
 add_action( 'in_admin_header', 'entrepot_catch_all_notices',               1    );
 
+// Enqueue scripts when needed
+add_action( 'admin_enqueue_scripts', 'entrepot_admin_enqueue_scripts' );
+
 // Ease repositories identification
 add_filter( 'extra_plugin_headers', 'entrepot_extra_header', 10, 1 );
 

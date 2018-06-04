@@ -35,10 +35,23 @@ function entrepot_admin_updater() {
  * Gets the list of available repositories.
  *
  * @since 1.0.0
+ * @deprecated 1.4.0
  *
  * @return array The list of available repositories.
  */
 function entrepot_admin_get_repositories_list() {
+	_deprecated_function( __FUNCTION__, '1.4.0', 'entrepot_admin_get_plugin_repositories_list()' );
+	return entrepot_admin_get_plugin_repositories_list();
+}
+
+/**
+ * Gets the list of available plugin repositories.
+ *
+ * @since 1.4.0
+ *
+ * @return array The list of available plugin repositories.
+ */
+function entrepot_admin_get_plugin_repositories_list() {
 	$repositories    = entrepot_get_repositories();
 	$installed_repos = entrepot_get_installed_repositories();
 	$keyed_by_slug   = array();
@@ -120,6 +133,83 @@ function entrepot_admin_get_repositories_list() {
 }
 
 /**
+ * Gets the list of available theme repositories.
+ *
+ * @since 1.4.0
+ *
+ * @return array The list of available theme repositories.
+ */
+function entrepot_admin_get_theme_repositories_list() {
+	$themes = entrepot_get_repositories( '', 'themes' );
+
+	// No Themes in the Entrepôt, stop!
+	if ( ! $themes ) {
+		return array();
+	}
+
+	// Prepare a list of installed themes to check against before the loop.
+	$installed_themes = array();
+	$wp_themes        = wp_get_themes();
+	foreach ( $wp_themes as $theme ) {
+		$installed_themes[] = $theme->get_stylesheet();
+	}
+	$update_php = self_admin_url( 'update.php?action=install-theme' );
+	$locale     = get_user_locale();
+
+	// Set up properties for themes available in the Entrepôt.
+	foreach ( $themes as &$theme ) {
+		$theme->install_url = add_query_arg(
+			array(
+				'theme'       => $theme->slug,
+				'_wpnonce'    => wp_create_nonce( 'install-theme_' . $theme->slug ),
+			), $update_php
+		);
+
+		$theme->name        = wp_kses( $theme->name, array() );
+		$theme->version     = '';
+		$theme->description = entrepot_sanitize_repository_text( $theme->description->{$locale} );
+		$theme->stars       = '';
+		$theme->num_ratings = 0;
+		$theme->preview_url = '';
+
+		if ( ! empty( $theme->urls->preview_url ) ) {
+			$theme->preview_url = set_url_scheme( $theme->urls->preview_url );
+		}
+
+		// Handle themes that are already installed as installed themes.
+		if ( in_array( $theme->slug, $installed_themes, true ) ) {
+			$theme->type = 'installed';
+		} else {
+			$theme->type = 'entrepot';
+		}
+
+		// Set active based on customized theme.
+		$theme->active = ( isset( $_POST['customized_theme'] ) && $_POST['customized_theme'] === $theme->slug );
+
+		// Map available theme properties to installed theme properties.
+		$theme->id             = $theme->slug;
+		$theme->screenshot     = array( $theme->screenshot );
+		$theme->screenshot_url = $theme->screenshot;
+		$theme->authorAndUri   = wp_kses( $theme->author, array() );
+		$theme->author         = array(
+			'display_name' => $theme->authorAndUri,
+		);
+
+		if ( ! empty( $theme->template ) ) {
+			$theme->parent = $theme->template;
+		} else {
+			$theme->parent = false;
+		}
+
+		foreach ( array( 'country', 'releases', 'issues', 'README', 'urls' ) as $rk ) {
+			unset( $theme->{$rk} );
+		}
+	}
+
+	return $themes;
+}
+
+/**
  * WP Ajax is overused by plugins.. Let's be sure we are
  * alone to request there.
  *
@@ -132,7 +222,7 @@ function entrepot_admin_send_json() {
 		wp_send_json( __( 'Vous n\'êtes pas autorisé à réaliser cette action.', 'entrepot' ), 403 );
 	}
 
-	$repositories = entrepot_admin_get_repositories_list();
+	$repositories = entrepot_admin_get_plugin_repositories_list();
 
 	if ( empty( $repositories ) ) {
 		wp_send_json( __( 'Un problème est survenu lors de la récupération des dépôts de plugin.', 'entrepot' ), 500 );
@@ -294,6 +384,32 @@ function entrepot_admin_register_scripts() {
 }
 
 /**
+ * Enqueue scripts when needed.
+ *
+ * @since 1.4.0
+ */
+function entrepot_admin_enqueue_scripts() {
+	$current_screen = get_current_screen();
+
+	if ( empty( $current_screen->id ) || 0 !== strpos( 'theme-install', $current_screen->id ) ) {
+		return;
+	}
+
+	// Add the entrepôt tab to the Theme Install filters bar.
+	wp_add_inline_script( 'theme', sprintf( '
+		( function( $ ) {
+			$( \'.wp-filter .filter-links\' ).append(
+				$( \'<li></li>\' ).html(
+					$( \'<a></a>\' ).html( \'%s\' )
+					                .prop( \'href\', \'#\' )
+					                .attr( \'data-sort\', \'entrepot\' )
+				)
+			);
+		} )( jQuery );
+	', esc_html__( 'Entrepôt', 'entrepot' ) ) );
+}
+
+/**
  * Adds a new tab to the Plugins Install screen.
  *
  * @since 1.0.0
@@ -375,6 +491,7 @@ function _entrepot_admin_fix_plugin_updates_count() {
  *                         False when not Shortcircuited.
  */
 function entrepot_repositories_api( $res = false, $action = '', $args = null ) {
+	// Plugins
 	if ( 'query_plugins' === $action && ! empty( $args->entrepot ) ) {
 		wp_enqueue_script( 'entrepot' );
 		$res = (object) array(
@@ -389,6 +506,15 @@ function entrepot_repositories_api( $res = false, $action = '', $args = null ) {
 		 * error.
 		 */
 		_entrepot_admin_fix_plugin_updates_count();
+
+	// Themes
+	} elseif ( 'query_themes' === $action && ! empty( $args->browse ) && 'entrepot' === $args->browse ) {
+		$themes = entrepot_admin_get_theme_repositories_list();
+
+		$res = new stdClass;
+		$res->themes = $themes;
+		$res->info = array( "page" => 1,"pages" => 1,"results" => count( $themes ) );
+
 	} elseif ( 'plugin_information' === $action && ! empty( $args->slug ) ) {
 		$json = entrepot_get_repository_json( $args->slug );
 
