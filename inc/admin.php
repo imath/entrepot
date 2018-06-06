@@ -174,6 +174,13 @@ function entrepot_admin_get_theme_repositories_list() {
 
 		if ( ! empty( $theme->urls->preview_url ) ) {
 			$theme->preview_url = set_url_scheme( $theme->urls->preview_url );
+		} else {
+			$theme->preview_url = add_query_arg(
+				array(
+					'page'        => 'repositories',
+					'theme'       => $theme->slug,
+				), self_admin_url( 'themes.php' )
+			);
 		}
 
 		// Handle themes that are already installed as installed themes.
@@ -248,7 +255,7 @@ function entrepot_admin_add_menu() {
 	// The admin screen should not be displayed in subsites.
 	if ( ! is_multisite() || 'network_admin_menu' === current_action() ) {
 		$screens = array(
-			'admin' => array(
+			'add-plugins' => array(
 				'page_hook' => add_plugins_page(
 					__( 'Dépôts', 'entrepot' ),
 					__( 'Dépôts', 'entrepot' ),
@@ -268,6 +275,17 @@ function entrepot_admin_add_menu() {
 				),
 				'load_callback' => 'entrepot_admin_versions_load',
 			),
+			'theme-details' => array(
+				'page_hook' => add_theme_page(
+					__( 'Dépôts', 'entrepot' ),
+					__( 'Dépôts', 'entrepot' ),
+					'install_themes',
+					'repositories',
+					'entrepot_admin_menu'
+				),
+				'load_callback' => 'entrepot_admin_theme_details',
+			),
+
 		);
 	}
 
@@ -294,6 +312,29 @@ function entrepot_admin_add_menu() {
 }
 
 /**
+ * Loads a fallback iframe to display a specific Theme details
+ * when its preview url is not available.
+ *
+ * @since 1.4.0
+ */
+function entrepot_admin_theme_details() {
+	if ( ! current_user_can( 'install_themes' ) && ! current_user_can( 'update_themes' ) ) {
+		wp_die(
+			__( 'Vous n\'êtes pas autorisé à réaliser cette action.', 'entrepot' ),
+			__( 'Accès interdit.', 'entrepot' ),
+			array( 'response' => 403 )
+		);
+	}
+
+	iframe_header(); ?>
+	<h1 style="text-align:center">
+		<?php esc_html_e( 'Ce thème ne propose pas d\'aperçu.', 'entrepot' ); ?>
+	</h1
+	<?php iframe_footer();
+	exit;
+}
+
+/**
  * The Repositories Administration page
  *
  * @since 1.0.0
@@ -307,6 +348,7 @@ function entrepot_admin_menu() {}
  */
 function entrepot_admin_head() {
 	remove_submenu_page( 'plugins.php', 'repositories' );
+	remove_submenu_page( 'themes.php', 'repositories' );
 
 	if ( ! entrepot()->upgrades ) {
 		remove_submenu_page( 'plugins.php', 'upgrade-repositories' );
