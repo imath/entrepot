@@ -14,6 +14,7 @@
         },
         "README": "https://raw.githubusercontent.com/imath/vingt-dixsept/master/README.md",
         "urls": {
+            "history": "https://raw.githubusercontent.com/imath/vingt-dixsept/master/CHANGELOG.md",
             "donate": "https://paypal.me/imath",
             "preview_url": ""
         }
