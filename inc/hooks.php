@@ -49,10 +49,10 @@ add_action( 'set_site_transient_update_plugins', 'entrepot_update_plugin_reposit
 add_action( 'set_site_transient_update_themes',  'entrepot_update_theme_repositories',  10, 1 );
 
 // Plugins Install Screen > Entrepôt Tab.
-add_filter( 'install_plugins_tabs',                                 'entrepot_admin_repositories_tab',            10, 1 );
-add_filter( 'install_plugins_table_api_args_entrepot_repositories', 'entrepot_admin_repositories_tab_args',       10, 1 );
-add_action( 'install_plugins_entrepot_repositories',                'entrepot_admin_repositories_print_templates'       );
-add_action( 'install_plugins_pre_plugin-information',               'entrepot_admin_plugin_details',               5    );
+add_filter( 'install_plugins_tabs',                                 'entrepot_admin_repositories_tab',       10, 1 );
+add_filter( 'install_plugins_table_api_args_entrepot_repositories', 'entrepot_admin_repositories_tab_args',  10, 1 );
+add_action( 'install_plugins_entrepot_repositories',                'entrepot_admin_plugins_print_templates'       );
+add_action( 'install_plugins_pre_plugin-information',               'entrepot_admin_plugin_details',          5    );
 
 // Override the Plugins/Themes API to include Entrepôt repositories.
 add_filter( 'plugins_api', 'entrepot_repositories_api', 10, 3 );

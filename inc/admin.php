@@ -174,6 +174,7 @@ function entrepot_admin_get_theme_repositories_list() {
 
 		if ( ! empty( $theme->urls->preview_url ) ) {
 			$theme->preview_url = set_url_scheme( $theme->urls->preview_url );
+			$theme->hasPreview  = true;
 		} else {
 			$theme->preview_url = add_query_arg(
 				array(
@@ -378,6 +379,14 @@ function entrepot_admin_register_scripts() {
 		true
 	);
 
+	wp_register_script(
+		'entrepot-themes',
+		sprintf( '%1$sthemes%2$s.js', entrepot_js_url(), entrepot_min_suffix() ),
+		array( 'theme' ),
+		entrepot_version(),
+		true
+	);
+
 	wp_register_style(
 		'entrepot-notices',
 		sprintf( '%1$snotices%2$s.css', entrepot_assets_url(), entrepot_min_suffix() ),
@@ -415,18 +424,12 @@ function entrepot_admin_enqueue_scripts() {
 		return;
 	}
 
-	// Add the entrepôt tab to the Theme Install filters bar.
-	wp_add_inline_script( 'theme', sprintf( '
-		( function( $ ) {
-			$( \'.wp-filter .filter-links\' ).append(
-				$( \'<li></li>\' ).html(
-					$( \'<a></a>\' ).html( \'%s\' )
-					                .prop( \'href\', \'#\' )
-					                .attr( \'data-sort\', \'entrepot\' )
-				)
-			);
-		} )( jQuery );
-	', esc_html__( 'Entrepôt', 'entrepot' ) ) );
+	wp_enqueue_script( 'entrepot-themes' );
+	wp_localize_script( 'entrepot-themes', 'entrepotl10nThemes', array(
+		'tabText'  => __( 'Entrepôt', 'entrepot' ),
+		'moreText' => __( 'Afficher les détails', 'entrepôt' ),
+		'btnText'  => __( 'Détails', 'entrepôt' ),
+	) );
 }
 
 /**
@@ -568,10 +571,22 @@ function entrepot_repositories_api( $res = false, $action = '', $args = null ) {
  * Prints the the JavaScript templates.
  *
  * @since 1.0.0
+ * @deprecated 1.4.0
  *
  * @return string HTML Output.
  */
 function entrepot_admin_repositories_print_templates() {
+	_deprecated_function( __FUNCTION__, '1.4.0', 'entrepot_admin_plugins_print_templates()' );
+	return entrepot_admin_plugins_print_templates();
+}
+/**
+ * Prints the the JavaScript templates for Plugin views.
+ *
+ * @since 1.4.0
+ *
+ * @return string HTML Output.
+ */
+function entrepot_admin_plugins_print_templates() {
 	?>
 	<form id="plugin-filter" method="post">
 		<div class="wp-list-table widefat plugin-install">
