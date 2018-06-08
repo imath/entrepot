@@ -427,8 +427,8 @@ function entrepot_admin_enqueue_scripts() {
 	wp_enqueue_script( 'entrepot-themes' );
 	wp_localize_script( 'entrepot-themes', 'entrepotl10nThemes', array(
 		'tabText'  => __( 'Entrepôt', 'entrepot' ),
-		'moreText' => __( 'Afficher les détails', 'entrepôt' ),
-		'btnText'  => __( 'Détails', 'entrepôt' ),
+		'moreText' => __( 'Afficher les détails', 'entrepot' ),
+		'btnText'  => __( 'Détails', 'entrepot' ),
 	) );
 }
 
