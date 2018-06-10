@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Entrepôt 1.4.0-alpha\n"
 "Report-Msgid-Bugs-To: https://github.com/imath/entrepot/issues\n"
-"POT-Creation-Date: 2018-06-10 15:08:21+00:00\n"
+"POT-Creation-Date: 2018-06-10 17:34:42+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13,31 +13,31 @@ msgstr ""
 "Language-Team: FRENCH <contact@imathi.eu>\n"
 "X-Generator: grunt-wp-i18n 0.5.4\n"
 
-#: inc/admin.php:110
+#: inc/admin.php:115
 msgid "Plus d'informations sur %s"
 msgstr ""
 
-#: inc/admin.php:231 inc/admin.php:946
+#: inc/admin.php:236 inc/admin.php:951
 msgid "Vous n'êtes pas autorisé à réaliser cette action."
 msgstr ""
 
-#: inc/admin.php:237
+#: inc/admin.php:242
 msgid "Un problème est survenu lors de la récupération des dépôts de plugin."
 msgstr ""
 
-#: inc/admin.php:262 inc/admin.php:263 inc/admin.php:282 inc/admin.php:283
+#: inc/admin.php:267 inc/admin.php:268 inc/admin.php:287 inc/admin.php:288
 msgid "Dépôts"
 msgstr ""
 
-#: inc/admin.php:272 inc/admin.php:273 inc/admin.php:1477
+#: inc/admin.php:277 inc/admin.php:278 inc/admin.php:1482
 msgid "Gestion des versions"
 msgstr ""
 
-#: inc/admin.php:297
+#: inc/admin.php:302
 msgid "Mise à niveau des Extensions"
 msgstr ""
 
-#: inc/admin.php:298 inc/admin.php:1379
+#: inc/admin.php:303 inc/admin.php:1384
 msgid "Mettre à niveau"
 msgstr ""
 
@@ -45,149 +45,149 @@ msgstr ""
 msgid "Entrepôt"
 msgstr ""
 
-#: inc/admin.php:430
+#: inc/admin.php:435
 msgid "Afficher les détails"
 msgstr ""
 
-#: inc/admin.php:431
+#: inc/admin.php:436
 msgid "Détails"
 msgstr ""
 
-#: inc/admin.php:593
+#: inc/admin.php:598
 msgid "Liste des dépôts"
 msgstr ""
 
-#: inc/admin.php:613
+#: inc/admin.php:618
 msgid "Installer maintenant"
 msgstr ""
 
-#: inc/admin.php:613
+#: inc/admin.php:618
 msgid "Installer"
 msgstr ""
 
-#: inc/admin.php:616
+#: inc/admin.php:621
 msgid "Mettre à jour maintenant"
 msgstr ""
 
-#: inc/admin.php:616
+#: inc/admin.php:621
 msgid "Mettre à jour"
 msgstr ""
 
-#: inc/admin.php:619
+#: inc/admin.php:624
 msgid "Activer sur le réseau"
 msgstr ""
 
-#: inc/admin.php:619
+#: inc/admin.php:624
 msgid "Activer"
 msgstr ""
 
-#: inc/admin.php:622
+#: inc/admin.php:627
 msgid "Actif"
 msgstr ""
 
-#: inc/admin.php:625
+#: inc/admin.php:630
 msgid "Installé"
 msgstr ""
 
-#: inc/admin.php:631
+#: inc/admin.php:636
 msgid "Plus de détails"
 msgstr ""
 
-#: inc/admin.php:646 inc/admin.php:1067
+#: inc/admin.php:651 inc/admin.php:1072
 msgid "Dépendance(s) insatisfaite(s):"
 msgstr ""
 
-#: inc/admin.php:686
+#: inc/admin.php:691
 msgid "Détails du dépôt"
 msgstr ""
 
-#: inc/admin.php:696
+#: inc/admin.php:701
 msgid ""
 "Désolé, les détails concernant ce dépôt ne sont pas disponibles pour le "
 "moment."
 msgstr ""
 
-#: inc/admin.php:706
+#: inc/admin.php:711
 msgid "Faire une donation"
 msgstr ""
 
-#: inc/admin.php:707
+#: inc/admin.php:712
 msgid "Voir l'historique"
 msgstr ""
 
-#: inc/admin.php:708
+#: inc/admin.php:713
 msgid "Lire la documentation"
 msgstr ""
 
-#: inc/admin.php:735
+#: inc/admin.php:740
 msgid "Présentation"
 msgstr ""
 
-#: inc/admin.php:814
+#: inc/admin.php:819
 msgid "Rapporter une anomalie"
 msgstr ""
 
-#: inc/admin.php:819
+#: inc/admin.php:824
 msgid "Contribuer"
 msgstr ""
 
-#: inc/admin.php:830
+#: inc/admin.php:835
 msgid "Voir sur Github"
 msgstr ""
 
-#: inc/admin.php:833
+#: inc/admin.php:838
 msgid "Plus d'actions"
 msgstr ""
 
-#: inc/admin.php:853
+#: inc/admin.php:858
 msgid "Signaler"
 msgstr ""
 
-#: inc/admin.php:921
+#: inc/admin.php:926
 msgid "Détails de la mise à jour"
 msgstr ""
 
-#: inc/admin.php:930
+#: inc/admin.php:935
 msgid ""
 "Désolé ce dépôt n'a pas inclu d'informations de mise à jour pour cette "
 "version."
 msgstr ""
 
-#: inc/admin.php:947
+#: inc/admin.php:952
 msgid "Accès interdit."
 msgstr ""
 
-#: inc/admin.php:1189
+#: inc/admin.php:1194
 msgid "%d extension nécessite une mise à niveau"
 msgid_plural "%d extensions nécessitent une mise à niveau."
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/admin.php:1190
+#: inc/admin.php:1195
 msgid ""
 "Merci de visiter la page d'administration des %s pour effecuer les "
 "opérations nécessaires."
 msgstr ""
 
-#: inc/admin.php:1192
+#: inc/admin.php:1197
 msgid "mises à niveau"
 msgstr ""
 
-#: inc/admin.php:1208
+#: inc/admin.php:1213
 msgid "<span class=\"count\">%d</span> Alerte"
 msgid_plural "<span class=\"count\">%d</span> Alertes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/admin.php:1231
+#: inc/admin.php:1236
 msgid "Ne plus afficher cette alerte"
 msgstr ""
 
-#: inc/admin.php:1232
+#: inc/admin.php:1237
 msgid "Ouvrir la notice."
 msgstr ""
 
-#: inc/admin.php:1250
+#: inc/admin.php:1255
 msgid ""
 "Voici votre nouveau gestionnaires d'alertes. Toutes vos prochaines alertes "
 "s'y afficheront. Les alertes d'information ou d'erreur peuvent être "
@@ -196,79 +196,79 @@ msgid ""
 "indésirables."
 msgstr ""
 
-#: inc/admin.php:1274
+#: inc/admin.php:1279
 msgid "La mise à niveau a été interrompue en raison d'une erreur."
 msgstr ""
 
-#: inc/admin.php:1287
+#: inc/admin.php:1292
 msgid "Vous n'êtes pas autorisé à réaliser cette mise à niveau."
 msgstr ""
 
-#: inc/admin.php:1292
+#: inc/admin.php:1297
 msgid "La fonction de mise à niveau pour cette tâche est inexistante."
 msgstr ""
 
-#: inc/admin.php:1325
+#: inc/admin.php:1330
 msgid "%d tâche de mise à niveau à effectuer."
 msgid_plural "%d tâches de mise à niveau à effectuer."
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/admin.php:1353
+#: inc/admin.php:1358
 msgid "Mis à niveau"
 msgstr ""
 
-#: inc/admin.php:1354
+#: inc/admin.php:1359
 msgid ""
 "Attention, vous ne pourrez pas faire machine arrière à moins d'avoir fait "
 "une sauvegarde de votre base de données. Souhaitez-vous poursuivre ?"
 msgstr ""
 
-#: inc/admin.php:1359
+#: inc/admin.php:1364
 msgid "Mise à niveau"
 msgid_plural "Mises à niveau"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/admin.php:1362
+#: inc/admin.php:1367
 msgid "Aucune opération de mise à niveau à réaliser."
 msgstr ""
 
-#: inc/admin.php:1365
+#: inc/admin.php:1370
 msgid ""
 "Une fois votre base de données sauvegardée, utilisez le bouton de Mise à "
 "niveau pour procéder aux opérations correspondantes."
 msgstr ""
 
-#: inc/admin.php:1408
+#: inc/admin.php:1413
 msgid "Vue d’ensemble"
 msgstr ""
 
-#: inc/admin.php:1410
+#: inc/admin.php:1415
 msgid ""
 "Depuis cet écran vous pouvez manuellement administrer les versions "
 "installées pour vos extensions. Vous pouvez mettre à jour ou revenir à une "
 "version plus ancienne chacune des extensions listées."
 msgstr ""
 
-#: inc/admin.php:1411
+#: inc/admin.php:1416
 msgid ""
 "Pour cela, il suffit de cliquer sur le bouton indiquant la version actuelle "
 "de l'extension afin de sélectionner depuis votre appareil l'archive ZIP "
 "contenant la version de remplacement."
 msgstr ""
 
-#: inc/admin.php:1418
+#: inc/admin.php:1423
 msgid ""
 "Dans WordPress les packages sont au format ZIP, merci de sélectionner ce "
 "type de fichier"
 msgstr ""
 
-#: inc/admin.php:1419
+#: inc/admin.php:1424
 msgid "Erreur inconnue, merci de renouveler un peu plus tard"
 msgstr ""
 
-#: inc/admin.php:1434
+#: inc/admin.php:1439
 msgid "La gestion manuelle des versions des extensions nécessite WordPress 4.9."
 msgstr ""
 
@@ -374,33 +374,33 @@ msgstr ""
 msgid "https://imathi.eu/"
 msgstr ""
 
-#: inc/admin.php:355
+#: inc/admin.php:360
 msgctxt "plugin"
 msgid "De %s"
 msgstr ""
 
-#: inc/admin.php:1213
+#: inc/admin.php:1218
 msgctxt "Admin Notices Center tab"
 msgid "Mise à niveau"
 msgid_plural "Mises à niveau"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/admin.php:1218
+#: inc/admin.php:1223
 msgctxt "Admin Notices Center tab"
 msgid "Info"
 msgid_plural "Infos"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/admin.php:1223
+#: inc/admin.php:1228
 msgctxt "Admin Notices Center tab"
 msgid "Succès"
 msgid_plural "Succès"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/admin.php:1228
+#: inc/admin.php:1233
 msgctxt "Admin Notices Center tab"
 msgid "Erreur"
 msgid_plural "Erreurs"

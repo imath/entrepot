@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Entrepôt
  * Plugin URI: https://github.com/imath/entrepot/
- * Description: Une liste d'extensions gratuites hébergées sur GitHub.com.
+ * Description: Une liste d'extensions et thèmes gratuits hébergés sur GitHub.com.
  * Version: 1.4.0-alpha
  * Requires at least: 4.8
  * Tested up to: 5.0

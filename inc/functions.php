@@ -92,20 +92,48 @@ function entrepot_min_suffix() {
 /**
  * Gets the Repositories' dir.
  *
+ * @since 1.4.0
+ *
+ * @param  string $type The type of repositories to get. Default to 'plugins'.
+ * @return string Path to the repositories dir.
+ */
+function entrepot_repositories_dir( $type = 'plugins' ) {
+	/**
+	 * Unit tests filter. Do not use.
+	 *
+	 * @since  1.4.0
+	 *
+	 * @param string $repositories_dir Path to the repositories dir.
+	 * @param string $type             Repositories' type.
+	 */
+	$dir = apply_filters( 'entrepot_repositories_dir', trailingslashit( entrepot()->repositories_dir . $type ), $type );
+
+	/**
+	 * Use this filter to move somewhere else the Repositories dir.
+	 *
+	 * @since  1.0.0
+	 * @since  1.4.0 The filter is now dynamic to take themes in account.
+	 *
+	 * @param string $dir Path to the repositories type dir.
+	 */
+	return apply_filters( "entrepot_{$type}_dir", $dir );
+}
+
+/**
+ * Gets the Repositories' dir.
+ *
  * @since 1.0.0
+ * @deprecated 1.4.0
  *
  * @return string Path to the repositories dir.
  */
 function entrepot_plugins_dir() {
-	/**
-	 * Use this filter to move somewhere else the Repositories dir.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $repositories_dir Path to the repositories dir
-	 */
-	return apply_filters( 'entrepot_plugins_dir', entrepot()->repositories_dir );
+	_deprecated_function( __FUNCTION__, '1.4.0', 'entrepot_repositories_dir()' );
+	return entrepot_repositories_dir();
 }
+
+
+
 /**
  * Loads translation.
  *
@@ -133,21 +161,25 @@ function entrepot_setup_cache_group() {
  *
  * @param  string $slug An empty string to get all repositories or
  *                      the repository slug to get a specific repository.
- * @param  string $type The type of repositories to get. Default to repositories (plugins).
+ * @param  string $type The type of repositories to get. Default to 'plugins'.
  * @return array|object The list of repository objects or a single repository object.
  */
-function entrepot_get_repositories( $slug = '', $type = 'repositories' ) {
+function entrepot_get_repositories( $slug = '', $type = 'plugins' ) {
 	$repositories = wp_cache_get( $type, 'entrepot' );
 
 	if ( ! $repositories ) {
-		$src = 'entrepot.min.json';
+		$src = sprintf( '%1$sentrepot-%2$s.min.json', entrepot_assets_dir(), $type );
 
-		if ( 'repositories' !== $type ) {
-			$src = sprintf( 'entrepot-%s.json', $type );
+		if ( ! file_exists( $src ) ) {
+			return array();
 		}
 
-		$json         = file_get_contents( entrepot_assets_dir() . $src );
+		$json         = file_get_contents( $src );
 		$repositories = json_decode( $json );
+
+		if ( ! is_array( $repositories ) ) {
+			$repositories = array( $repositories );
+		}
 
 		// Cache repositories
 		wp_cache_add( $type, $repositories, 'entrepot' );
@@ -180,17 +212,17 @@ function entrepot_get_repositories( $slug = '', $type = 'repositories' ) {
  * @since 1.4.0 Adds a new $type parameter to look for Theme repositories.
  *
  * @param  string $repository Name of the plugin or the theme.
- * @param  string $type       The type of repositories to get. Default to repositories (plugins).
+ * @param  string $type       The type of repositories to get. Default to 'plugins'.
  * @return string             JSON data.
  */
-function entrepot_get_repository_json( $repository = '', $type = 'repositories' ) {
+function entrepot_get_repository_json( $repository = '', $type = 'plugins' ) {
 	if ( ! $repository ) {
 		return false;
 	}
 
 	// Specific to unit tests
 	if ( defined( 'PR_TESTING_ASSETS') && PR_TESTING_ASSETS ) {
-		$json = sprintf( '%1$s/%2$s.json', entrepot_plugins_dir(), sanitize_file_name( $repository ) );
+		$json = sprintf( '%1$s%2$s.json', entrepot_repositories_dir( $type ), sanitize_file_name( $repository ) );
 		if ( ! file_exists( $json ) ) {
 			return false;
 		}

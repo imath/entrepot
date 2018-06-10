@@ -20,11 +20,16 @@ function entrepot_admin_updater() {
 		return;
 	}
 
-	// New repositories can be added each time the Entrepôt has a new release.
-	wp_cache_delete( 'repositories', 'entrepot' );
-
 	if ( 1.1 === (float) entrepot_version() ) {
 		set_site_transient( 'entrepot_notice_example', true, DAY_IN_SECONDS );
+	}
+
+	// New repositories can be added each time the Entrepôt has a new release.
+	if ( 1.4 >= (float) entrepot_version() ) {
+		wp_cache_delete( 'plugins', 'entrepot' );
+		wp_cache_delete( 'themes', 'entrepot' );
+	} else {
+		wp_cache_delete( 'repositories', 'entrepot' );
 	}
 
 	// Update Entrepôt version.
@@ -165,6 +170,14 @@ function entrepot_admin_get_theme_repositories_list() {
 			), $update_php
 		);
 
+		/**
+		 * Defaults to en_US if User's language translation
+		 * is not included in Theme's JSON.
+		 */
+		if ( ! isset( $theme->description->{$locale} ) ) {
+			$locale = 'en_US';
+		}
+
 		$theme->name        = wp_kses( $theme->name, array() );
 		$theme->version     = '';
 		$theme->description = entrepot_sanitize_repository_text( $theme->description->{$locale} );
@@ -197,8 +210,8 @@ function entrepot_admin_get_theme_repositories_list() {
 
 		// Map available theme properties to installed theme properties.
 		$theme->id             = $theme->slug;
-		$theme->screenshot     = array( $theme->screenshot );
 		$theme->screenshot_url = $theme->screenshot;
+		$theme->screenshot     = array( $theme->screenshot );
 		$theme->authorAndUri   = wp_kses( $theme->author, array() );
 		$theme->author         = array(
 			'display_name' => $theme->authorAndUri,
@@ -891,7 +904,7 @@ function entrepot_admin_plugin_details() {
 	}
 
 	$plugin     = wp_unslash( $_REQUEST['plugin'] );
-	$repository = entrepot_get_repository_json( $plugin, 'repositories' );
+	$repository = entrepot_get_repository_json( $plugin, 'plugins' );
 
 	// If it's not an Entrepôt registered repository, leave WordPress handle the plugin.
 	if ( ! $repository ) {

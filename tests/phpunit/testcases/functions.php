@@ -9,7 +9,7 @@
 class entrepot_Functions_Tests extends WP_UnitTestCase {
 
 	public function repositories_dir() {
-		return PR_TESTING_ASSETS;
+		return PR_TESTING_ASSETS . '/';
 	}
 
 	public function repositories_list( $list = array(), $type = '' ) {
@@ -36,7 +36,7 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 	public function test_entrepot_get_plugin_latest_stable_release_for_update() {
 		$stable = PR_TESTING_ASSETS . '/releases-stable.atom';
 
-		add_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+		add_filter( 'entrepot_repositories_dir', array( $this, 'repositories_dir' ) );
 
 		$json = entrepot_get_repository_json( 'test-plugin' );
 
@@ -47,7 +47,7 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 			'GitHub Plugin URI' => 'https://github.com/imath/test-plugin',
 		), 'plugin' );
 
-		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+		remove_filter( 'entrepot_repositories_dir', array( $this, 'repositories_dir' ) );
 
 		$this->assertTrue( $release->is_update );
 	}
@@ -58,7 +58,7 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 	public function test_entrepot_get_plugin_latest_stable_release_two_digits_in_atom_for_update() {
 		$stable = PR_TESTING_ASSETS . '/releases-two-digits-stable.atom';
 
-		add_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+		add_filter( 'entrepot_repositories_dir', array( $this, 'repositories_dir' ) );
 
 		$json = entrepot_get_repository_json( 'test-plugin' );
 
@@ -69,7 +69,7 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 			'GitHub Plugin URI' => 'https://github.com/imath/test-plugin',
 		), 'plugin' );
 
-		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+		remove_filter( 'entrepot_repositories_dir', array( $this, 'repositories_dir' ) );
 
 		$this->assertTrue( $release->is_update );
 	}
@@ -80,7 +80,7 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 	public function test_entrepot_get_plugin_latest_stable_release_two_digits_in_version_for_update() {
 		$stable = PR_TESTING_ASSETS . '/releases-stable.atom';
 
-		add_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+		add_filter( 'entrepot_repositories_dir', array( $this, 'repositories_dir' ) );
 
 		$json = entrepot_get_repository_json( 'test-plugin' );
 
@@ -91,7 +91,7 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 			'GitHub Plugin URI' => 'https://github.com/imath/test-plugin',
 		), 'plugin' );
 
-		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+		remove_filter( 'entrepot_repositories_dir', array( $this, 'repositories_dir' ) );
 
 		$this->assertFalse( $release->is_update );
 	}
@@ -102,7 +102,7 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 	public function test_entrepot_get_plugin_latest_stable_release_no_dots_in_version_for_update() {
 		$stable = PR_TESTING_ASSETS . '/releases.atom';
 
-		add_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+		add_filter( 'entrepot_repositories_dir', array( $this, 'repositories_dir' ) );
 
 		$json = entrepot_get_repository_json( 'test-plugin' );
 
@@ -113,7 +113,7 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 			'GitHub Plugin URI' => 'https://github.com/imath/test-plugin',
 		), 'plugin' );
 
-		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+		remove_filter( 'entrepot_repositories_dir', array( $this, 'repositories_dir' ) );
 
 		$this->assertTrue( $release->is_update );
 	}
@@ -124,7 +124,7 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 	public function test_entrepot_get_plugin_not_stable_release_for_update() {
 		$stable = PR_TESTING_ASSETS . '/releases-not-stable.atom';
 
-		add_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+		add_filter( 'entrepot_repositories_dir', array( $this, 'repositories_dir' ) );
 
 		$json = entrepot_get_repository_json( 'test-plugin' );
 
@@ -135,7 +135,7 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 			'GitHub Plugin URI' => 'https://github.com/imath/test-plugin',
 		), 'plugin' );
 
-		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+		remove_filter( 'entrepot_repositories_dir', array( $this, 'repositories_dir' ) );
 
 		$this->assertFalse( $release->is_update );
 	}
@@ -146,7 +146,7 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 	public function test_entrepot_get_plugin_beta_latest_release_for_update() {
 		$stable = PR_TESTING_ASSETS . '/releases-beta-after-stable.atom';
 
-		add_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+		add_filter( 'entrepot_repositories_dir', array( $this, 'repositories_dir' ) );
 
 		$json = entrepot_get_repository_json( 'test-plugin' );
 
@@ -157,7 +157,7 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 			'GitHub Plugin URI' => 'https://github.com/imath/test-plugin',
 		), 'plugin' );
 
-		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+		remove_filter( 'entrepot_repositories_dir', array( $this, 'repositories_dir' ) );
 
 		$this->assertFalse( $release->is_update );
 	}
@@ -168,7 +168,7 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 	public function test_entrepot_get_plugin_beta_latest_release_but_update() {
 		$stable = PR_TESTING_ASSETS . '/releases-beta-after-stable.atom';
 
-		add_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+		add_filter( 'entrepot_repositories_dir', array( $this, 'repositories_dir' ) );
 
 		$json = entrepot_get_repository_json( 'test-plugin' );
 
@@ -179,7 +179,7 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 			'GitHub Plugin URI' => 'https://github.com/imath/test-plugin',
 		), 'plugin' );
 
-		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+		remove_filter( 'entrepot_repositories_dir', array( $this, 'repositories_dir' ) );
 
 		$this->assertTrue( $release->is_update );
 	}
@@ -191,7 +191,7 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 		set_current_screen( 'dashboard' );
 
 		add_filter( 'entrepot_get_installed_repositories', array( $this, 'repositories_list' ), 10, 2 );
-		add_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+		add_filter( 'entrepot_repositories_dir', array( $this, 'repositories_dir' ) );
 
 		do_action( 'http_api_debug' );
 
@@ -213,7 +213,7 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 
 		set_site_transient( 'update_plugins', $update_plugins );
 
-		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+		remove_filter( 'entrepot_repositories_dir', array( $this, 'repositories_dir' ) );
 		remove_filter( 'entrepot_get_installed_repositories', array( $this, 'repositories_list' ), 10, 2 );
 
 		$updates = get_site_transient( 'update_plugins' )->response;
@@ -229,7 +229,7 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 	 */
 	public function test_entrepot_update_theme_repositories() {
 		add_filter( 'entrepot_get_installed_repositories', array( $this, 'repositories_list' ), 10, 2 );
-		add_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+		add_filter( 'entrepot_repositories_dir', array( $this, 'repositories_dir' ) );
 
 		do_action( 'http_api_debug' );
 
@@ -249,7 +249,7 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 
 		set_site_transient( 'update_themes', $update_themes );
 
-		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+		remove_filter( 'entrepot_repositories_dir', array( $this, 'repositories_dir' ) );
 		remove_filter( 'entrepot_get_installed_repositories', array( $this, 'repositories_list' ), 10, 2 );
 
 		$updates = get_site_transient( 'update_themes' )->response;
@@ -264,7 +264,7 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 	public function test_entrepot_get_plugin_latest_stable_release_for_install() {
 		$stable = PR_TESTING_ASSETS . '/releases-stable.atom';
 
-		add_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+		add_filter( 'entrepot_repositories_dir', array( $this, 'repositories_dir' ) );
 
 		$json = entrepot_get_repository_json( 'test-plugin' );
 
@@ -275,7 +275,7 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 			'GitHub Plugin URI' => 'https://github.com/imath/test-plugin',
 		), 'plugin' );
 
-		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+		remove_filter( 'entrepot_repositories_dir', array( $this, 'repositories_dir' ) );
 
 		$this->assertTrue( $release->is_install );
 	}
@@ -286,7 +286,7 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 	public function test_entrepot_get_plugin_not_stable_release_for_install() {
 		$stable = PR_TESTING_ASSETS . '/releases-not-stable.atom';
 
-		add_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+		add_filter( 'entrepot_repositories_dir', array( $this, 'repositories_dir' ) );
 
 		$json = entrepot_get_repository_json( 'test-plugin' );
 
@@ -297,7 +297,7 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 			'GitHub Plugin URI' => 'https://github.com/imath/test-plugin',
 		), 'plugin' );
 
-		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+		remove_filter( 'entrepot_repositories_dir', array( $this, 'repositories_dir' ) );
 
 		$this->assertTrue( ! isset( $release->is_install ) );
 		$this->assertFalse( $release->is_update );
@@ -309,7 +309,7 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 	public function test_entrepot_get_plugin_beta_after_release_for_install() {
 		$stable = PR_TESTING_ASSETS . '/releases-beta-after-stable.atom';
 
-		add_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+		add_filter( 'entrepot_repositories_dir', array( $this, 'repositories_dir' ) );
 
 		$json = entrepot_get_repository_json( 'test-plugin' );
 
@@ -320,7 +320,7 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 			'GitHub Plugin URI' => 'https://github.com/imath/test-plugin',
 		), 'plugin' );
 
-		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+		remove_filter( 'entrepot_repositories_dir', array( $this, 'repositories_dir' ) );
 
 		$this->assertTrue( $release->is_install );
 		$this->assertTrue( $release->version === '1.7.0' );
@@ -366,7 +366,7 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 
 		require_once PR_TESTING_ASSETS . '/test-upgrade.php';
 
-		add_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+		add_filter( 'entrepot_repositories_dir', array( $this, 'repositories_dir' ) );
 		add_filter( 'entrepot_add_upgrader_tasks', 'test_upgrade_add_upgrade_routines' );
 
 		$upgrade = entrepot_get_upgrader_tasks();
@@ -375,7 +375,7 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 		$this->assertTrue( isset( $upgrade['test-upgrade']['info']['icon'] ) );
 		$this->assertTrue( 1 === count( $upgrade['test-upgrade']['tasks'] ) );
 
-		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+		remove_filter( 'entrepot_repositories_dir', array( $this, 'repositories_dir' ) );
 		remove_filter( 'entrepot_add_upgrader_tasks', 'test_upgrade_add_upgrade_routines' );
 		$test_upgrade_db_version = $reset_global;
 	}
@@ -391,14 +391,14 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 
 		require_once PR_TESTING_ASSETS . '/test-upgrade.php';
 
-		add_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+		add_filter( 'entrepot_repositories_dir', array( $this, 'repositories_dir' ) );
 		add_filter( 'entrepot_add_upgrader_tasks', 'test_upgrade_add_upgrade_routines' );
 
 		$upgrade = entrepot_get_upgrader_tasks();
 
 		$this->assertFalse( isset( $upgrade['test-upgrade'] ) );
 
-		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+		remove_filter( 'entrepot_repositories_dir', array( $this, 'repositories_dir' ) );
 		remove_filter( 'entrepot_add_upgrader_tasks', 'test_upgrade_add_upgrade_routines' );
 		$test_upgrade_db_version = $reset_global;
 	}
@@ -493,7 +493,7 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 
 		require_once PR_TESTING_ASSETS . '/test-upgrade.php';
 
-		add_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+		add_filter( 'entrepot_repositories_dir', array( $this, 'repositories_dir' ) );
 		add_filter( 'entrepot_add_upgrader_tasks', 'test_upgrade_add_upgrade_routines' );
 
 		$upgrade_filter = entrepot_get_upgrader_tasks();
@@ -506,7 +506,7 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 		$this->assertEquals( $upgrade_action, $upgrade_filter );
 
 		remove_action( 'entrepot_register_upgrade_tasks', 'test_upgrade_register_upgrade_routines' );
-		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+		remove_filter( 'entrepot_repositories_dir', array( $this, 'repositories_dir' ) );
 
 		$test_upgrade_db_version = $reset_global;
 		entrepot()->upgrades = $reset;
@@ -524,7 +524,7 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 
 		require_once PR_TESTING_ASSETS . '/test-upgrade.php';
 
-		add_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+		add_filter( 'entrepot_repositories_dir', array( $this, 'repositories_dir' ) );
 		add_action( 'entrepot_register_upgrade_tasks', 'test_upgrade_register_upgrade_multiple_versions' );
 
 		$upgrade_action = entrepot_get_upgrader_tasks();
@@ -532,7 +532,7 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 		$this->assertEquals( array( 'Upgrading to 2.0.0', 'Upgrading to 2.1.0' ), wp_list_pluck( $upgrade_action['test-upgrade']['tasks'], 'message' ) );
 
 		remove_action( 'entrepot_register_upgrade_tasks', 'test_upgrade_register_upgrade_multiple_versions' );
-		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+		remove_filter( 'entrepot_repositories_dir', array( $this, 'repositories_dir' ) );
 
 		$test_upgrade_db_version = $reset_global;
 		entrepot()->upgrades = $reset;

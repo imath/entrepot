@@ -11,8 +11,8 @@
 	"releases": "https://github.com/imath/entrepot/releases",
 	"issues": "https://github.com/imath/entrepot/issues",
 	"description": {
-		"en_US" : "Entrepôt, a list of free GitHub.com hosted plugins.",
-		"fr_FR" : "Entrepôt, une liste d'extensions gratuites hébergées sur GitHub.com."
+		"en_US" : "Entrepôt, a list of free GitHub.com hosted plugins and themes.",
+		"fr_FR" : "Entrepôt, une liste d'extensions et de thèmes gratuits hébergés sur GitHub.com."
 	},
 	"README": "https://raw.githubusercontent.com/imath/entrepot/master/README.md",
 	"urls": {
