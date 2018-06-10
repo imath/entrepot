@@ -146,8 +146,8 @@ function entrepot_get_repositories( $slug = '', $type = 'repositories' ) {
 			$src = sprintf( 'entrepot-%s.json', $type );
 		}
 
-		$json            = file_get_contents( entrepot_assets_dir() . $src );
-		$repositories    = json_decode( $json );
+		$json         = file_get_contents( entrepot_assets_dir() . $src );
+		$repositories = json_decode( $json );
 
 		// Cache repositories
 		wp_cache_add( $type, $repositories, 'entrepot' );
@@ -416,12 +416,7 @@ function entrepot_get_repository_latest_stable_release( $atom_url = '', $reposit
  * @return array            The repositories header tag.
  */
 function entrepot_extra_header( $headers = array() ) {
-	if (  ! isset( $headers['GitHub Plugin URI'] ) ) {
-		$headers['GitHub Plugin URI'] = 'GitHub Plugin URI';
-	}
-
-	$headers['Allow File Edits'] = 'Allow File Edits';
-
+	_deprecated_function( __FUNCTION__, '1.4.0', 'entrepot_plugin_extra_header()' );
 	return entrepot_plugin_extra_header( $headers );
 }
 
