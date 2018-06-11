@@ -170,6 +170,9 @@ function entrepot_admin_get_theme_repositories_list() {
 			), $update_php
 		);
 
+		// For testing purpose.
+		$theme->descriptions = $theme->description;
+
 		/**
 		 * Defaults to en_US if User's language translation
 		 * is not included in Theme's JSON.
@@ -223,8 +226,10 @@ function entrepot_admin_get_theme_repositories_list() {
 			$theme->parent = false;
 		}
 
-		foreach ( array( 'country', 'releases', 'issues', 'README', 'urls' ) as $rk ) {
-			unset( $theme->{$rk} );
+		if ( ! defined( 'PR_TESTING_ASSETS' ) ) {
+			foreach ( array( 'descriptions', 'country', 'releases', 'issues', 'README', 'urls' ) as $rk ) {
+				unset( $theme->{$rk} );
+			}
 		}
 	}
 

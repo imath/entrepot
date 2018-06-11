@@ -43,6 +43,9 @@ class entrepot_Admin_Tests extends WP_UnitTestCase {
 		$this->assertTrue( $updates['entrepot/entrepot.php']->is_update );
 	}
 
+	/**
+	 * @group plugins
+	 */
 	public function test_entrepot_admin_get_plugin_repositories_list() {
 		set_current_screen( 'dashboard' );
 
@@ -68,6 +71,38 @@ class entrepot_Admin_Tests extends WP_UnitTestCase {
 		}
 
 		$this->assertTrue( count( $repositories ) === count( array_unique( $slugs ) ), 'Plugin slugs should be unique.' );
+
+		set_current_screen( 'front' );
+	}
+
+	/**
+	 * @group themes
+	 */
+	public function test_entrepot_admin_get_theme_repositories_list() {
+		set_current_screen( 'dashboard' );
+
+		$repositories = entrepot_admin_get_theme_repositories_list();
+		$slugs        = array();
+
+		foreach ( $repositories as $repository ) {
+			$this->assertNotEmpty( $repository->name, 'The name property of the theme should be set.' );
+			$this->assertNotEmpty( $repository->slug, 'The slug property of the theme should be set.' );
+			$this->assertNotEmpty( $repository->author, 'The author property of the theme should be set.' );
+			$this->assertNotEmpty( $repository->screenshot, 'The screenshot property of the theme should be set.' );
+			$this->assertNotEmpty( $repository->releases, 'The releases URL property of the theme should be set.' );
+			$this->assertTrue(
+				rtrim( $repository->releases, '/' ) === 'https://github.com/' . $repository->authorAndUri . '/' . $repository->slug . '/releases',
+				'The releases URL property should have this form https://github.com/{author}/{slug}/releases.'
+			);
+
+			$slugs[] = $repository->slug;
+
+			$this->assertTrue( file_exists( entrepot_repositories_dir( 'themes' ) . $repository->slug . '.json' ), 'The slug property should be used as the json file name' );
+			$this->assertNotEmpty( $repository->descriptions->en_US, 'An american (en_US) description should be provided for the theme.' );
+			$this->assertNotEmpty( $repository->README, 'The README property of the theme should be set.' );
+		}
+
+		$this->assertTrue( count( $repositories ) === count( array_unique( $slugs ) ), 'Theme slugs should be unique.' );
 
 		set_current_screen( 'front' );
 	}

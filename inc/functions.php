@@ -221,7 +221,7 @@ function entrepot_get_repository_json( $repository = '', $type = 'plugins' ) {
 	}
 
 	// Specific to unit tests
-	if ( defined( 'PR_TESTING_ASSETS') && PR_TESTING_ASSETS ) {
+	if ( defined( 'PR_TESTING_ASSETS' ) && PR_TESTING_ASSETS ) {
 		$json = sprintf( '%1$s%2$s.json', entrepot_repositories_dir( $type ), sanitize_file_name( $repository ) );
 		if ( ! file_exists( $json ) ) {
 			return false;
