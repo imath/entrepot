@@ -120,21 +120,6 @@ function entrepot_repositories_dir( $type = 'plugins' ) {
 }
 
 /**
- * Gets the Repositories' dir.
- *
- * @since 1.0.0
- * @deprecated 1.4.0
- *
- * @return string Path to the repositories dir.
- */
-function entrepot_plugins_dir() {
-	_deprecated_function( __FUNCTION__, '1.4.0', 'entrepot_repositories_dir()' );
-	return entrepot_repositories_dir();
-}
-
-
-
-/**
  * Loads translation.
  *
  * @since 1.0.0
@@ -282,21 +267,6 @@ function entrepot_get_standardized_version_number( $version = '' ) {
  * Checks with the Github releases of the Repository if there a new stable version available.
  *
  * @since 1.0.0
- * @deprecated 1.4.0
- *
- * @param  string $atom_url The Repository's feed URL.
- * @param  array  $plugin   The plugin's data.
- * @return object           The stable release data.
- */
-function entrepot_get_plugin_latest_stable_release( $atom_url = '', $plugin = array() ) {
-	_deprecated_function( __FUNCTION__, '1.4.0', 'entrepot_get_repository_latest_stable_release()' );
-	return entrepot_get_repository_latest_stable_release( $atom_url, $plugin, 'plugin' );
-}
-
-/**
- * Checks with the Github releases of the Repository if there a new stable version available.
- *
- * @since 1.0.0
  *
  * @param  string $atom_url   The Repository's feed URL.
  * @param  array  $repository The plugin's data.
@@ -434,22 +404,6 @@ function entrepot_get_repository_latest_stable_release( $atom_url = '', $reposit
 	}
 
 	return $tag_data;
-}
-
-/**
- * Adds a new Plugin's header tag to ease repositories identification
- * within the regular plugins.
- *
- * @since 1.0.0
- * @since 1.2.0 Add a new Plugin Header Tag to inform the plugin can be edited.
- * @deprecated 1.4.0
- *
- * @param  array  $headers  The current Plugin's header tag.
- * @return array            The repositories header tag.
- */
-function entrepot_extra_header( $headers = array() ) {
-	_deprecated_function( __FUNCTION__, '1.4.0', 'entrepot_plugin_extra_header()' );
-	return entrepot_plugin_extra_header( $headers );
 }
 
 /**

@@ -37,19 +37,6 @@ function entrepot_admin_updater() {
 }
 
 /**
- * Gets the list of available repositories.
- *
- * @since 1.0.0
- * @deprecated 1.4.0
- *
- * @return array The list of available repositories.
- */
-function entrepot_admin_get_repositories_list() {
-	_deprecated_function( __FUNCTION__, '1.4.0', 'entrepot_admin_get_plugin_repositories_list()' );
-	return entrepot_admin_get_plugin_repositories_list();
-}
-
-/**
  * Gets the list of available plugin repositories.
  *
  * @since 1.4.0
@@ -586,18 +573,6 @@ function entrepot_repositories_api( $res = false, $action = '', $args = null ) {
 }
 
 /**
- * Prints the the JavaScript templates.
- *
- * @since 1.0.0
- * @deprecated 1.4.0
- *
- * @return string HTML Output.
- */
-function entrepot_admin_repositories_print_templates() {
-	_deprecated_function( __FUNCTION__, '1.4.0', 'entrepot_admin_plugins_print_templates()' );
-	return entrepot_admin_plugins_print_templates();
-}
-/**
  * Prints the the JavaScript templates for Plugin views.
  *
  * @since 1.4.0
@@ -875,20 +850,6 @@ function entrepot_admin_repository_iframe( $args = array() ) {
 
 	iframe_footer();
 	exit;
-}
-
-/**
- * Displays the repository's modal content.
- *
- * @since 1.0.0
- * @since 1.2.0 Use a split button to list all Repository links.
- * @deprecated 1.4.0
- *
- * @return string The repository's modal content.
- */
-function entrepot_admin_repository_information() {
-	_deprecated_function( __FUNCTION__, '1.4.0', 'entrepot_admin_plugin_details()' );
-	return entrepot_admin_plugin_details();
 }
 
 /**

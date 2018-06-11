@@ -109,6 +109,11 @@ final class Entrepot {
 			require $this->inc_dir . 'admin.php';
 		}
 
+		// Load deprecated functions.
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			require $this->inc_dir . 'deprecated.php';
+		}
+
 		require $this->inc_dir . 'hooks.php';
 	}
 
