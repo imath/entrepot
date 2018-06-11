@@ -30,7 +30,6 @@ function entrepot_customize_register( $wp_customize ) {
         );
     }
 }
-add_action( 'customize_register', 'entrepot_customize_register' );
 
 /**
  * Load the Entrepôt Themes into the corresponding Customizer section.
@@ -75,4 +74,3 @@ function entrepot_customize_load_themes( $themes = array(), $args = array() ) {
         'themes' => $themes,
     );
 }
-add_filter( 'customize_load_themes', 'entrepot_customize_load_themes', 10, 2 );

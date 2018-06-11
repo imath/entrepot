@@ -65,6 +65,10 @@ add_filter( 'entrepot_repository_modal_content', 'links_add_target'             
 // Registers REST API routes.
 add_action( 'rest_api_init', 'entrepot_rest_routes', 100 );
 
+// Theme Customizer hooks.
+add_action( 'customize_register',    'entrepot_customize_register'           );
+add_filter( 'customize_load_themes', 'entrepot_customize_load_themes', 10, 2 );
+
 /**
  * Restricts the Plugins editor to only allow Plugin or custom functions file edits
  * when they use a "Allow File Edits:" Plugin Header Tag set to true.
