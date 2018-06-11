@@ -41,7 +41,7 @@ add_action( 'customize_register', 'entrepot_customize_register' );
  * @param  array $args   List of the arguments of the themes query.
  * @return array         Populated List of Entrepôt themes data.
  */
-function entrepot_load_themes( $themes = array(), $args = array() ) {
+function entrepot_customize_load_themes( $themes = array(), $args = array() ) {
     if ( ! isset( $_POST['theme_action'] ) || 'entrepot' !== $_POST['theme_action'] ) {
         return $themes;
     }
@@ -53,6 +53,19 @@ function entrepot_load_themes( $themes = array(), $args = array() ) {
         return array();
     }
 
+    if ( ! empty( $_POST['search'] ) ) {
+        $search = strtolower( $_POST['search'] );
+
+        foreach ( $themes as $kt => $vt ) {
+            // Only keep matching themes.
+            if ( false !== strpos( strtolower( $vt->name ), $search ) || false !== strpos( strtolower( $vt->description ), $search ) ) {
+                continue;
+            }
+
+            unset( $themes[ $kt ] );
+        }
+    }
+
     return (object) array(
         'info' => array(
             'page'    => 1,
@@ -62,4 +75,4 @@ function entrepot_load_themes( $themes = array(), $args = array() ) {
         'themes' => $themes,
     );
 }
-add_filter( 'customize_load_themes', 'entrepot_load_themes', 10, 2 );
+add_filter( 'customize_load_themes', 'entrepot_customize_load_themes', 10, 2 );
