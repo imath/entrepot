@@ -78,7 +78,7 @@ _Requires WordPress 4.8_
 
 ### Features
 
-Thanks to Entrepôt you can enjoy an alternative source of public & free Plugins that are hosted on Github.com. Once activated, you will be able to **browse, install, activate and upgrade** the registered plugins directly from your WordPress Administration.
+Thanks to Entrepôt you can enjoy an alternative source of public & free Plugins that are hosted on GitHub.com. Once activated, you will be able to **browse, install, activate and upgrade** the registered plugins directly from your WordPress Administration.
 
 ### Registered Plugins
 

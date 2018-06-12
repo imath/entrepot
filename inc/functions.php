@@ -264,7 +264,7 @@ function entrepot_get_standardized_version_number( $version = '' ) {
 }
 
 /**
- * Checks with the Github releases of the Repository if there a new stable version available.
+ * Checks with the GitHub releases of the Repository if there a new stable version available.
  *
  * @since 1.0.0
  *

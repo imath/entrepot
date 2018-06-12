@@ -393,6 +393,20 @@ function entrepot_admin_register_scripts() {
 	);
 
 	wp_register_style(
+		'entrepot-flag',
+		sprintf( '%1$sflag-button%2$s.css', entrepot_assets_url(), entrepot_min_suffix() ),
+		array( 'common' ),
+		entrepot_version()
+	);
+
+	wp_register_style(
+		'entrepot-admin',
+		sprintf( '%1$sstyle%2$s.css', entrepot_assets_url(), entrepot_min_suffix() ),
+		array( 'entrepot-flag' ),
+		entrepot_version()
+	);
+
+	wp_register_style(
 		'entrepot-notices',
 		sprintf( '%1$snotices%2$s.css', entrepot_assets_url(), entrepot_min_suffix() ),
 		array( 'common' ),
@@ -425,7 +439,7 @@ function entrepot_admin_register_scripts() {
 function entrepot_admin_enqueue_scripts() {
 	$current_screen = get_current_screen();
 
-	if ( empty( $current_screen->id ) || 0 !== strpos( 'theme-install', $current_screen->id ) ) {
+	if ( empty( $current_screen->id ) || ( 0 !== strpos( 'theme-install', $current_screen->id ) && 0 !== strpos( 'themes', $current_screen->id ) ) ) {
 		return;
 	}
 
@@ -435,6 +449,24 @@ function entrepot_admin_enqueue_scripts() {
 		'moreText' => __( 'Afficher les détails', 'entrepot' ),
 		'btnText'  => __( 'Détails', 'entrepot' ),
 	) );
+
+	if ( 0 === strpos( 'themes', $current_screen->id ) ) {
+		$css = sprintf( '%1$sflag-button%2$s.css', entrepot_assets_dir(), entrepot_min_suffix() );
+
+		if ( $css && file_exists( $css ) ) {
+			$css = file_get_contents( $css );
+
+			wp_add_inline_style( 'common', sprintf( '
+				.entrepot-actions {
+					position: absolute;
+					left: 10px;
+					bottom: 5px;
+				}
+
+				%s
+			', $css ) );
+		}
+	}
 }
 
 /**
@@ -653,6 +685,24 @@ function entrepot_admin_plugins_print_templates() {
 }
 
 /**
+ * Return the Repositories flagging URL.
+ *
+ * @since 1.4.0
+ *
+ * @param  string $repo_name The name identifying the repository.
+ * @return string            The URL to the flagging form.
+ */
+function entrepot_get_flag_url( $repo_name ) {
+	$imathieu = 'https://imathi.eu/entrepot/#respond';
+
+	if ( 'fr_FR' !== get_locale() ) {
+		$imathieu = 'https://imathi.eu/entrepot/translate/en-us/#respond';
+	}
+
+	return add_query_arg( 'repository', $repo_name, $imathieu );
+}
+
+/**
  * Displays an iframe containing Plugin/Theme details.
  *
  * @since 1.4.0
@@ -673,7 +723,7 @@ function entrepot_admin_repository_iframe( $args = array() ) {
 	global $tab;
 
 	$r = wp_parse_args( $args, array(
-		'type'       => 'repositories',
+		'type'       => 'plugins',
 		'repo_name'  => '',
 		'repository' => null,
 		'title'      => __( 'Détails du dépôt', 'entrepot' ),
@@ -750,12 +800,7 @@ function entrepot_admin_repository_iframe( $args = array() ) {
 			}
 		}
 
-		wp_enqueue_style( 'entrepot',
-			sprintf( '%1$sstyle%2$s.css', entrepot_assets_url(), entrepot_min_suffix() ),
-			array( 'common' ),
-			entrepot_version()
-		);
-
+		wp_enqueue_style( 'entrepot-admin' );
 		wp_add_inline_script( 'common', '
 			( function( $ ) {
 				$( \'#plugin-information-footer .split-button\' ).on( \'click\', \'.split-button-toggle\', function( event ) {
@@ -793,13 +838,7 @@ function entrepot_admin_repository_iframe( $args = array() ) {
 
 	<?php if ( ! empty( $repository_data->releases ) ) :
 		$base_url = str_replace( 'releases', '', rtrim( $repository_data->releases, '/' ) );
-		$imathieu = 'https://imathi.eu/entrepot/';
-
-		if ( 'fr_FR' !== get_locale() ) {
-			$imathieu = 'https://imathi.eu/entrepot/translate/en-us/';
-		}
-
-		$flag_url = add_query_arg( 'repository', $r['repo_name'], $imathieu );
+		$flag_url = entrepot_get_flag_url( $r['repo_name'] );
 
 		if ( ! empty( $repository_data->issues ) ) {
 			$sections = array_merge( array(
@@ -820,7 +859,7 @@ function entrepot_admin_repository_iframe( $args = array() ) {
 		<div id='<?php echo esc_attr( $tab ); ?>-footer'>
 			<div class="split-button">
 				<div class="split-button-head">
-					<a href="<?php echo esc_url( $base_url ); ?>" target="_blank" class="button split-button-primary" aria-live="polite"><?php esc_html_e( 'Voir sur Github', 'entrepot' ); ?></a>
+					<a href="<?php echo esc_url( $base_url ); ?>" target="_blank" class="button split-button-primary" aria-live="polite"><?php esc_html_e( 'Voir sur GitHub', 'entrepot' ); ?></a>
 					<button type="button" class="split-button-toggle" aria-haspopup="true" aria-expanded="false">
 						<i class="dashicons dashicons-arrow-down-alt2"></i>
 						<span class="screen-reader-text"><?php esc_html_e( 'Plus d\'actions', 'entrepot' ); ?></span>
@@ -842,8 +881,9 @@ function entrepot_admin_repository_iframe( $args = array() ) {
 					<?php endforeach; ?>
 				</ul>
 			</div>
-
-			<a class="button button-primary entrepot-warning right" href="<?php echo esc_url( $flag_url ); ?>#respond" target="_blank"><?php esc_html_e( 'Signaler', 'entrepot' ); ?></a>
+			<?php if ( 'themes' !== $r['type'] ) : ?>
+				<a class="button button-primary entrepot-warning right" href="<?php echo esc_url( $flag_url ); ?>" target="_blank"><?php esc_html_e( 'Signaler', 'entrepot' ); ?></a>
+			<?php endif ; ?>
 		</div>
 
 	<?php endif;
@@ -878,7 +918,7 @@ function entrepot_admin_plugin_details() {
 	}
 
 	$args = array(
-		'type'       => 'repositories',
+		'type'       => 'plugins',
 		'repo_name'  => $plugin,
 		'repository' => $repository,
 		'section'    => $section,
@@ -953,6 +993,43 @@ function entrepot_admin_theme_details() {
 	);
 
 	return entrepot_admin_repository_iframe( $args );
+}
+
+/**
+ * Add Entrepôt specific data to Installed Themes list for the registered themes.
+ *
+ * @since 1.4.0
+ *
+ * @param  array $prepared_themes The list of JS prepared Themes.
+ * @return array                  The list of JS prepared Themes.
+ */
+function entrepot_prepare_themes_for_js( $prepared_themes = array() ) {
+	$current_screen = get_current_screen();
+
+	if ( empty( $current_screen->id ) || 0 !== strpos( 'themes', $current_screen->id ) ) {
+		return $prepared_themes;
+	}
+
+	foreach( $prepared_themes as &$theme ) {
+		$repository = entrepot_get_repository_json( $theme['id'], 'themes' );
+
+		if ( ! $repository ) {
+			continue;
+		}
+
+		$theme['entrepotData'] = array(
+			'entrepot-warning' => array(
+				'text' => __( 'Signaler', 'entrepot' ),
+				'url'  => entrepot_get_flag_url( $theme['id'] ),
+			),
+			'entrepot-git' => array(
+				'text' => __( 'Voir sur GitHub', 'entrepot' ),
+				'url'  => str_replace( 'releases', '', rtrim( $repository->releases, '/' ) ),
+			),
+		);
+	}
+
+	return $prepared_themes;
 }
 
 /**

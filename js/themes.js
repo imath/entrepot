@@ -5,8 +5,9 @@
 		return false;
     }
 
-    var entrepot  = _.extend( window.entrepot || {}, _.pick( wp, 'themes' ) );
-    var themeView = entrepot.themes.view.Theme;
+    var entrepot         = _.extend( window.entrepot || {}, _.pick( wp, 'themes' ) );
+    var themeView        = entrepot.themes.view.Theme;
+    var themeDetailsView = entrepot.themes.view.Details;
 
     /**
      * Theme's view overrides.
@@ -27,6 +28,32 @@
                         btnDetails.html( entrepotl10nThemes.btnText );
                     }
                 }
+            }
+        }
+    } );
+
+    /**
+     * Theme's Details view overrides.
+     */
+    wp.themes.view.Details = themeDetailsView.extend( {
+        render: function() {
+            // First render the theme
+            themeDetailsView.prototype.render.apply( this, arguments );
+
+            // Then edit texts if needed.
+            var entrepotData = this.model.get( 'entrepotData' );
+
+            if ( entrepotData ) {
+                var extraActions = $( '<div></div>' ).prop( 'class', 'entrepot-actions' );
+
+                $.each( entrepotData, function( i, ed ) {
+                    extraActions.append( $( '<a></a>' ).html( ed.text ).prop( {
+                        'href': ed.url,
+                        'class': i + ' button'
+                    } ) );
+                } );
+
+                this.$el.find( '.theme-actions' ).prepend( extraActions );
             }
         }
     } );

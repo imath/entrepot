@@ -41,8 +41,9 @@ add_action( 'in_admin_header', 'entrepot_catch_all_notices',               1    
 add_action( 'admin_enqueue_scripts', 'entrepot_admin_enqueue_scripts' );
 
 // Ease repositories identification
-add_filter( 'extra_plugin_headers', 'entrepot_plugin_extra_header', 10, 1 );
-add_filter( 'extra_theme_headers',  'entrepot_theme_extra_header',  10, 1 );
+add_filter( 'extra_plugin_headers',     'entrepot_plugin_extra_header',    10, 1 );
+add_filter( 'extra_theme_headers',      'entrepot_theme_extra_header',     10, 1 );
+add_filter( 'wp_prepare_themes_for_js', 'entrepot_prepare_themes_for_js',  10, 1 );
 
 // Manage repository Updates
 add_action( 'set_site_transient_update_plugins', 'entrepot_update_plugin_repositories', 10, 1 );
