@@ -118,7 +118,7 @@ window.entrepot = window.entrepot || _.extend( {}, _.pick( window.wp, 'apiReques
 
 		firstFile = _.first( event.currentTarget.files );
 
-		if ( 'application/zip' !== firstFile.type ) {
+		if ( ! ( /.zip./ ).test( firstFile.type ) || 'zip' !== firstFile.name.substr( ( firstFile.name.lastIndexOf( '.' ) + 1 ) ) ) {
 			card.append( entrepot.notice( {
 				id: 'notice-' + pluginSlug,
 				code: 403,
