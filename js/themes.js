@@ -6,8 +6,24 @@
     }
 
     var entrepot         = _.extend( window.entrepot || {}, _.pick( wp, 'themes' ) );
+    var themesView       = entrepot.themes.view.Themes;
     var themeView        = entrepot.themes.view.Theme;
     var themeDetailsView = entrepot.themes.view.Details;
+
+    /**
+     * Themes' view overrides.
+     */
+    wp.themes.view.Themes = themesView.extend( {
+        render: function() {
+            // Shuffle Entrepôt Themes before they are rendered.
+            if ( entrepot.themes.router && 'entrepot' === entrepot.themes.router.selectedTab ) {
+                this.collection.reset( this.collection.shuffle(), { silent: true } );
+            }
+
+            // Render Themes.
+            themesView.prototype.render.apply( this, arguments );
+        }
+    } );
 
     /**
      * Theme's view overrides.

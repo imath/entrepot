@@ -65,6 +65,9 @@ function entrepot_customize_load_themes( $themes = array(), $args = array() ) {
         }
     }
 
+    // Randomize Themes!
+    shuffle( $themes );
+
     return (object) array(
         'info' => array(
             'page'    => 1,
