@@ -1,5 +1,25 @@
 # Change Log
 
+## 1.4.0
+
+_Requires WordPress 4.8_
+
+### Features
+
+- Theme installs/updates inside the customizer and from the regular Administration screens.
+
+### Bug fixes
+
+- Leave WordPress display regular w.org plugin details in the Thickbox.
+- Make sure the zip file type check in Plugin overwrites is taking in account all zip mime types (eg: "application/x-zip-compressed").
+- Use actions instead of filters when overring update transients.
+
+### Newly Registered Themes
+
+- Vingt DixSept
+
+---
+
 ## 1.3.0
 
 _Requires WordPress 4.8_
