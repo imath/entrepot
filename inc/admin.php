@@ -379,7 +379,7 @@ function entrepot_admin_register_scripts() {
 	wp_register_script(
 		'entrepot-plugins-overwrite',
 		sprintf( '%1$splugins-overwrite%2$s.js', entrepot_js_url(), entrepot_min_suffix() ),
-		array( 'wp-util', 'wp-api-request' ),
+		array( 'wp-api-request', 'wp-util' ),
 		entrepot_version(),
 		true
 	);
