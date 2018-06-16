@@ -93,3 +93,16 @@ function entrepot_extra_header( $headers = array() ) {
 	_deprecated_function( __FUNCTION__, '1.4.0', 'entrepot_plugin_extra_header()' );
 	return entrepot_plugin_extra_header( $headers );
 }
+
+/**
+ * Temporary private function to fix WordPress Plugin Updates count
+ * on the Plugin Install screen.
+ *
+ * @see  https://core.trac.wordpress.org/ticket/41407
+ * @deprecated 1.4.0 (Fixed in WordPress 4.9).
+ *
+ * @since  1.1.0
+ */
+function _entrepot_admin_fix_plugin_updates_count() {
+	_deprecated_function( __FUNCTION__, '1.4.0' );
+}

@@ -353,6 +353,16 @@ function entrepot_get_repository_latest_stable_release( $atom_url = '', $reposit
 
 			if ( ! empty( $release->content ) ) {
 				$tag_data->full_upgrade_notice = end( $release->content );
+
+				if ( 'theme' === $type && 'latest' !== $repository['Version'] ) {
+					$response['url'] = add_query_arg(
+						array(
+							'page'        => 'repositories',
+							'section'     => 'changelog',
+							'theme'       => $repository['slug'],
+						), network_admin_url( 'themes.php' )
+					);
+				}
 			}
 
 			if ( 'latest' === $repository['Version'] ) {
