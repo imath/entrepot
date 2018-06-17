@@ -1427,6 +1427,41 @@ function entrepot_admin_upgrade() {
 }
 
 /**
+ * Enqueues the needed script and style for the Plugin Versions screen.
+ *
+ * @since  1.4.0
+ */
+function entrepot_admin_versions_enqueue_scripts() {
+	wp_enqueue_script( 'entrepot-plugins-overwrite' );
+	$l10n = array(
+		'filetypeError' => __( 'Dans WordPress les packages sont au format ZIP, merci de sélectionner ce type de fichier', 'entrepot' ),
+		'unknownError'  => __( 'Erreur inconnue, merci de renouveler un peu plus tard', 'entrepot' ),
+	);
+
+	/**
+	 * Are API settings available ?
+	 *
+	 * Gutenberg is arbitrary deregistering the `wp-api-request` script to replace
+	 * it with a new implementation. As we need the `wpApiSettings` object WordPress
+	 * Core adds to the "old implementation" of the WP API Request, we need to add it
+	 * to our script in case Gutenberg is active.
+	 *
+	 * @see https://github.com/WordPress/gutenberg/pull/7329
+	 */
+	$data = wp_scripts()->get_data( 'wp-api-request', 'data' );
+	if ( ! $data || false === strpos( $data, 'wpApiSettings' ) ) {
+		$l10n['wpApiSettings'] = array(
+			'root'          => esc_url_raw( get_rest_url() ),
+			'nonce'         => ( wp_installing() && ! is_multisite() ) ? '' : wp_create_nonce( 'wp_rest' ),
+			'versionString' => 'wp/v2/',
+		);
+	}
+
+	wp_localize_script( 'entrepot-plugins-overwrite', 'entrepotl10nPluginsOverwrite', $l10n );
+	wp_enqueue_style( 'entrepot-plugins-overwrite' );
+}
+
+/**
  * Enqueues the needed JavaScript for the Manage Plugins versions Admin screen.
  *
  * @since 1.2.0
@@ -1442,13 +1477,7 @@ function entrepot_admin_versions_load() {
 		) ) . '</p>',
 	) );
 
-	// Enqueues the needed script and style.
-	wp_enqueue_script ( 'entrepot-plugins-overwrite' );
-	wp_localize_script( 'entrepot-plugins-overwrite', 'entrepotl10nPluginsOverwrite', array(
-		'filetypeError' => __( 'Dans WordPress les packages sont au format ZIP, merci de sélectionner ce type de fichier', 'entrepot' ),
-		'unknownError'  => __( 'Erreur inconnue, merci de renouveler un peu plus tard', 'entrepot' ),
-	) );
-	wp_enqueue_style( 'entrepot-plugins-overwrite' );
+	add_action( 'admin_enqueue_scripts', 'entrepot_admin_versions_enqueue_scripts', 20 );
 }
 
 /**
