@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Entrepôt 1.4.0-beta\n"
 "Report-Msgid-Bugs-To: https://github.com/imath/entrepot/issues\n"
-"POT-Creation-Date: 2018-06-16 16:33:35+00:00\n"
+"POT-Creation-Date: 2018-06-17 04:03:46+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -29,7 +29,7 @@ msgstr ""
 msgid "Dépôts"
 msgstr ""
 
-#: inc/admin.php:277 inc/admin.php:278 inc/admin.php:1507
+#: inc/admin.php:277 inc/admin.php:278 inc/admin.php:1536
 msgid "Gestion des versions"
 msgstr ""
 
@@ -240,35 +240,35 @@ msgid ""
 "niveau pour procéder aux opérations correspondantes."
 msgstr ""
 
+#: inc/admin.php:1437
+msgid ""
+"Dans WordPress les packages sont au format ZIP, merci de sélectionner ce "
+"type de fichier"
+msgstr ""
+
 #: inc/admin.php:1438
+msgid "Erreur inconnue, merci de renouveler un peu plus tard"
+msgstr ""
+
+#: inc/admin.php:1473
 msgid "Vue d’ensemble"
 msgstr ""
 
-#: inc/admin.php:1440
+#: inc/admin.php:1475
 msgid ""
 "Depuis cet écran vous pouvez manuellement administrer les versions "
 "installées pour vos extensions. Vous pouvez mettre à jour ou revenir à une "
 "version plus ancienne chacune des extensions listées."
 msgstr ""
 
-#: inc/admin.php:1441
+#: inc/admin.php:1476
 msgid ""
 "Pour cela, il suffit de cliquer sur le bouton indiquant la version actuelle "
 "de l'extension afin de sélectionner depuis votre appareil l'archive ZIP "
 "contenant la version de remplacement."
 msgstr ""
 
-#: inc/admin.php:1448
-msgid ""
-"Dans WordPress les packages sont au format ZIP, merci de sélectionner ce "
-"type de fichier"
-msgstr ""
-
-#: inc/admin.php:1449
-msgid "Erreur inconnue, merci de renouveler un peu plus tard"
-msgstr ""
-
-#: inc/admin.php:1464
+#: inc/admin.php:1493
 msgid "La gestion manuelle des versions des extensions nécessite WordPress 4.9."
 msgstr ""
 
