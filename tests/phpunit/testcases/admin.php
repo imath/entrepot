@@ -15,7 +15,7 @@ class entrepot_Admin_Tests extends WP_UnitTestCase {
 	}
 
 	public function repositories_dir() {
-		return PR_TESTING_ASSETS;
+		return PR_TESTING_ASSETS . '/';
 	}
 
 	public function test_entrepot_get_installed_repositories() {
@@ -32,21 +32,24 @@ class entrepot_Admin_Tests extends WP_UnitTestCase {
 	 * @group updates
 	 */
 	public function test_entrepot_update_repositories() {
-		add_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+		add_filter( 'entrepot_repositories_dir', array( $this, 'repositories_dir' ) );
 
 		wp_update_plugins();
 
-		remove_filter( 'entrepot_plugins_dir', array( $this, 'repositories_dir' ) );
+		remove_filter( 'entrepot_repositories_dir', array( $this, 'repositories_dir' ) );
 
 		$updates = get_site_transient( 'update_plugins' )->response;
 		$this->assertNotEmpty( $updates['entrepot/entrepot.php']->package );
 		$this->assertTrue( $updates['entrepot/entrepot.php']->is_update );
 	}
 
-	public function test_entrepot_admin_get_repositories_list() {
+	/**
+	 * @group plugins
+	 */
+	public function test_entrepot_admin_get_plugin_repositories_list() {
 		set_current_screen( 'dashboard' );
 
-		$repositories = entrepot_admin_get_repositories_list();
+		$repositories = entrepot_admin_get_plugin_repositories_list();
 		$slugs        = array();
 
 		foreach ( $repositories as $repository ) {
@@ -62,12 +65,44 @@ class entrepot_Admin_Tests extends WP_UnitTestCase {
 			}
 
 			$slugs[] = $repository->slug;
-			$this->assertTrue( file_exists( entrepot_plugins_dir() . $repository->slug . '.json' ), 'The slug property should be used as the json file name' );
+			$this->assertTrue( file_exists( entrepot_repositories_dir() . $repository->slug . '.json' ), 'The slug property should be used as the json file name' );
 			$this->assertNotEmpty( $repository->description->en_US, 'An american (en_US) description should be provided for the plugin.' );
 			$this->assertNotEmpty( $repository->README, 'The README property of the plugin should be set.' );
 		}
 
 		$this->assertTrue( count( $repositories ) === count( array_unique( $slugs ) ), 'Plugin slugs should be unique.' );
+
+		set_current_screen( 'front' );
+	}
+
+	/**
+	 * @group themes
+	 */
+	public function test_entrepot_admin_get_theme_repositories_list() {
+		set_current_screen( 'dashboard' );
+
+		$repositories = entrepot_admin_get_theme_repositories_list();
+		$slugs        = array();
+
+		foreach ( $repositories as $repository ) {
+			$this->assertNotEmpty( $repository->name, 'The name property of the theme should be set.' );
+			$this->assertNotEmpty( $repository->slug, 'The slug property of the theme should be set.' );
+			$this->assertNotEmpty( $repository->author, 'The author property of the theme should be set.' );
+			$this->assertNotEmpty( $repository->screenshot, 'The screenshot property of the theme should be set.' );
+			$this->assertNotEmpty( $repository->releases, 'The releases URL property of the theme should be set.' );
+			$this->assertTrue(
+				rtrim( $repository->releases, '/' ) === 'https://github.com/' . $repository->authorAndUri . '/' . $repository->slug . '/releases',
+				'The releases URL property should have this form https://github.com/{author}/{slug}/releases.'
+			);
+
+			$slugs[] = $repository->slug;
+
+			$this->assertTrue( file_exists( entrepot_repositories_dir( 'themes' ) . $repository->slug . '.json' ), 'The slug property should be used as the json file name' );
+			$this->assertNotEmpty( $repository->descriptions->en_US, 'An american (en_US) description should be provided for the theme.' );
+			$this->assertNotEmpty( $repository->README, 'The README property of the theme should be set.' );
+		}
+
+		$this->assertTrue( count( $repositories ) === count( array_unique( $slugs ) ), 'Theme slugs should be unique.' );
 
 		set_current_screen( 'front' );
 	}
@@ -81,19 +116,19 @@ class entrepot_Admin_Tests extends WP_UnitTestCase {
 		$db_version = entrepot_db_version();
 
 		$repositories = entrepot_get_repositories();
-		$this->assertSame( wp_cache_get('repositories', 'entrepot' ), $repositories );
+		$this->assertSame( wp_cache_get( 'plugins', 'entrepot' ), $repositories );
 
 		do_action( 'entrepot_admin_init' );
 
 		// There was an upgrade, cache should be reset.
-		$this->assertFalse( wp_cache_get('repositories', 'entrepot' ) );
+		$this->assertFalse( wp_cache_get( 'plugins', 'entrepot' ) );
 
 		$repositories = entrepot_get_repositories();
 
 		do_action( 'entrepot_admin_init' );
 
 		// There was no upgrade, cache should not be reset.
-		$this->assertSame( wp_cache_get('repositories', 'entrepot' ), $repositories );
+		$this->assertSame( wp_cache_get( 'plugins', 'entrepot' ), $repositories );
 
 		// Restore
 		set_current_screen( 'front' );

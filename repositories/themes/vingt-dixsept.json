@@ -1,0 +1,40 @@
+{
+    "name": "Vingt DixSept",
+    "author": "imath",
+    "slug": "vingt-dixsept",
+    "screenshot": "https://raw.githubusercontent.com/imath/vingt-dixsept/master/screenshot.jpg",
+    "tags": [
+      "one-column",
+      "two-columns",
+      "right-sidebar",
+      "flexible-header",
+      "accessibility-ready",
+      "custom-colors",
+      "custom-header",
+      "custom-menu",
+      "custom-logo",
+      "editor-style",
+      "featured-images",
+      "footer-widgets",
+      "post-formats",
+      "rtl-language-support",
+      "sticky-post",
+      "theme-options",
+      "threaded-comments",
+      "translation-ready"
+    ],
+    "template": "twentyseventeen",
+    "country": "fr_FR",
+    "releases": "https://github.com/imath/vingt-dixsept/releases",
+    "issues": "https://github.com/imath/vingt-dixsept/issues",
+    "description": {
+        "en_US" : "A TwentySeventeen's \"kid\" which focuses on making your WordPress emails prettier.",
+        "fr_FR" : "Un « gamin » de TwentySeventeen qui se concentre sur la mise en valeur des e-mails de votre site."
+    },
+    "README": "https://raw.githubusercontent.com/imath/vingt-dixsept/master/README.md",
+    "urls": {
+        "history": "https://raw.githubusercontent.com/imath/vingt-dixsept/master/CHANGELOG.md",
+        "donate": "https://paypal.me/imath",
+        "preview_url": ""
+    }
+}

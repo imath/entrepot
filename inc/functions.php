@@ -92,20 +92,33 @@ function entrepot_min_suffix() {
 /**
  * Gets the Repositories' dir.
  *
- * @since 1.0.0
+ * @since 1.4.0
  *
+ * @param  string $type The type of repositories to get. Default to 'plugins'.
  * @return string Path to the repositories dir.
  */
-function entrepot_plugins_dir() {
+function entrepot_repositories_dir( $type = 'plugins' ) {
+	/**
+	 * Unit tests filter. Do not use.
+	 *
+	 * @since  1.4.0
+	 *
+	 * @param string $repositories_dir Path to the repositories dir.
+	 * @param string $type             Repositories' type.
+	 */
+	$dir = apply_filters( 'entrepot_repositories_dir', trailingslashit( entrepot()->repositories_dir . $type ), $type );
+
 	/**
 	 * Use this filter to move somewhere else the Repositories dir.
 	 *
-	 * @since 1.0.0
+	 * @since  1.0.0
+	 * @since  1.4.0 The filter is now dynamic to take themes in account.
 	 *
-	 * @param string $repositories_dir Path to the repositories dir
+	 * @param string $dir Path to the repositories type dir.
 	 */
-	return apply_filters( 'entrepot_plugins_dir', entrepot()->repositories_dir );
+	return apply_filters( "entrepot_{$type}_dir", $dir );
 }
+
 /**
  * Loads translation.
  *
@@ -129,20 +142,32 @@ function entrepot_setup_cache_group() {
  * Gets all registered repositories or a specific one.
  *
  * @since 1.0.0
+ * @since 1.4.0 Adds a new $type parameter to look for Theme repositories.
  *
  * @param  string $slug An empty string to get all repositories or
  *                      the repository slug to get a specific repository.
+ * @param  string $type The type of repositories to get. Default to 'plugins'.
  * @return array|object The list of repository objects or a single repository object.
  */
-function entrepot_get_repositories( $slug = '' ) {
-	$repositories = wp_cache_get( 'repositories', 'entrepot' );
+function entrepot_get_repositories( $slug = '', $type = 'plugins' ) {
+	$repositories = wp_cache_get( $type, 'entrepot' );
 
 	if ( ! $repositories ) {
-		$json            = file_get_contents( entrepot_assets_dir() . 'entrepot.min.json' );
-		$repositories    = json_decode( $json );
+		$src = sprintf( '%1$sentrepot-%2$s.min.json', entrepot_assets_dir(), $type );
+
+		if ( ! file_exists( $src ) ) {
+			return array();
+		}
+
+		$json         = file_get_contents( $src );
+		$repositories = json_decode( $json );
+
+		if ( ! is_array( $repositories ) ) {
+			$repositories = array( $repositories );
+		}
 
 		// Cache repositories
-		wp_cache_add( 'repositories', $repositories, 'entrepot' );
+		wp_cache_add( $type, $repositories, 'entrepot' );
 	}
 
 	if ( $slug ) {
@@ -166,21 +191,23 @@ function entrepot_get_repositories( $slug = '' ) {
 }
 
 /**
- * Gets a specific plugin's JSON data.
+ * Gets a specific repository's JSON data.
  *
  * @since 1.0.0
+ * @since 1.4.0 Adds a new $type parameter to look for Theme repositories.
  *
- * @param  string $plugin Name of the plugin.
- * @return string         JSON data.
+ * @param  string $repository Name of the plugin or the theme.
+ * @param  string $type       The type of repositories to get. Default to 'plugins'.
+ * @return string             JSON data.
  */
-function entrepot_get_repository_json( $plugin = '' ) {
-	if ( ! $plugin ) {
+function entrepot_get_repository_json( $repository = '', $type = 'plugins' ) {
+	if ( ! $repository ) {
 		return false;
 	}
 
 	// Specific to unit tests
-	if ( defined( 'PR_TESTING_ASSETS') && PR_TESTING_ASSETS ) {
-		$json = sprintf( '%1$s/%2$s.json', entrepot_plugins_dir(), sanitize_file_name( $plugin ) );
+	if ( defined( 'PR_TESTING_ASSETS' ) && PR_TESTING_ASSETS ) {
+		$json = sprintf( '%1$s%2$s.json', entrepot_repositories_dir( $type ), sanitize_file_name( $repository ) );
 		if ( ! file_exists( $json ) ) {
 			return false;
 		}
@@ -189,7 +216,7 @@ function entrepot_get_repository_json( $plugin = '' ) {
 		return json_decode( $data );
 	}
 
-	return entrepot_get_repositories( $plugin );
+	return entrepot_get_repositories( $repository, $type );
 }
 
 /**
@@ -237,22 +264,29 @@ function entrepot_get_standardized_version_number( $version = '' ) {
 }
 
 /**
- * Checks with the Github releases of the Repository if there a new stable version available.
+ * Checks with the GitHub releases of the Repository if there a new stable version available.
  *
  * @since 1.0.0
  *
- * @param  string $atom_url The Repository's feed URL.
- * @param  array  $plugin   The plugin's data.
- * @return object           The stable release data.
+ * @param  string $atom_url   The Repository's feed URL.
+ * @param  array  $repository The plugin's data.
+ * @param  string $type       The repository type (plugin or theme).
+ * @return object             The stable release data.
  */
-function entrepot_get_plugin_latest_stable_release( $atom_url = '', $plugin = array() ) {
-	$tag_data = new stdClass;
+function entrepot_get_repository_latest_stable_release( $atom_url = '', $repository = array(), $type = 'plugin' ) {
+	$tag_data            = new stdClass;
 	$tag_data->is_update = false;
+	$github_uri_key      = sprintf( 'GitHub %s URI', ucfirst( $type ) );
 
 	if ( ! $atom_url  ) {
 		// For Unit Testing purpose only. Do not use this constant in your code.
-		if ( defined( 'PR_TESTING_ASSETS' ) && isset( $plugin['slug'] ) &&  'entrepot' === $plugin['slug'] ) {
-			$atom_url = trailingslashit( entrepot()->dir ) . 'tests/phpunit/assets/releases';
+		if ( defined( 'PR_TESTING_ASSETS' ) && isset( $repository['slug'] ) ) {
+			if ( 'entrepot' === $repository['slug'] ) {
+				$test_releases = 'releases';
+			} else {
+				$test_releases = $repository['slug'];
+			}
+			$atom_url = trailingslashit( entrepot()->dir ) . 'tests/phpunit/assets/' . $test_releases;
 		} else {
 			return $tag_data;
 		}
@@ -287,34 +321,79 @@ function entrepot_get_plugin_latest_stable_release( $atom_url = '', $plugin = ar
 			'package'     => '',
 		);
 
-		if ( ! empty( $plugin['Version'] ) ) {
+		if ( 'theme' === $type ) {
+			unset( $response['plugin'] );
+			$response['theme'] = '';
+		}
+
+		if ( ! empty( $repository['Version'] ) ) {
 			$std_tag     = entrepot_get_standardized_version_number( $tag );
-			$std_version = entrepot_get_standardized_version_number( $plugin['Version'] );
+			$std_version = entrepot_get_standardized_version_number( $repository['Version'] );
 
 			if ( ! $std_tag || ! $std_version || version_compare( $std_tag, $std_version, '<=' ) ) {
 				continue;
 			}
 
 			$response = wp_parse_args( array(
-				'id'          => rtrim( str_replace( array( 'https://', 'http://' ), '', $plugin['GitHub Plugin URI'] ), '/' ),
-				'slug'        => $plugin['slug'],
-				'plugin'      => $plugin['plugin'],
-				'url'         => $plugin['GitHub Plugin URI'],
+				'id'          => rtrim( str_replace( array( 'https://', 'http://' ), '', $repository[ $github_uri_key ] ), '/' ),
+				'slug'        => $repository['slug'],
+				'url'         => $repository[ $github_uri_key ],
 				'package'     => sprintf( '%1$sreleases/download/%2$s/%3$s',
-					trailingslashit( $plugin['GitHub Plugin URI'] ),
+					trailingslashit( $repository[ $github_uri_key ] ),
 					$tag,
-					sanitize_file_name( $plugin['slug'] . '.zip' )
+					sanitize_file_name( $repository['slug'] . '.zip' )
 				),
 			), $response );
 
-			if ( ! empty( $release->content ) ) {
-				$tag_data->full_upgrade_notice = end( $release->content );
+			if ( 'theme' === $type ) {
+				$response['theme'] = $repository['theme'];
+			} else {
+				$response['plugin'] = $repository['plugin'];
 			}
 
-			if ( 'latest' === $plugin['Version'] ) {
+			if ( ! empty( $release->content ) ) {
+				$tag_data->full_upgrade_notice = end( $release->content );
+
+				if ( 'theme' === $type && 'latest' !== $repository['Version'] ) {
+					$response['url'] = add_query_arg(
+						array(
+							'page'        => 'repositories',
+							'section'     => 'changelog',
+							'theme'       => $repository['slug'],
+						), network_admin_url( 'themes.php' )
+					);
+				}
+			}
+
+			if ( 'latest' === $repository['Version'] ) {
 				$response['download_link'] = $response['package'];
 				$response['version']       = $response['new_version'];
 				$response['name']          = $response['slug'];
+
+				// Specific to themes.
+				if ( 'theme' === $type ) {
+					$theme_data = entrepot_get_repositories( $response['slug'], 'themes' );
+
+					$response['preview_url'] = '';
+					if ( ! empty( $theme_data->urls->preview_url ) ) {
+						$response['preview_url'] = set_url_scheme( $theme_data->urls->preview_url );
+					}
+
+					$response['author'] = array();
+					if ( ! empty( $theme_data->author ) ) {
+						$response['author'] = array(
+							'user_nicename' => $theme_data->author,
+							'display_name'  => $theme_data->author,
+						);
+
+						if ( isset( $theme->urls->author_uri ) ) {
+							$response['author']['profile'] = $theme->urls->author_uri;
+						}
+					}
+
+					$response['screenshot_url'] = $theme->screenshot;
+				}
+
 				$tag_data->is_install = true;
 			} else {
 				$tag_data->is_update = true;
@@ -341,13 +420,12 @@ function entrepot_get_plugin_latest_stable_release( $atom_url = '', $plugin = ar
  * Adds a new Plugin's header tag to ease repositories identification
  * within the regular plugins.
  *
- * @since 1.0.0
- * @since 1.2.0 Add a new Plugin Header Tag to inform the plugin can be edited.
+ * @since 1.4.0
  *
  * @param  array  $headers  The current Plugin's header tag.
- * @return array            The repositories header tag.
+ * @return array            The Plugin repositories header tag.
  */
-function entrepot_extra_header( $headers = array() ) {
+function entrepot_plugin_extra_header( $headers = array() ) {
 	if (  ! isset( $headers['GitHub Plugin URI'] ) ) {
 		$headers['GitHub Plugin URI'] = 'GitHub Plugin URI';
 	}
@@ -358,30 +436,89 @@ function entrepot_extra_header( $headers = array() ) {
 }
 
 /**
+ * Adds a new Theme's header tag to ease repositories identification
+ * within the regular themes.
+ *
+ * @since 1.4.0
+ *
+ * @param  array  $headers  The current Theme's header tag.
+ * @return array            The Theme repositories header tag.
+ */
+function entrepot_theme_extra_header( $headers = array() ) {
+	if (  ! isset( $headers['GitHub Theme URI'] ) ) {
+		$headers['GitHub Theme URI'] = 'GitHub Theme URI';
+	}
+
+	return $headers;
+}
+
+/**
  * Gets all installed repositories.
  *
  * @since 1.0.0
+ * @since 1.4.0 Add a $type parameter
  *
  * @return array The repositories list.
  */
-function entrepot_get_installed_repositories() {
-	$plugins = get_plugins();
+function entrepot_get_installed_repositories( $type = 'plugins' ) {
+	$repositories = array();
 
-	return array_diff_key( $plugins, wp_list_filter( $plugins, array( 'GitHub Plugin URI' => '' ) ) );
+	if ( defined( 'PR_TESTING_ASSETS' ) && has_filter( 'entrepot_get_installed_repositories' ) ) {
+		return apply_filters( 'entrepot_get_installed_repositories', $repositories, $type );
+	}
+
+	if ( 'themes' === $type ) {
+		$themes = wp_get_themes();
+
+		foreach ( $themes as $kt => $vt ) {
+			$github_uri = $vt->get( 'GitHub Theme URI' );
+
+			if ( ! $github_uri ) {
+				continue;
+			}
+
+			// Properties are private
+			$repositories[ $kt ] = array(
+				'theme'            => $kt,
+				'Name'             => $vt->get( 'Name' ),
+				'Version'          => $vt->get( 'Version' ),
+				'GitHub Theme URI' => $github_uri,
+			);
+		}
+
+	} else {
+		$plugins      = get_plugins();
+		$repositories = array_diff_key( $plugins, wp_list_filter( $plugins, array( 'GitHub Plugin URI' => '' ) ) );
+	}
+
+	return $repositories;
 }
 
 /**
  * Manage repositories Upgrades by overriding the update_plugins transient.
  *
  * @since 1.0.0
+ * @deprecated 1.4.0
  *
  * @param  object $option The update_plugins transient value.
  * @return object         The update_plugins transient value.
  */
 function entrepot_update_repositories( $option = null ) {
+	return entrepot_update_plugin_repositories( $option );
+}
+
+/**
+ * Manage Plugin repository Updates by overriding the update_plugins transient.
+ *
+ * @since 1.4.0
+ *
+ * @param  object $option The update_plugins transient value.
+ * @return object         The update_plugins transient value.
+ */
+function entrepot_update_plugin_repositories( $option = null ) {
 	// Only do it when a WordPress.org request happened.
 	if ( ! did_action( 'http_api_debug' ) ) {
-		return $option;
+		return;
 	}
 
 	$repositories = entrepot_get_installed_repositories();
@@ -395,10 +532,10 @@ function entrepot_update_repositories( $option = null ) {
 			continue;
 		}
 
-		$response = entrepot_get_plugin_latest_stable_release( $json->releases, array_merge( $dp, array(
+		$response = entrepot_get_repository_latest_stable_release( $json->releases, array_merge( $dp, array(
 			'plugin' => $kr,
 			'slug'   => $repository_name,
-		) ) );
+		) ), 'plugin' );
 
 		$repositories_data[ $kr ] = $response;
 	}
@@ -406,7 +543,7 @@ function entrepot_update_repositories( $option = null ) {
 	$updated_repositories = wp_list_filter( $repositories_data, array( 'is_update' => true ) );
 
 	if ( ! $updated_repositories ) {
-		return $option;
+		return;
 	}
 
 	if ( isset( $option->response ) ) {
@@ -416,10 +553,63 @@ function entrepot_update_repositories( $option = null ) {
 	}
 
 	// Prevent infinite loops.
-	remove_filter( 'set_site_transient_update_plugins', 'entrepot_update_repositories' );
+	remove_action( 'set_site_transient_update_plugins', 'entrepot_update_plugin_repositories', 10, 1 );
 
 	set_site_transient( 'update_plugins', $option );
-	return $option;
+}
+
+/**
+ * Manage Theme repository Updates by overriding the update_themes transient.
+ *
+ * @since 1.4.0
+ *
+ * @param  object $option The update_themes transient value.
+ * @return object         The update_themes transient value.
+ */
+function entrepot_update_theme_repositories( $option = null ) {
+	// Only do it when a WordPress.org request happened.
+	if ( ! did_action( 'http_api_debug' ) ) {
+		return;
+	}
+
+	$repositories = entrepot_get_installed_repositories( 'themes' );
+
+	if ( ! $repositories ) {
+		return;
+	}
+
+	$repositories_data = array();
+	foreach ( $repositories as $kr => $dp ) {
+		$json = entrepot_get_repository_json( $kr, 'themes' );
+
+		if ( ! $json || ! isset( $json->releases ) ) {
+			continue;
+		}
+
+		$response = entrepot_get_repository_latest_stable_release( $json->releases, array_merge( $dp, array(
+			'slug'   => $kr,
+		) ), 'theme' );
+
+		// Themes, unlike Plugins do not use objects
+		$repositories_data[ $kr ] = (array) $response;
+	}
+
+	$updated_repositories = wp_list_filter( $repositories_data, array( 'is_update' => true ) );
+
+	if ( ! $updated_repositories ) {
+		return;
+	}
+
+	if ( isset( $option->response ) ) {
+		$option->response = array_merge( $option->response, $updated_repositories );
+	} else {
+		$option->response = $repositories_data;
+	}
+
+	// Prevent infinite loops.
+	remove_action( 'set_site_transient_update_themes', 'entrepot_update_theme_repositories', 10, 1 );
+
+	set_site_transient( 'update_themes', $option );
 }
 
 /**

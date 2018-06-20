@@ -1,4 +1,4 @@
-/* global _, wpApiSettings, entrepotl10nPluginsOverwrite, JSON, ActiveXObject */
+/* global _, entrepotl10nPluginsOverwrite, JSON, ActiveXObject */
 
 // Make sure the wp object exists.
 window.wp       = window.wp || {};
@@ -14,6 +14,15 @@ window.entrepot = window.entrepot || _.extend( {}, _.pick( window.wp, 'apiReques
 	entrepot.notice = entrepot.template( 'entrepot-notice' );
 
 	/**
+	 * Make sure to get the wpApiSettings even if Gutenberg
+	 * is arbitrary removing it from `wp-api-request` Core
+	 * script.
+	 *
+	 * @type {object}
+	 */
+	entrepot.wpApiSettings = window.wpApiSettings || entrepotl10nPluginsOverwrite.wpApiSettings;
+
+	/**
 	 * Ajax Uploader.
 	 *
 	 * For a reason I ignore, it's not possible to use
@@ -27,11 +36,11 @@ window.entrepot = window.entrepot || _.extend( {}, _.pick( window.wp, 'apiReques
 		var ajaxRequest, endpoint,
 		    headers = {
 		    	'X-Requested-With' : 'XMLHttpRequest',
-		    	'X-WP-Nonce'       : wpApiSettings.nonce,
+		    	'X-WP-Nonce'       : entrepot.wpApiSettings.nonce,
 		    	'Cache-Control'    : 'no-cache, must-revalidate, max-age=0'
 		    };
 
-		endpoint = wpApiSettings.root + path.replace( /^\//, '' );
+		endpoint = entrepot.wpApiSettings.root + path.replace( /^\//, '' );
 		data     = data || {};
 
 		if ( 'undefined' !== typeof XMLHttpRequest ) {
@@ -118,7 +127,7 @@ window.entrepot = window.entrepot || _.extend( {}, _.pick( window.wp, 'apiReques
 
 		firstFile = _.first( event.currentTarget.files );
 
-		if ( 'application/zip' !== firstFile.type ) {
+		if ( ! ( /.zip*/ ).test( firstFile.type ) || 'zip' !== firstFile.name.substr( ( firstFile.name.lastIndexOf( '.' ) + 1 ) ) ) {
 			card.append( entrepot.notice( {
 				id: 'notice-' + pluginSlug,
 				code: 403,

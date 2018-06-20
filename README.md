@@ -3,26 +3,24 @@
 # Entrepôt
 
 ## Français 🇫🇷
-*Inscrivez vos extensions WordPress gratuites dans l'Entrepôt.*
+*Inscrivez vos extensions et thèmes WordPress gratuits dans l'Entrepôt.*
 
-Cette extension WordPress vous propose de recenser vos propres extensions gratuites hébergées sur Github.com directement depuis l'onglet **Entrepôt** de l'écran d'administration de l'ajout d'extensions de WordPress. Elle prendra en charge l'installation et la mise à jour de vos extensions.
+Cette extension WordPress vous propose de recenser vos propres extensions et thèmes gratuits hébergés sur GitHub.com directement depuis l'onglet **Entrepôt** de l'écran d'administration de l'ajout d'extensions ou de thèmes de WordPress. Elle prendra en charge l'installation et la mise à jour de vos dépôts.
 
-Les utilisateurs peuvent télécharger cette extension pour disposer d'une source alternative d'extensions gratuites.
+Les utilisateurs peuvent télécharger cette extension pour disposer d'une source alternative d'extensions et de thèmes gratuits.
 
-Les *auteurs* peuvent, à l'aide d'une "Pull Request" particulière référencer leurs extensions gratuites hébergées sur Github.com. Pour en savoir plus, reporter vous à la [documentation](https://github.com/imath/entrepot/wiki).
+Les *auteurs* peuvent, à l'aide d'une "Pull Request" particulière référencer leurs extensions ou thèmes gratuits hébergés sur GitHub.com. Pour en savoir plus, reporter vous à la [documentation](https://github.com/imath/entrepot/wiki).
 
 Cette extension nécessite WordPress 4.8.
 
-![Onglet Entrepôt](https://cldup.com/UClN7C5nqq.png)
-
 ## English 🇬🇧
-*Register your free WordPress plugins into Entrepôt*
+*Register your free WordPress plugins and themes into Entrepôt*
 
-This plugin lets you list your own free Github.com hosted plugins inside the **Entrepôt** tab of the Add Plugins Administration screen. It will take care of installing and upgrading your plugins.
+This plugin lets you list your own free GitHub.com hosted plugins and themes inside the **Entrepôt** tab of the Add Plugins/Themes Administration screens. It will take care of installing and upgrading your repositories.
 
-Users can download this plugin to enjoy an alternative source of free WordPress plugins.
+Users can download this plugin to enjoy an alternative source of free WordPress plugins and themes.
 
-*Authors* can, using a particular "Pull Request" register their free Github.com hosted plugins. For more information, see the [documentation](https://github.com/imath/entrepot/wiki).
+*Authors* can, using a particular "Pull Request" register their free GitHub.com hosted plugins or themes. For more information, see the [documentation](https://github.com/imath/entrepot/wiki).
 
 This plugin requires WordPress 4.8.
 

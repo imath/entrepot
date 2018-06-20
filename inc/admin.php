@@ -20,11 +20,16 @@ function entrepot_admin_updater() {
 		return;
 	}
 
-	// New repositories can be added each time the Entrepôt has a new release.
-	wp_cache_delete( 'repositories', 'entrepot' );
-
 	if ( 1.1 === (float) entrepot_version() ) {
 		set_site_transient( 'entrepot_notice_example', true, DAY_IN_SECONDS );
+	}
+
+	// New repositories can be added each time the Entrepôt has a new release.
+	if ( 1.4 >= (float) entrepot_version() ) {
+		wp_cache_delete( 'plugins', 'entrepot' );
+		wp_cache_delete( 'themes', 'entrepot' );
+	} else {
+		wp_cache_delete( 'repositories', 'entrepot' );
 	}
 
 	// Update Entrepôt version.
@@ -32,13 +37,13 @@ function entrepot_admin_updater() {
 }
 
 /**
- * Gets the list of available repositories.
+ * Gets the list of available plugin repositories.
  *
- * @since 1.0.0
+ * @since 1.4.0
  *
- * @return array The list of available repositories.
+ * @return array The list of available plugin repositories.
  */
-function entrepot_admin_get_repositories_list() {
+function entrepot_admin_get_plugin_repositories_list() {
 	$repositories    = entrepot_get_repositories();
 	$installed_repos = entrepot_get_installed_repositories();
 	$keyed_by_slug   = array();
@@ -120,6 +125,105 @@ function entrepot_admin_get_repositories_list() {
 }
 
 /**
+ * Gets the list of available theme repositories.
+ *
+ * @since 1.4.0
+ *
+ * @return array The list of available theme repositories.
+ */
+function entrepot_admin_get_theme_repositories_list() {
+	$themes = entrepot_get_repositories( '', 'themes' );
+
+	// No Themes in the Entrepôt, stop!
+	if ( ! $themes ) {
+		return array();
+	}
+
+	// Prepare a list of installed themes to check against before the loop.
+	$installed_themes = array();
+	$wp_themes        = wp_get_themes();
+	foreach ( $wp_themes as $theme ) {
+		$installed_themes[] = $theme->get_stylesheet();
+	}
+	$update_php = network_admin_url( 'update.php?action=install-theme' );
+	$locale     = get_user_locale();
+
+	// Set up properties for themes available in the Entrepôt.
+	foreach ( $themes as &$theme ) {
+		$theme->install_url = add_query_arg(
+			array(
+				'theme'       => $theme->slug,
+				'_wpnonce'    => wp_create_nonce( 'install-theme_' . $theme->slug ),
+			), $update_php
+		);
+
+		// For testing purpose.
+		$theme->descriptions = $theme->description;
+
+		/**
+		 * Defaults to en_US if User's language translation
+		 * is not included in Theme's JSON.
+		 */
+		if ( ! isset( $theme->description->{$locale} ) ) {
+			$locale = 'en_US';
+		}
+
+		$theme->name        = wp_kses( $theme->name, array() );
+		$theme->version     = '';
+		$theme->description = entrepot_sanitize_repository_text( $theme->description->{$locale} );
+		$theme->stars       = '';
+		$theme->num_ratings = 0;
+		$theme->preview_url = '';
+
+		if ( ! empty( $theme->urls->preview_url ) ) {
+			$theme->preview_url = set_url_scheme( $theme->urls->preview_url );
+			$theme->hasPreview  = true;
+		} else {
+			$theme->preview_url = add_query_arg(
+				array(
+					'page'        => 'repositories',
+					'theme'       => $theme->slug,
+				), network_admin_url( 'themes.php' )
+			);
+		}
+
+		// Handle themes that are already installed as installed themes.
+		if ( in_array( $theme->slug, $installed_themes, true ) ) {
+			$theme->type    = 'installed';
+			$theme->version = $wp_themes[ $theme->slug ]->get( 'Version' );
+		} else {
+			$theme->type = 'entrepot';
+		}
+
+		// Set active based on customized theme.
+		$theme->active = ( isset( $_POST['customized_theme'] ) && $_POST['customized_theme'] === $theme->slug );
+
+		// Map available theme properties to installed theme properties.
+		$theme->id             = $theme->slug;
+		$theme->screenshot_url = $theme->screenshot;
+		$theme->screenshot     = array( $theme->screenshot );
+		$theme->authorAndUri   = wp_kses( $theme->author, array() );
+		$theme->author         = array(
+			'display_name' => $theme->authorAndUri,
+		);
+
+		if ( ! empty( $theme->template ) ) {
+			$theme->parent = $theme->template;
+		} else {
+			$theme->parent = false;
+		}
+
+		if ( ! defined( 'PR_TESTING_ASSETS' ) ) {
+			foreach ( array( 'descriptions', 'country', 'releases', 'issues', 'README', 'urls' ) as $rk ) {
+				unset( $theme->{$rk} );
+			}
+		}
+	}
+
+	return $themes;
+}
+
+/**
  * WP Ajax is overused by plugins.. Let's be sure we are
  * alone to request there.
  *
@@ -132,7 +236,7 @@ function entrepot_admin_send_json() {
 		wp_send_json( __( 'Vous n\'êtes pas autorisé à réaliser cette action.', 'entrepot' ), 403 );
 	}
 
-	$repositories = entrepot_admin_get_repositories_list();
+	$repositories = entrepot_admin_get_plugin_repositories_list();
 
 	if ( empty( $repositories ) ) {
 		wp_send_json( __( 'Un problème est survenu lors de la récupération des dépôts de plugin.', 'entrepot' ), 500 );
@@ -158,7 +262,7 @@ function entrepot_admin_add_menu() {
 	// The admin screen should not be displayed in subsites.
 	if ( ! is_multisite() || 'network_admin_menu' === current_action() ) {
 		$screens = array(
-			'admin' => array(
+			'add-plugins' => array(
 				'page_hook' => add_plugins_page(
 					__( 'Dépôts', 'entrepot' ),
 					__( 'Dépôts', 'entrepot' ),
@@ -177,6 +281,17 @@ function entrepot_admin_add_menu() {
 					'entrepot_admin_versions'
 				),
 				'load_callback' => 'entrepot_admin_versions_load',
+			),
+			'theme-details' => array(
+				'page_hook' => add_submenu_page(
+					'themes.php',
+					__( 'Dépôts', 'entrepot' ),
+					__( 'Dépôts', 'entrepot' ),
+					'install_themes',
+					'repositories',
+					'entrepot_admin_menu'
+				),
+				'load_callback' => 'entrepot_admin_theme_details',
 			),
 		);
 	}
@@ -217,6 +332,7 @@ function entrepot_admin_menu() {}
  */
 function entrepot_admin_head() {
 	remove_submenu_page( 'plugins.php', 'repositories' );
+	remove_submenu_page( 'themes.php', 'repositories' );
 
 	if ( ! entrepot()->upgrades ) {
 		remove_submenu_page( 'plugins.php', 'upgrade-repositories' );
@@ -263,9 +379,31 @@ function entrepot_admin_register_scripts() {
 	wp_register_script(
 		'entrepot-plugins-overwrite',
 		sprintf( '%1$splugins-overwrite%2$s.js', entrepot_js_url(), entrepot_min_suffix() ),
-		array( 'wp-util', 'wp-api-request' ),
+		array( 'wp-api-request', 'wp-util' ),
 		entrepot_version(),
 		true
+	);
+
+	wp_register_script(
+		'entrepot-themes',
+		sprintf( '%1$sthemes%2$s.js', entrepot_js_url(), entrepot_min_suffix() ),
+		array( 'theme' ),
+		entrepot_version(),
+		true
+	);
+
+	wp_register_style(
+		'entrepot-flag',
+		sprintf( '%1$sflag-button%2$s.css', entrepot_assets_url(), entrepot_min_suffix() ),
+		array( 'common' ),
+		entrepot_version()
+	);
+
+	wp_register_style(
+		'entrepot-admin',
+		sprintf( '%1$sstyle%2$s.css', entrepot_assets_url(), entrepot_min_suffix() ),
+		array( 'entrepot-flag' ),
+		entrepot_version()
 	);
 
 	wp_register_style(
@@ -294,6 +432,46 @@ function entrepot_admin_register_scripts() {
 }
 
 /**
+ * Enqueue scripts when needed.
+ *
+ * @since 1.4.0
+ */
+function entrepot_admin_enqueue_scripts() {
+	$current_screen = get_current_screen();
+
+	if ( empty( $current_screen->id ) || ( 0 !== strpos( $current_screen->id, 'theme-install' ) && 0 !== strpos( $current_screen->id, 'themes' ) ) ) {
+		return;
+	}
+
+	if ( false === strpos( $current_screen->id, 'repositories' ) && 'themes-network' !== $current_screen->id ) {
+		wp_enqueue_script( 'entrepot-themes' );
+		wp_localize_script( 'entrepot-themes', 'entrepotl10nThemes', array(
+			'tabText'  => __( 'Entrepôt', 'entrepot' ),
+			'moreText' => __( 'Afficher les détails', 'entrepot' ),
+			'btnText'  => __( 'Détails', 'entrepot' ),
+		) );
+	}
+
+	if ( 0 === strpos( $current_screen->id, 'themes' ) ) {
+		$css = sprintf( '%1$sflag-button%2$s.css', entrepot_assets_dir(), entrepot_min_suffix() );
+
+		if ( $css && file_exists( $css ) ) {
+			$css = file_get_contents( $css );
+
+			wp_add_inline_style( 'common', sprintf( '
+				.entrepot-actions {
+					position: absolute;
+					left: 10px;
+					bottom: 5px;
+				}
+
+				%s
+			', $css ) );
+		}
+	}
+}
+
+/**
  * Adds a new tab to the Plugins Install screen.
  *
  * @since 1.0.0
@@ -318,52 +496,6 @@ function entrepot_admin_repositories_tab_args( $args = false ) {
 }
 
 /**
- * Temporary private function to fix WordPress Plugin Updates count
- * on the Plugin Install screen.
- *
- * @see  https://core.trac.wordpress.org/ticket/41407
- *
- * @since  1.1.0
- */
-function _entrepot_admin_fix_plugin_updates_count() {
-	$updates = get_site_transient( 'update_plugins' );
-
-	if ( empty( $updates->response ) ) {
-		return;
-	}
-
-	$installed_repositories = array_keys( entrepot_get_installed_repositories() );
-	$repository_updates     = array();
-	$js_plugins             = array_fill_keys(
-		array( 'all', 'search', 'active', 'inactive', 'recently_activated', 'mustuse', 'dropins' ),
-		array()
-	);
-
-	if ( ! empty( $updates->checked ) ) {
-		$js_plugins['all'] = array_keys( $updates->checked );
-	}
-
-	foreach ( $updates->response as $update ) {
-		$js_plugins['upgrade'][] = $update->plugin;
-	}
-
-	$repository_updates = array_intersect( $js_plugins['upgrade'], $installed_repositories );
-
-	if ( empty( $repository_updates ) ) {
-		return;
-	}
-
-	if ( empty( $js_plugins['all'] ) ) {
-		$js_plugins['all'] = $js_plugins['upgrade'];
-	}
-
-	wp_localize_script( 'updates', '_wpUpdatesItemCounts', array(
-		'plugins' => $js_plugins,
-		'totals'  => wp_get_update_data(),
-	) );
-}
-
-/**
  * Shortcircuits the Plugins API for repositories
  *
  * @since 1.0.0
@@ -375,6 +507,7 @@ function _entrepot_admin_fix_plugin_updates_count() {
  *                         False when not Shortcircuited.
  */
 function entrepot_repositories_api( $res = false, $action = '', $args = null ) {
+	// Plugins
 	if ( 'query_plugins' === $action && ! empty( $args->entrepot ) ) {
 		wp_enqueue_script( 'entrepot' );
 		$res = (object) array(
@@ -382,23 +515,37 @@ function entrepot_repositories_api( $res = false, $action = '', $args = null ) {
 			'info'    => array( 'results' => 0 ),
 		);
 
-		/**
-		 * A JavaScript Error can be thrown by WordPress as some plugin
-		 * informations are not localized. Untill the upstream ticket is not fixed
-		 * we are making sure Upgrading from the Entrepôt tab is not throwing this
-		 * error.
-		 */
-		_entrepot_admin_fix_plugin_updates_count();
+	// Themes
+	} elseif ( 'query_themes' === $action && ! empty( $args->browse ) && 'entrepot' === $args->browse ) {
+		$themes = entrepot_admin_get_theme_repositories_list();
+
+		$res = new stdClass;
+		$res->themes = $themes;
+		$res->info = array( "page" => 1,"pages" => 1,"results" => count( $themes ) );
+
 	} elseif ( 'plugin_information' === $action && ! empty( $args->slug ) ) {
 		$json = entrepot_get_repository_json( $args->slug );
 
 		if ( $json && $json->releases ) {
-			$res = entrepot_get_plugin_latest_stable_release( $json->releases, array(
+			$res = entrepot_get_repository_latest_stable_release( $json->releases, array(
 				'plugin'            => $json->name,
 				'slug'              => $args->slug,
 				'Version'           => 'latest',
 				'GitHub Plugin URI' => str_replace( '/releases', '', $json->releases ),
-			) );
+			), 'plugin' );
+		}
+
+	// @todo merge this statement with previous one.
+	} elseif ( 'theme_information' === $action && ! empty( $args->slug ) ) {
+		$json = entrepot_get_repository_json( $args->slug, 'themes' );
+
+		if ( $json && $json->releases ) {
+			$res = entrepot_get_repository_latest_stable_release( $json->releases, array(
+				'theme'             => $json->name,
+				'slug'              => $args->slug,
+				'Version'           => 'latest',
+				'GitHub Theme URI' => str_replace( '/releases', '', $json->releases ),
+			), 'theme' );
 		}
 	}
 
@@ -406,13 +553,13 @@ function entrepot_repositories_api( $res = false, $action = '', $args = null ) {
 }
 
 /**
- * Prints the the JavaScript templates.
+ * Prints the the JavaScript templates for Plugin views.
  *
- * @since 1.0.0
+ * @since 1.4.0
  *
  * @return string HTML Output.
  */
-function entrepot_admin_repositories_print_templates() {
+function entrepot_admin_plugins_print_templates() {
 	?>
 	<form id="plugin-filter" method="post">
 		<div class="wp-list-table widefat plugin-install">
@@ -486,191 +633,181 @@ function entrepot_admin_repositories_print_templates() {
 }
 
 /**
- * Displays the repository's modal content.
+ * Return the Repositories flagging URL.
  *
- * @since 1.0.0
- * @since 1.2.0 Use a split button to list all Repository links.
+ * @since 1.4.0
  *
- * @return string The repository's modal content.
+ * @param  string $repo_name The name identifying the repository.
+ * @return string            The URL to the flagging form.
  */
-function entrepot_admin_repository_information() {
+function entrepot_get_flag_url( $repo_name ) {
+	$imathieu = 'https://imathi.eu/entrepot/#respond';
+
+	if ( 'fr_FR' !== get_locale() ) {
+		$imathieu = 'https://imathi.eu/entrepot/translate/en-us/#respond';
+	}
+
+	return add_query_arg( 'repository', $repo_name, $imathieu );
+}
+
+/**
+ * Displays an iframe containing Plugin/Theme details.
+ *
+ * @since 1.4.0
+ *
+ * @param array  $args {
+ *  An array of arguments.
+ *
+ *  @type string $type      Whether it's an iframe about plugins or themes.
+ *  @type string $repo_name The GitHub repository name.
+ *  @type string $title     The iframe title tag.
+ *  @type string $text      The content to output.
+ *  @type string $section   The displayed iframe section.
+ *  @type string $context   Whether it's the repo description or the upgrade notice.
+ *  @type string $result    Whether there was an error or it's a success.
+ * }
+ */
+function entrepot_admin_repository_iframe( $args = array() ) {
 	global $tab;
 
-	if ( empty( $_REQUEST['plugin'] ) ) {
-		return;
-	}
+	$r = wp_parse_args( $args, array(
+		'type'       => 'plugins',
+		'repo_name'  => '',
+		'repository' => null,
+		'title'      => __( 'Détails du dépôt', 'entrepot' ),
+		'text'       => '',
+		'section'    => '',
+		'context'    => 'repository_information',
+		'result'     => 'error',
+	) );
 
-	$plugin = wp_unslash( $_REQUEST['plugin'] );
-	$output = array(
-		'title'   => __( 'Détails du dépôt', 'entrepot' ),
-		'text'    => '',
-		'type'    => 'error',
-		'context' => 'repository_information',
-	);
+	if ( ! $r['text'] && 'success' !== $r['result'] ) {
+		$repository_data = $r['repository'];
 
-	$section  = '';
-	if ( isset( $_REQUEST['section'] ) ) {
-		$section = $_REQUEST['section'];
-	}
+		$r['text'] = __( 'Désolé, les détails concernant ce dépôt ne sont pas disponibles pour le moment.', 'entrepot' );
+		$sections  = array();
 
-	if ( 'changelog' === $section ) {
-		$repository_updates = get_site_transient( 'update_plugins' );
+		if ( $repository_data ) {
+			if ( ! $tab ) {
+				$tab = 'plugin-information';
+			}
 
-		if ( empty( $repository_updates->response ) ) {
-			return;
-		}
+			$uri             = '';
+			$allowed_section = array(
+				'donate'  => __( 'Faire une donation', 'entrepot' ),
+				'history' => __( 'Voir l\'historique', 'entrepot' ),
+				'wiki'    => __( 'Lire la documentation', 'entrepot' ),
+			);
 
-		$repository = wp_list_filter( $repository_updates->response, array( 'slug' => $plugin ) );
-		if ( empty( $repository ) || 1 !== count( $repository ) ) {
-			return;
-		}
+			if ( ! empty( $repository_data->urls ) ) {
+				foreach ( (array) $repository_data->urls as $k_url => $v_url ) {
+					// Validate sections.
+					if ( ! isset( $allowed_section[ $k_url ] ) ) {
+						continue;
+					}
 
-		$repository        = reset( $repository );
-		$output['title']   = __( 'Détails de la mise à jour', 'entrepot' );
-		$output['context'] = 'repository_upgrade_notice';
+					$sections[ $k_url ] = array(
+						'text' => $allowed_section[ $k_url ],
+						'type' => 'external',
+						'url'  => $v_url,
+					);
 
-		if ( ! empty( $repository->full_upgrade_notice ) ) {
-			$upgrade_info = html_entity_decode( $repository->full_upgrade_notice, ENT_QUOTES, get_bloginfo( 'charset' ) );
-			$output['text'] = $upgrade_info;
-			$output['type'] = 'success';
-
-		} else {
-			$output['text'] = __( 'Désolé ce dépôt n\'a pas inclu d\'informations de mise à jour pour cette version.', 'entrepot' );
-		}
-	} else {
-		$repository_data = entrepot_get_repository_json( $plugin );
-
-		if ( ! $repository_data ) {
-			return;
-		}
-
-		$output['text']  = __( 'Désolé, les détails concernant ce dépôt ne sont pas disponibles pour le moment.', 'entrepot' );
-		$uri             = '';
-		$sections        = array();
-		$allowed_section = array(
-			'donate'  => __( 'Faire une donation', 'entrepot' ),
-			'history' => __( 'Voir l\'historique', 'entrepot' ),
-			'wiki'    => __( 'Lire la documentation', 'entrepot' ),
-		);
-
-		if ( ! empty( $repository_data->urls ) ) {
-			foreach ( (array) $repository_data->urls as $k_url => $v_url ) {
-				// Validate sections.
-				if ( ! isset( $allowed_section[ $k_url ] ) ) {
-					continue;
+					$is_md = wp_check_filetype( $v_url, array( 'md' => 'text/x-markdown' ) );
+					if ( 'md' === $is_md['ext'] ) {
+						$sections[ $k_url ]['type'] = 'iframe';
+					}
 				}
+			}
 
-				$sections[ $k_url ] = array(
-					'text' => $allowed_section[ $k_url ],
-					'type' => 'external',
-					'url'  => $v_url,
-				);
+			if ( isset( $repository_data->README ) ) {
+				$uri = $repository_data->README;
 
-				$is_md = wp_check_filetype( $v_url, array( 'md' => 'text/x-markdown' ) );
-				if ( 'md' === $is_md['ext'] ) {
-					$sections[ $k_url ]['type'] = 'iframe';
+				array_unshift( $sections, array(
+					'text' => __( 'Présentation', 'entrepot' ),
+					'type' => 'iframe',
+					'url'  => $repository_data->README,
+				) );
+			}
+
+			if ( $r['section'] && isset( $sections[ $r['section'] ] ) ) {
+				$uri = $sections[ $r['section'] ]['url'];
+			}
+
+			if ( $uri ) {
+				$request  = wp_remote_get( $uri, array(
+					'timeout'    => 30,
+					'user-agent' => 'Entrepôt/WordPress-Plugin-Updater; ' . get_bloginfo( 'url' ),
+				) );
+
+				if ( ! is_wp_error( $request ) && 200 === (int) wp_remote_retrieve_response_code( $request ) ) {
+					$repository_info = wp_remote_retrieve_body( $request );
+					$parsedown       = new Parsedown();
+					$r['text']       = $parsedown->text( $repository_info );
+					$r['result']       = 'success';
 				}
 			}
 		}
 
-		if ( isset( $repository_data->README ) ) {
-			$uri = $repository_data->README;
-
-			array_unshift( $sections, array(
-				'text' => __( 'Présentation', 'entrepot' ),
-				'type' => 'iframe',
-				'url'  => $repository_data->README,
-			) );
-		}
-
-		if ( $section && isset( $sections[ $section ] ) ) {
-			$uri = $sections[ $section ]['url'];
-		}
-
-		if ( $uri ) {
-			$request  = wp_remote_get( $uri, array(
-				'timeout'    => 30,
-				'user-agent' => 'Entrepôt/WordPress-Plugin-Updater; ' . get_bloginfo( 'url' ),
-			) );
-
-			if ( ! is_wp_error( $request ) && 200 === (int) wp_remote_retrieve_response_code( $request ) ) {
-				$repository_info = wp_remote_retrieve_body( $request );
-				$parsedown       = new Parsedown();
-				$output['text']  = $parsedown->text( $repository_info );
-				$output['type']  = 'success';
-			}
-		}
+		wp_enqueue_style( 'entrepot-admin' );
+		wp_add_inline_script( 'common', '
+			( function( $ ) {
+				$( \'#plugin-information-footer .split-button\' ).on( \'click\', \'.split-button-toggle\', function( event ) {
+					$( event.delegateTarget ).toggleClass( \'is-open\' );
+				} );
+			} )( jQuery );
+		' );
 	}
 
-	wp_enqueue_style( 'entrepot',
-		sprintf( '%1$sstyle%2$s.css', entrepot_assets_url(), entrepot_min_suffix() ),
-		array( 'common' ),
-		entrepot_version()
-	);
-	wp_add_inline_script( 'common', '
-		( function( $ ) {
-			$( \'#plugin-information-footer .split-button\' ).on( \'click\', \'.split-button-toggle\', function( event ) {
-				$( event.delegateTarget ).toggleClass( \'is-open\' );
-			} );
-		} )( jQuery );
-	' );
-
-	iframe_header( strip_tags( $output['title'] ) ); ?>
+	iframe_header( strip_tags( $r['title'] ) ); ?>
 
 	<div id="plugin-information-scrollable" class="entrepot">
 		<div id="section-holder" class="wrap">
 
-		<?php if ( 'success' === $output['type'] ) :
+		<?php if ( 'success' === $r['result'] ) :
 			/**
 			 * Use this filter to add extra formatting.
 			 *
 			 * @since 1.0.0
 			 *
 			 * @param string $text   The Content to output. (Repo Information or Upgrade notice).
-			 * @param array  $output {
+			 * @param array  $r {
 			 *  An array of arguments.
 			 *
-			 *  @type string $title   The page title.
-			 *  @type string $text    The content to output.
-			 *  @type string $type    Whether it's as a success or an error.
-			 *  @type string $context Whether it's the repo description or the upgrade notice.
+			 *  @see the entrepot_admin_repository_iframe() function for a complete descripton.
 			 * }
 			 */
-			echo apply_filters( 'entrepot_repository_modal_content', $output['text'], $output );
+			echo apply_filters( 'entrepot_repository_modal_content', $r['text'], $r );
 		else :
-			printf( '<div id="message" class="error"><p>%s</p></div>', esc_html( $output['text'] ) );
+			printf( '<div id="message" class="error"><p>%s</p></div>', esc_html( $r['text'] ) );
 		endif ; ?>
 
 		</div>
 	</div>
 
-	<?php if ( ! empty( $repository_data->issues ) ) :
-		$base_url = str_replace( 'issues', '', rtrim( $repository_data->issues, '/' ) );
-		$imathieu = 'https://imathi.eu/entrepot/';
+	<?php if ( ! empty( $repository_data->releases ) ) :
+		$base_url = str_replace( 'releases', '', rtrim( $repository_data->releases, '/' ) );
+		$flag_url = entrepot_get_flag_url( $r['repo_name'] );
 
-		if ( 'fr_FR' !== get_locale() ) {
-			$imathieu = 'https://imathi.eu/entrepot/translate/en-us/';
+		if ( ! empty( $repository_data->issues ) ) {
+			$sections = array_merge( array(
+				'issues' => array(
+					'text' => __( 'Rapporter une anomalie', 'entrepot' ),
+					'type' => 'external',
+					'url'  => $repository_data->issues,
+				),
+				'pulls' => array(
+					'text' => __( 'Contribuer', 'entrepot' ),
+					'type' => 'external',
+					'url'  => $base_url . 'pulls',
+				),
+			), $sections );
 		}
+		?>
 
-		$flag_url = add_query_arg( 'repository', $plugin, $imathieu );
-
-		$sections = array_merge( array(
-			'issues' => array(
-				'text' => __( 'Rapporter une anomalie', 'entrepot' ),
-				'type' => 'external',
-				'url'  => $repository_data->issues,
-			),
-			'pulls' => array(
-				'text' => __( 'Contribuer', 'entrepot' ),
-				'type' => 'external',
-				'url'  => $base_url . 'pulls',
-			),
-		), $sections );
-	?>
 		<div id='<?php echo esc_attr( $tab ); ?>-footer'>
 			<div class="split-button">
 				<div class="split-button-head">
-					<a href="<?php echo esc_url( $base_url ); ?>" target="_blank" class="button split-button-primary" aria-live="polite"><?php esc_html_e( 'Voir sur Github', 'entrepot' ); ?></a>
+					<a href="<?php echo esc_url( $base_url ); ?>" target="_blank" class="button split-button-primary" aria-live="polite"><?php esc_html_e( 'Voir sur GitHub', 'entrepot' ); ?></a>
 					<button type="button" class="split-button-toggle" aria-haspopup="true" aria-expanded="false">
 						<i class="dashicons dashicons-arrow-down-alt2"></i>
 						<span class="screen-reader-text"><?php esc_html_e( 'Plus d\'actions', 'entrepot' ); ?></span>
@@ -682,7 +819,7 @@ function entrepot_admin_repository_information() {
 						$target = ' target="_blank"';
 
 						if ( 'iframe' === $d_section['type'] ) {
-							$link   = add_query_arg( array( 'tab' => 'plugin-information', 'section' => $k_section ) );
+							$link   = add_query_arg( 'section', $k_section );
 							$target = '';
 						}
 						?>
@@ -692,13 +829,181 @@ function entrepot_admin_repository_information() {
 					<?php endforeach; ?>
 				</ul>
 			</div>
-
-			<a class="button button-primary entrepot-warning right" href="<?php echo esc_url( $flag_url ); ?>#respond" target="_blank"><?php esc_html_e( 'Signaler', 'entrepot' ); ?></a>
+			<?php if ( 'themes' !== $r['type'] ) : ?>
+				<a class="button button-primary entrepot-warning right" href="<?php echo esc_url( $flag_url ); ?>" target="_blank"><?php esc_html_e( 'Signaler', 'entrepot' ); ?></a>
+			<?php endif ; ?>
 		</div>
-	<?php endif ; ?>
 
-	<?php iframe_footer();
+	<?php endif;
+
+	iframe_footer();
 	exit;
+}
+
+/**
+ * Gets the changelog section attributes for a plugin or a theme.
+ *
+ * @since  1.4.0
+ *
+ * @param  string $slug The repository slug.
+ * @param  string $type Whether it's one of the plugins or themes.
+ * @return array        The changelog section attributes.
+ */
+function entrepot_admin_get_changelog_section( $slug, $type = 'plugins' ) {
+	$repository_updates = get_site_transient( 'update_' . $type );
+	$args = array();
+
+	if ( empty( $repository_updates->response ) ) {
+		return $args;
+	}
+
+	$repository = wp_list_filter( $repository_updates->response, array( 'slug' => $slug ) );
+	if ( empty( $repository ) || 1 !== count( $repository ) ) {
+		return;
+	}
+
+	$repository = reset( $repository );
+
+	// Cast the Theme's upgrade data array as an object.
+	if ( 'themes' === $type ) {
+		$repository = (object) $repository;
+	}
+
+	$args['title']   = __( 'Détails de la mise à jour', 'entrepot' );
+	$args['context'] = 'repository_upgrade_notice';
+
+	if ( ! empty( $repository->full_upgrade_notice ) ) {
+		$upgrade_info = html_entity_decode( $repository->full_upgrade_notice, ENT_QUOTES, get_bloginfo( 'charset' ) );
+		$args['text']   = $upgrade_info;
+		$args['result'] = 'success';
+
+	} else {
+		$args['text'] = __( 'Désolé ce dépôt n\'a pas inclu d\'informations de mise à jour pour cette version.', 'entrepot' );
+	}
+
+	return $args;
+}
+
+/**
+ * Displays the Plugin repository's details.
+ *
+ * @since 1.4.0
+ */
+function entrepot_admin_plugin_details() {
+	global $tab;
+
+	if ( empty( $_REQUEST['plugin'] ) ) {
+		return;
+	}
+
+	$section  = '';
+	if ( isset( $_REQUEST['section'] ) ) {
+		$section = $_REQUEST['section'];
+	}
+
+	$plugin     = wp_unslash( $_REQUEST['plugin'] );
+	$repository = entrepot_get_repository_json( $plugin, 'plugins' );
+
+	// If it's not an Entrepôt registered repository, leave WordPress handle the plugin.
+	if ( ! $repository ) {
+		return;
+	}
+
+	$args = array(
+		'type'       => 'plugins',
+		'repo_name'  => $plugin,
+		'repository' => $repository,
+		'section'    => $section,
+	);
+
+	if ( 'changelog' === $section ) {
+		$args = array_merge( $args, entrepot_admin_get_changelog_section( $plugin ) );
+	}
+
+	return entrepot_admin_repository_iframe( $args );
+}
+
+/**
+ * Loads a fallback iframe to display a specific Theme details
+ * when its preview url is not available.
+ *
+ * @since 1.4.0
+ */
+function entrepot_admin_theme_details() {
+	if ( ! current_user_can( 'install_themes' ) && ! current_user_can( 'update_themes' ) ) {
+		wp_die(
+			__( 'Vous n\'êtes pas autorisé à réaliser cette action.', 'entrepot' ),
+			__( 'Accès interdit.', 'entrepot' ),
+			array( 'response' => 403 )
+		);
+	}
+
+	if ( empty( $_REQUEST['theme'] ) ) {
+		return;
+	}
+
+	$section  = '';
+	if ( isset( $_REQUEST['section'] ) ) {
+		$section = wp_unslash( $_REQUEST['section'] );
+	}
+
+	$theme      = wp_unslash( $_REQUEST['theme'] );
+	$repository = entrepot_get_repository_json( $theme, 'themes' );
+
+	// If it's not an Entrepôt registered repository, leave WordPress handle the theme.
+	if ( ! $repository ) {
+		return;
+	}
+
+	$args = array(
+		'type'       => 'themes',
+		'repo_name'  => $theme,
+		'repository' => $repository,
+		'section'    => $section,
+	);
+
+	if ( 'changelog' === $section ) {
+		$args = array_merge( $args, entrepot_admin_get_changelog_section( $theme, 'themes' ) );
+	}
+
+	return entrepot_admin_repository_iframe( $args );
+}
+
+/**
+ * Add Entrepôt specific data to Installed Themes list for the registered themes.
+ *
+ * @since 1.4.0
+ *
+ * @param  array $prepared_themes The list of JS prepared Themes.
+ * @return array                  The list of JS prepared Themes.
+ */
+function entrepot_prepare_themes_for_js( $prepared_themes = array() ) {
+	$current_screen = get_current_screen();
+
+	if ( empty( $current_screen->id ) || 0 !== strpos( 'themes', $current_screen->id ) ) {
+		return $prepared_themes;
+	}
+
+	foreach( $prepared_themes as &$theme ) {
+		$repository = entrepot_get_repository_json( $theme['id'], 'themes' );
+
+		if ( ! $repository ) {
+			continue;
+		}
+
+		$theme['entrepotData'] = array(
+			'entrepot-warning' => array(
+				'text' => __( 'Signaler', 'entrepot' ),
+				'url'  => entrepot_get_flag_url( $theme['id'] ),
+			),
+			'entrepot-git' => array(
+				'text' => __( 'Voir sur GitHub', 'entrepot' ),
+				'url'  => str_replace( 'releases', '', rtrim( $repository->releases, '/' ) ),
+			),
+		);
+	}
+
+	return $prepared_themes;
 }
 
 /**
@@ -1122,6 +1427,41 @@ function entrepot_admin_upgrade() {
 }
 
 /**
+ * Enqueues the needed script and style for the Plugin Versions screen.
+ *
+ * @since  1.4.0
+ */
+function entrepot_admin_versions_enqueue_scripts() {
+	wp_enqueue_script( 'entrepot-plugins-overwrite' );
+	$l10n = array(
+		'filetypeError' => __( 'Dans WordPress les packages sont au format ZIP, merci de sélectionner ce type de fichier', 'entrepot' ),
+		'unknownError'  => __( 'Erreur inconnue, merci de renouveler un peu plus tard', 'entrepot' ),
+	);
+
+	/**
+	 * Are API settings available ?
+	 *
+	 * Gutenberg is arbitrary deregistering the `wp-api-request` script to replace
+	 * it with a new implementation. As we need the `wpApiSettings` object WordPress
+	 * Core adds to the "old implementation" of the WP API Request, we need to add it
+	 * to our script in case Gutenberg is active.
+	 *
+	 * @see https://github.com/WordPress/gutenberg/pull/7329
+	 */
+	$data = wp_scripts()->get_data( 'wp-api-request', 'data' );
+	if ( ! $data || false === strpos( $data, 'wpApiSettings' ) ) {
+		$l10n['wpApiSettings'] = array(
+			'root'          => esc_url_raw( get_rest_url() ),
+			'nonce'         => ( wp_installing() && ! is_multisite() ) ? '' : wp_create_nonce( 'wp_rest' ),
+			'versionString' => 'wp/v2/',
+		);
+	}
+
+	wp_localize_script( 'entrepot-plugins-overwrite', 'entrepotl10nPluginsOverwrite', $l10n );
+	wp_enqueue_style( 'entrepot-plugins-overwrite' );
+}
+
+/**
  * Enqueues the needed JavaScript for the Manage Plugins versions Admin screen.
  *
  * @since 1.2.0
@@ -1137,13 +1477,7 @@ function entrepot_admin_versions_load() {
 		) ) . '</p>',
 	) );
 
-	// Enqueues the needed script and style.
-	wp_enqueue_script ( 'entrepot-plugins-overwrite' );
-	wp_localize_script( 'entrepot-plugins-overwrite', 'entrepotl10nPluginsOverwrite', array(
-		'filetypeError' => __( 'Dans WordPress les packages sont au format ZIP, merci de sélectionner ce type de fichier', 'entrepot' ),
-		'unknownError'  => __( 'Erreur inconnue, merci de renouveler un peu plus tard', 'entrepot' ),
-	) );
-	wp_enqueue_style( 'entrepot-plugins-overwrite' );
+	add_action( 'admin_enqueue_scripts', 'entrepot_admin_versions_enqueue_scripts', 20 );
 }
 
 /**
