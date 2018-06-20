@@ -2,10 +2,10 @@
 # This file is distributed under the GNU/GPL 2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Entrepôt 1.4.0-beta\n"
+"Project-Id-Version: Entrepôt 1.4.0\n"
 "Report-Msgid-Bugs-To: https://github.com/imath/entrepot/issues\n"
-"POT-Creation-Date: 2018-06-16 16:33:35+00:00\n"
-"PO-Revision-Date: 2018-06-16 18:34+0100\n"
+"POT-Creation-Date: 2018-06-20 02:31:11+00:00\n"
+"PO-Revision-Date: 2018-06-20 04:34+0100\n"
 "Last-Translator: imath <mathchristo@yahoo.fr>\n"
 "Language-Team: imath <contact@imathi.eu>\n"
 "Language: en_US\n"
@@ -31,7 +31,7 @@ msgstr "A problem occured while loading the plugin repositories."
 msgid "Dépôts"
 msgstr "Repositories"
 
-#: inc/admin.php:277 inc/admin.php:278 inc/admin.php:1507
+#: inc/admin.php:277 inc/admin.php:278 inc/admin.php:1536
 msgid "Gestion des versions"
 msgstr "Versions Management"
 
@@ -250,11 +250,23 @@ msgstr ""
 "Once your database backed up, use the Upgrade button to proceed to needed "
 "tasks."
 
+#: inc/admin.php:1437
+msgid ""
+"Dans WordPress les packages sont au format ZIP, merci de sélectionner ce "
+"type de fichier"
+msgstr ""
+"In WordPress packages are using the ZIP format, please make sure to select "
+"this type of file."
+
 #: inc/admin.php:1438
+msgid "Erreur inconnue, merci de renouveler un peu plus tard"
+msgstr "Unknown error, please try again later"
+
+#: inc/admin.php:1473
 msgid "Vue d’ensemble"
 msgstr "Overview"
 
-#: inc/admin.php:1440
+#: inc/admin.php:1475
 msgid ""
 "Depuis cet écran vous pouvez manuellement administrer les versions "
 "installées pour vos extensions. Vous pouvez mettre à jour ou revenir à une "
@@ -263,7 +275,7 @@ msgstr ""
 "From this screen you can manually manage the installed Plugin versions. You "
 "can update or downgrade every listed plugins."
 
-#: inc/admin.php:1441
+#: inc/admin.php:1476
 msgid ""
 "Pour cela, il suffit de cliquer sur le bouton indiquant la version actuelle "
 "de l'extension afin de sélectionner depuis votre appareil l'archive ZIP "
@@ -273,19 +285,7 @@ msgstr ""
 "version. A window to browse your files will pop to let you select the ZIP "
 "package containing the version you wish to replace the installed one with."
 
-#: inc/admin.php:1448
-msgid ""
-"Dans WordPress les packages sont au format ZIP, merci de sélectionner ce "
-"type de fichier"
-msgstr ""
-"In WordPress packages are using the ZIP format, please make sure to select "
-"this type of file."
-
-#: inc/admin.php:1449
-msgid "Erreur inconnue, merci de renouveler un peu plus tard"
-msgstr "Unknown error, please try again later"
-
-#: inc/admin.php:1464
+#: inc/admin.php:1493
 msgid ""
 "La gestion manuelle des versions des extensions nécessite WordPress 4.9."
 msgstr "The manual Plugin versions management feature requires WordPress 4.9."
