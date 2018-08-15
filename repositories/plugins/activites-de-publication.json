@@ -1,0 +1,25 @@
+{
+    "name": "Activités de Publication",
+    "author": "imath",
+    "slug": "activites-de-publication",
+    "dependencies": [
+        {
+          "register_post_meta" : "WordPress 4.9.8+",
+          "bp_check_theme_template_pack_dependency": "BuddyPress 3.1+"
+        }
+    ],
+    "icon": "https://raw.githubusercontent.com/imath/activites-de-publication/master/icon.png",
+    "tags": [
+      "BuddyPress",
+      "activity",
+      "Post-Types"
+    ],
+    "country": "fr_FR",
+    "releases": "https://github.com/imath/activites-de-publication/releases",
+    "issues": "https://github.com/imath/activites-de-publication/issues",
+    "description": {
+        "en_US" : "Use the BuddyPress activities to boost conversations about your WordPress posts.",
+        "fr_FR" : "Utilisez les activités de BuddyPress pour dynamiser les conversations de vos publications WordPress"
+    },
+    "README": "https://raw.githubusercontent.com/imath/activites-de-publication/master/README.md"
+}

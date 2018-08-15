@@ -1,5 +1,15 @@
 # Change Log
 
+## 1.4.1
+
+_Requires WordPress 4.8_
+
+### Newly Registered Plugins
+
+- Activités de Publication
+
+---
+
 ## 1.4.0
 
 _Requires WordPress 4.8_
