@@ -3,7 +3,7 @@
     "author": "imath",
     "slug": "gutenblocks",
     "dependencies": [
-      { "gutenberg_render_block": "Gutenberg 1.9+" }
+      { "render_block": "WordPress 5.0+" }
     ],
     "icon": "https://raw.githubusercontent.com/imath/gutenblocks/master/icon.png",
     "tags": [

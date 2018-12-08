@@ -1,5 +1,13 @@
 # Change Log
 
+## 1.4.2
+
+_Requires WordPress 4.8_
+
+### Bug fixes
+
+- Remove the Gutenberg dependency for GutenBlocks and replace it with WordPress 5.0.
+
 ## 1.4.1
 
 _Requires WordPress 4.8_
