@@ -1,0 +1,25 @@
+{
+	"name": "entrepot/entrepot",
+	"description": "Store your free WordPress plugins and themes into the Entrepôt.",
+	"type": "wordpress-plugin",
+	"keywords": [
+        "plugins",
+        "repositories"
+	],
+	"homepage": "https://github.com/imath/entrepot",
+	"license": "GPL-2.0+",
+	"authors": [ {
+		"name": "imath",
+		"homepage": "https://imathi.eu/"
+	} ],
+	"support": {
+		"issues": "https://github.com/imath/entrepot/issues"
+	},
+	"require": {
+		"composer/installers": "~1.0",
+		"php": ">=5.6.0"
+	},
+	"require-dev": {
+        "phpcompatibility/phpcompatibility-wp": "*"
+	}
+}
