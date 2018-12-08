@@ -20,6 +20,7 @@
 		"php": ">=5.6.0"
 	},
 	"require-dev": {
-        "phpcompatibility/phpcompatibility-wp": "*"
+		"phpcompatibility/phpcompatibility-wp": "*",
+		"dealerdirect/phpcodesniffer-composer-installer": "^0.4.3"
 	}
 }
