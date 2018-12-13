@@ -40,8 +40,8 @@ module.exports = function( grunt ) {
 			}
 		},
 		clean: {
-			all: ['assets/*.min.css', 'js/*.min.js', 'assets/entrepot-plugins.min.json', 'assets/entrepot-themes.min.json'],
-			entrepot: ['assets/entrepot-plugins.min.json', 'assets/entrepot-themes.min.json']
+			all: ['assets/*.min.css', 'js/*.min.js', 'assets/entrepot-plugins.min.json', 'assets/entrepot-themes.min.json', 'assets/entrepot-blocks.min.json'],
+			entrepot: ['assets/entrepot-plugins.min.json', 'assets/entrepot-themes.min.json', 'assets/entrepot-blocks.min.json']
 		},
 		makepot: {
 			target: {
@@ -98,7 +98,8 @@ module.exports = function( grunt ) {
 			compile: {
 				files: {
 					'assets/entrepot-plugins.min.json': 'repositories/plugins/*.json',
-					'assets/entrepot-themes.min.json': 'repositories/themes/*.json'
+					'assets/entrepot-themes.min.json': 'repositories/themes/*.json',
+					'assets/entrepot-blocks.min.json': 'repositories/blocks/*.json'
 				}
 			}
 		},
