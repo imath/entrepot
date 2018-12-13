@@ -150,24 +150,47 @@ function entrepot_setup_cache_group() {
  * @return array|object The list of repository objects or a single repository object.
  */
 function entrepot_get_repositories( $slug = '', $type = 'plugins' ) {
-	$repositories = wp_cache_get( $type, 'entrepot' );
+	$json = get_site_transient( "entrepot_registered_{$type}" );
 
-	if ( ! $repositories ) {
-		$src = sprintf( '%1$sentrepot-%2$s.min.json', entrepot_assets_dir(), $type );
+	if ( ! $json ) {
+		$file = sprintf( 'entrepot-%s.min.json', $type );
 
-		if ( ! file_exists( $src ) ) {
-			return array();
+		// Try to get distant repositories list.
+		if ( ! defined( 'PR_TESTING_ASSETS' ) ) {
+			$uri = 'https://api.github.com/repos/imath/entrepot/contents/assets/' . $file;
+
+			$request  = wp_remote_get( $uri, array(
+				'timeout'    => 30,
+				'user-agent' => 'Entrepôt/WordPress-Repositories-Fetcher; ' . get_bloginfo( 'url' ),
+			) );
+
+			if ( ! is_wp_error( $request ) && 200 === (int) wp_remote_retrieve_response_code( $request ) ) {
+				$dist_repos = json_decode( wp_remote_retrieve_body( $request ) );
+				$json       = base64_decode( $dist_repos->content );
+			}
 		}
 
-		$json         = file_get_contents( $src );
-		$repositories = json_decode( $json );
+		// Use local repositories by default.
+		if ( ! $json ) {
+			$src = sprintf( '%1$sentrepot-%2$s.min.json', entrepot_assets_dir(), $type );
 
-		if ( ! is_array( $repositories ) ) {
-			$repositories = array( $repositories );
+			if ( ! file_exists( $src ) ) {
+				return array();
+			}
+
+			$json = file_get_contents( $src );
 		}
 
-		// Cache repositories
-		wp_cache_add( $type, $repositories, 'entrepot' );
+		if ( ! empty( $json ) ) {
+			set_site_transient( "entrepot_registered_{$type}", $json, DAY_IN_SECONDS );
+		}
+	}
+
+	// Set repositories
+	$repositories = json_decode( $json );
+
+	if ( ! is_array( $repositories ) ) {
+		$repositories = array( $repositories );
 	}
 
 	if ( $slug ) {
