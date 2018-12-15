@@ -120,6 +120,27 @@ function entrepot_repositories_dir( $type = 'plugins' ) {
 }
 
 /**
+ * Gets the full path to the standalone blocks repository.
+ *
+ * @since 1.5.0
+ *
+ * @return string Full path to the standalone blocks repository.
+ */
+function entrepot_blocks_dir() {
+	$blocks_dir = trailingslashit( WP_CONTENT_DIR ) . 'blocks';
+
+	/**
+	 * Use this filter to use another repository for standalone blocks.
+	 *
+	 * @since 1.5.0
+	 *
+	 * @param  string  $blocks_dir The repository name of standalone blocks.
+	 * @return string              Full path to the standalone blocks repository.
+	 */
+	return apply_filters( 'entrepot_blocks_dir', $blocks_dir );
+}
+
+/**
  * Loads translation.
  *
  * @since 1.0.0

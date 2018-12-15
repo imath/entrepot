@@ -32,6 +32,18 @@ function entrepot_admin_updater() {
 		wp_cache_delete( 'repositories', 'entrepot' );
 	}
 
+	if ( 1.5 === (float) entrepot_version() ) {
+		$blocks_dir = entrepot_blocks_dir();
+		$index_file = trailingslashit( $blocks_dir ) . 'index.php';
+
+		// Create the wp-content/blocks directory.
+		if ( ! file_exists( $index_file ) && wp_mkdir_p( $blocks_dir ) ) {
+			$f = fopen( $index_file, 'w' );
+			fwrite( $f, "<?php\n// Silence is golden." );
+			fclose( $f );
+		}
+	}
+
 	// Update Entrepôt version.
 	update_network_option( 0, '_entrepot_version', entrepot_version() );
 }
