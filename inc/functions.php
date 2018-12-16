@@ -880,6 +880,115 @@ function entrepot_get_upgrader_tasks() {
 }
 
 /**
+ * Set a block's data from its block.json file.
+ *
+ * @since 1.5.0
+ *
+ * @param  array  $blocks The list of installed blocks.
+ * @param  string $json   The absolute path to the block.json file.
+ * @return array          The list of installed blocks.
+ */
+function entrepot_set_block_data( $blocks = array(), $json ) {
+	if ( is_readable( $json ) ) {
+		$json_data        = file_get_contents( $json );
+		$block_data       = json_decode( $json_data );
+		$block_data->path = dirname( $json );
+		$block_dir        = wp_basename( $block_data->path );
+
+		if ( isset( $block_data->author ) && isset( $block_data->slug ) ) {
+			$id = $block_data->author . '/' . $block_data->slug;
+		} else {
+			$id = $block_dir;
+		}
+
+		$block_data->id = $id;
+
+		if ( ! isset( $blocks[ $id ] ) ) {
+			$blocks[ $block_dir ] = $block_data;
+		}
+	}
+
+	return $blocks;
+}
+
+/**
+ * Get data for all blocks or for a specific block.
+ *
+ * @since 1.5.0
+ *
+ * @param  string       $block_dir The name of the block directory. Optional.
+ * @return array|object            The list of blocks or a specific one.
+ */
+function entrepot_get_blocks( $block_dir = '' ) {
+	$blocks_cache = wp_cache_get( 'blocks', 'entrepot' );
+
+	if ( ! $blocks_cache ) {
+		$blocks_cache = array();
+	}
+
+	if ( count( $blocks_cache ) > 1 ) {
+		if ( $block_dir && isset( $blocks_cache[ $block_dir ] ) ) {
+			return $blocks_cache[ $block_dir ];
+		}
+
+		return $blocks_cache;
+	}
+
+	$entrepot_blocks = array();
+	$blocks_root     = entrepot_blocks_dir();
+
+	if ( $block_dir ) {
+		$blocks_root = trailingslashit( $blocks_root ) . trim( $block_dir, '/' );
+	}
+
+	// Files in wp-content/blocks directory
+	$blocks_dir = @ opendir( $blocks_root );
+
+	if ( $blocks_dir ) {
+		while ( ( $file = readdir( $blocks_dir ) ) !== false ) {
+			if ( 'block.json' === $file && $block_dir ) {
+				$entrepot_blocks = entrepot_set_block_data(
+					$entrepot_blocks,
+					$blocks_root . '/' . $file
+				);
+			} elseif ( is_dir( $blocks_root . '/' . $file ) && '.' !== substr( $file, 0, 1 ) ) {
+				$blocks_subdir = @ opendir( $blocks_root . '/' . $file );
+
+				if ( $blocks_subdir ) {
+					while ( ( $subfile = readdir( $blocks_subdir ) ) !== false ) {
+						if ( 'block.json' !== $subfile ) {
+							continue;
+						}
+
+						$entrepot_blocks = entrepot_set_block_data(
+							$entrepot_blocks,
+							$blocks_root . '/' . $file . '/' . $subfile
+						);
+					}
+
+					closedir( $blocks_subdir );
+				}
+			}
+		}
+
+		closedir( $blocks_dir );
+	}
+
+	if ( ! $entrepot_blocks ) {
+		return array();
+	}
+
+	uasort( $entrepot_blocks, '_sort_uname_callback' );
+	wp_cache_set( 'blocks', $entrepot_blocks, 'entrepot' );
+
+	if ( $block_dir && isset( $entrepot_blocks[ $block_dir ] ) ) {
+		return $entrepot_blocks[ $block_dir ];
+	}
+
+	return $entrepot_blocks;
+}
+
+/**
  * Registers a rest route for the Installed plugins.
  *
  * @since 1.2.0

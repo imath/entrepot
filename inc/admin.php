@@ -39,7 +39,7 @@ function entrepot_admin_updater() {
 		// Create the wp-content/blocks directory.
 		if ( ! file_exists( $index_file ) && wp_mkdir_p( $blocks_dir ) ) {
 			$f = fopen( $index_file, 'w' );
-			fwrite( $f, "<?php\n// Silence is golden." );
+			fwrite( $f, "<?php\n// Silence is golden.\n" );
 			fclose( $f );
 		}
 	}

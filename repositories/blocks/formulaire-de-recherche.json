@@ -2,20 +2,6 @@
     "name": "Formulaire de Recherche",
     "author": "imath",
     "slug": "formulaire-de-recherche",
-    "javascript": {
-        "handle": "formulaire-de-recherche",
-        "relative_path"  : "dist/index.js",
-        "dependencies": [
-            "wp-blocks",
-            "wp-element"
-        ]
-    },
-    "css": {
-        "handle": "formulaire-de-recherche",
-        "relative_path"  : "css/style.css",
-        "dependencies": []
-    },
-    "php_relative_path": "lib/functions.php",
     "icon": "https://raw.githubusercontent.com/imath/formulaire-de-recherche/master/icon.png",
     "tags": [
       "search",
