@@ -151,6 +151,25 @@ function entrepot_load_textdomain() {
 }
 
 /**
+ * Map custom caps to existing WordPress caps.
+ *
+ * @since 1.5.0
+ *
+ * @param  array   $caps    The user's actual capabilities.
+ * @param  string  $cap     The requested Capability name.
+ * @param  integer $user_id The user ID.
+ * @param  array   $args    The cap's context.
+ * @return array   $caps    The user's mapped capabilities.
+ */
+function entrepot_map_custom_caps( $caps = array(), $cap = '', $user_id = 0, $args = array() ) {
+	if ( 'activate_entrepot_blocks' === $cap ) {
+		$caps = array( 'activate_plugins' );
+	}
+
+	return $caps;
+}
+
+/**
  * Adds the Entrepôt cache group.
  *
  * @since 1.0.0

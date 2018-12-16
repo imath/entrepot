@@ -310,7 +310,7 @@ function entrepot_admin_add_menu() {
 
 	if ( $entrepot->upgrades ) {
 		$screens['upgrades'] = array(
-			'page_hook' =>add_plugins_page(
+			'page_hook' => add_plugins_page(
 				__( 'Mise à niveau des Extensions', 'entrepot' ),
 				__( 'Mettre à niveau', 'entrepot' ),
 				'install_plugins',
@@ -321,11 +321,29 @@ function entrepot_admin_add_menu() {
 		);
 	}
 
+	if ( function_exists( 'render_block' ) ) {
+		$screens['blocks'] = array(
+			'page_hook' => add_menu_page(
+				__( 'Gestion des types de bloc', 'entrepot' ),
+				__ ( 'Types de Bloc', 'entrepot' ),
+				'activate_entrepot_blocks',
+				'entrepot-blocks',
+				'entrepot_admin_blocks',
+				'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPHN2ZyB2ZXJzaW9uPSIxLjEiIHg9IjBweCIgeT0iMHB4IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgMTAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8Zz4KICAgIDxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBkPSJNODAsNzBIMjBWMzNoOXYtN2gxNnY3aDEydi03aDE2djdoN1Y3MHoiIHN0eWxlPSJmaWxsOiByZ2IoMjU1LCAyNTUsIDI1NSk7Ii8+CiAgPC9nPgo8L3N2Zz4=',
+				67
+			),
+		);
+	}
+
 	if ( empty( $screens ) ) {
 		return;
 	}
 
 	foreach ( $screens as $screen ) {
+		if ( ! isset( $screen['load_callback'] ) || ! $screen['load_callback'] ) {
+			continue;
+		}
+
 		add_action( 'load-' . $screen['page_hook'], $screen['load_callback'] );
 	}
 }
@@ -1546,6 +1564,17 @@ function entrepot_admin_versions() {
 	}
 
 	printf( '<div class="wrap"><h1>%1$s</h1>%2$s</div>', esc_html__( 'Gestion des versions', 'entrepot' ), $output );
+}
+
+/**
+ * Blocks administration screen.
+ *
+ * @since 1.5.0
+ */
+function entrepot_admin_blocks() {
+	$output = 'TBD';
+
+	printf( '<div class="wrap"><h1>%1$s</h1>%2$s</div>', esc_html__( 'Gestion des types de bloc', 'entrepot' ), $output );
 }
 
 /**
