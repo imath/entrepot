@@ -135,9 +135,28 @@ function entrepot_blocks_dir() {
 	 * @since 1.5.0
 	 *
 	 * @param  string  $blocks_dir The repository name of standalone blocks.
-	 * @return string              Full path to the standalone blocks repository.
 	 */
 	return apply_filters( 'entrepot_blocks_dir', $blocks_dir );
+}
+
+/**
+ * Gets the root url for standalone blocks.
+ *
+ * @since 1.5.0
+ *
+ * @return string The root url standalone blocks.
+ */
+function entrepot_blocks_url() {
+	$blocks_url = trailingslashit( content_url( 'blocks' ) );
+
+	/**
+	 * Use this filter to use another url for standalone blocks.
+	 *
+	 * @since 1.5.0
+	 *
+	 * @param  string  $blocks_url The root url standalone blocks.
+	 */
+	return apply_filters( 'entrepot_blocks_url', $blocks_url );
 }
 
 /**
@@ -978,7 +997,7 @@ function entrepot_get_blocks( $block_dir = '' ) {
 		return array();
 	}
 
-	uasort( $entrepot_blocks, '_sort_uname_callback' );
+	ksort( $entrepot_blocks );
 	wp_cache_set( 'blocks', $entrepot_blocks, 'entrepot' );
 
 	if ( $block_dir && isset( $entrepot_blocks[ $block_dir ] ) ) {
@@ -986,6 +1005,102 @@ function entrepot_get_blocks( $block_dir = '' ) {
 	}
 
 	return $entrepot_blocks;
+}
+
+/**
+ * Loads the PHP part of blocks registered into the Entrepôt.
+ *
+ * @since 1.5.0
+ */
+function entrepot_block_types_loaded() {
+	$blocks        = entrepot_get_blocks();
+	$active_blocks = get_option( 'entrepot_active_blocks', array( 'imath/formulaire-de-recherche' ) );
+
+	foreach ( $blocks as $block ) {
+		if ( ! in_array( $block->id, $active_blocks, true ) || ! isset( $block->php_relative_path ) ) {
+			continue;
+		}
+
+		$php_loader = trailingslashit( $block->path ) . $block->php_relative_path;
+
+		if ( file_exists( $php_loader ) ) {
+			require_once $php_loader;
+		}
+	}
+
+	/**
+	 * Add custom code once the PHP parts of blocks is loaded.
+	 *
+	 * @since 1.5.0
+	 */
+	do_action( 'entrepot_block_types_loaded' );
+}
+
+/**
+ * Register "Entrepôt" block types into the Block Editor.
+ *
+ * @since 1.5.0
+ */
+function entrepot_register_block_types() {
+	if ( ! function_exists( 'register_block_type' ) ) {
+		return;
+	}
+
+	$blocks        = entrepot_get_blocks();
+	$active_blocks = get_option( 'entrepot_active_blocks', array( 'imath/formulaire-de-recherche' ) );
+	$blocks_url    = trailingslashit( entrepot_blocks_url() );
+
+	foreach ( $blocks as $block_dir => $block ) {
+		$block_args    = array();
+		$block_version = time();
+
+		if ( ! in_array( $block->id, $active_blocks, true ) || ! isset( $block->block_id ) ) {
+			continue;
+		}
+
+		if ( isset( $block->version ) && $block->version ) {
+			$block_version = $block->version;
+		}
+
+		if ( isset( $block->editor_script ) && is_object( $block->editor_script ) ) {
+			$script_data = wp_parse_args( (array) $block->editor_script, array(
+				'handle'        => '',
+				'relative_path' => '',
+				'dependencies'  => array(),
+			) );
+
+			if ( ! $script_data['handle'] || ! $script_data['relative_path'] || ! file_exists( trailingslashit( $block->path ) . $script_data['relative_path'] ) ) {
+				continue;
+			}
+
+			$script_data['url'] = trailingslashit( $blocks_url . $block_dir ) . ltrim( $script_data['relative_path'], '/' );
+			$block_args['editor_script'] = sanitize_key( $script_data['handle'] );
+
+			wp_register_script(
+				$block_args['editor_script'],
+				esc_url_raw( $script_data['url'] ),
+				(array) $script_data['dependencies'],
+				esc_attr( $block_version ),
+				true
+			);
+		}
+
+		/**
+		 * @todo editor_style
+		 * @todo style
+		 * @todo render_callback
+		 */
+		if ( $block_args ) {
+			register_block_type( $block->block_id, $block_args );
+		}
+	}
+
+	/**
+	 * Add custom actions once Block Types from the "Entrepôt" are registered.
+	 *
+	 * @since 1.5.0
+	 */
+	do_action( 'entrepot_registered_blocks' );
 }
 
 /**

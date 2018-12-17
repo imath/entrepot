@@ -66,6 +66,9 @@ add_filter( 'entrepot_repository_modal_content', 'links_add_target'             
 // Registers REST API routes.
 add_action( 'rest_api_init', 'entrepot_rest_routes', 100 );
 
+// Register Block Types.
+add_action( 'init', 'entrepot_register_block_types', 30 );
+
 // Theme Customizer hooks.
 add_action( 'customize_register',    'entrepot_customize_register'           );
 add_filter( 'customize_load_themes', 'entrepot_customize_load_themes', 10, 2 );
@@ -97,6 +100,9 @@ add_action( 'entrepot_admin_init', 'entrepot_plugins_code_editor_restrictions' )
 
 // Load translations.
 add_action( 'plugins_loaded', 'entrepot_load_textdomain', 9 );
+
+// Include Block Types PHP scripts.
+add_action( 'plugins_loaded', 'entrepot_block_types_loaded', 20 );
 
 // Handle custom capabilities.
 add_filter( 'map_meta_cap', 'entrepot_map_custom_caps', 10, 4 );
