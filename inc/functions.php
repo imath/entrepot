@@ -914,15 +914,24 @@ function entrepot_set_block_data( $blocks = array(), $json ) {
 		$block_data->path = dirname( $json );
 		$block_dir        = wp_basename( $block_data->path );
 
-		if ( isset( $block_data->author ) && isset( $block_data->slug ) ) {
-			$id = $block_data->author . '/' . $block_data->slug;
-		} else {
-			$id = $block_dir;
+		if ( ! isset( $block_data->github_url ) ) {
+			return $blocks;
 		}
 
-		$block_data->id = $id;
+		$url_parts = wp_parse_url( $block_data->github_url );
+		if ( 'github.com' !== $url_parts['host'] || ! $url_parts['path'] ) {
+			return $blocks;
+		}
 
-		if ( ! isset( $blocks[ $id ] ) ) {
+		$path_parts = array_filter( explode( '/', $url_parts['path'] ) );
+		$elements   = count( $path_parts );
+		if ( ! $path_parts || $elements < 2 ) {
+			return $blocks;
+		}
+
+		$block_data->id = $path_parts[ $elements - 1 ] . '/' . rtrim( $path_parts[ $elements ], '.git' );
+
+		if ( ! isset( $blocks[ $block_dir ] ) ) {
 			$blocks[ $block_dir ] = $block_data;
 		}
 	}
