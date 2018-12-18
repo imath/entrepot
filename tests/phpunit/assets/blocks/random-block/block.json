@@ -1,7 +1,7 @@
 {
     "name": "Formulaire de Recherche",
     "author": "imath",
-    "slug": "formulaire-de-recherche",
+    "github_url": "https://github.com/imath/formulaire-de-recherche.git",
     "version": "1.0.0",
     "editor_script": {
         "handle": "formulaire-de-recherche",
