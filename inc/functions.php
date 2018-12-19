@@ -33,6 +33,17 @@ function entrepot_db_version() {
 }
 
 /**
+ * Gets the plugin's root path.
+ *
+ * @since 1.5.0
+ *
+ * @return string The plugin's root path.
+ */
+function entrepot_root_path() {
+	return entrepot()->dir;
+}
+
+/**
  * Gets the plugin's root URL.
  *
  * @since 1.5.0
@@ -1033,6 +1044,10 @@ function entrepot_get_blocks( $block_dir = '' ) {
  * @since 1.5.0
  */
 function entrepot_block_types_loaded() {
+	if ( ! function_exists( 'register_block_type' ) ) {
+		return;
+	}
+
 	$blocks        = entrepot_get_blocks();
 	$active_blocks = get_option( 'entrepot_active_blocks', array( 'imath/formulaire-de-recherche' ) );
 

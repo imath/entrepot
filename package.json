@@ -33,7 +33,8 @@
   },
   "scripts": {
     "start": "parcel watch src/*/*.js",
-    "build": "parcel build src/*/*.js"
+    "build": "parcel build src/*/*.js",
+    "translate": "po2json languages/js/entrepot-en_US.po languages/js/entrepot-en_US-entrepot-manage-blocks.json -f jed"
   },
   "keywords": [
     "plugins",

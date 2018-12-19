@@ -423,13 +423,17 @@ function entrepot_admin_register_scripts() {
 		true
 	);
 
-	wp_register_script(
-		'entrepot-manage-blocks',
-		sprintf( '%1$sdist/index%2$s.js', entrepot_root_url(), entrepot_min_suffix() ),
-		array( 'wp-element', 'wp-i18n' ),
-		entrepot_version(),
-		true
-	);
+	// Register Script and translation for the Block Admin.
+	if ( function_exists( 'register_block_type' ) ) {
+		wp_register_script(
+			'entrepot-manage-blocks',
+			sprintf( '%1$sdist/index%2$s.js', entrepot_root_url(), entrepot_min_suffix() ),
+			array( 'wp-element', 'wp-i18n' ),
+			entrepot_version(),
+			true
+		);
+		wp_set_script_translations( 'entrepot-manage-blocks', 'entrepot', trailingslashit( entrepot_root_path() ) . 'languages/js' );
+	}
 
 	wp_register_style(
 		'entrepot-flag',
