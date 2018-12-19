@@ -332,6 +332,7 @@ function entrepot_admin_add_menu() {
 				'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPHN2ZyB2ZXJzaW9uPSIxLjEiIHg9IjBweCIgeT0iMHB4IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgMTAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8Zz4KICAgIDxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBkPSJNODAsNzBIMjBWMzNoOXYtN2gxNnY3aDEydi03aDE2djdoN1Y3MHoiIHN0eWxlPSJmaWxsOiByZ2IoMjU1LCAyNTUsIDI1NSk7Ii8+CiAgPC9nPgo8L3N2Zz4=',
 				67
 			),
+			'load_callback' => 'entrepot_admin_blocks_load',
 		);
 	}
 
@@ -418,6 +419,14 @@ function entrepot_admin_register_scripts() {
 		'entrepot-themes',
 		sprintf( '%1$sthemes%2$s.js', entrepot_js_url(), entrepot_min_suffix() ),
 		array( 'theme' ),
+		entrepot_version(),
+		true
+	);
+
+	wp_register_script(
+		'entrepot-manage-blocks',
+		sprintf( '%1$sdist/index%2$s.js', entrepot_root_url(), entrepot_min_suffix() ),
+		array( 'wp-element', 'wp-i18n' ),
 		entrepot_version(),
 		true
 	);
@@ -1566,15 +1575,17 @@ function entrepot_admin_versions() {
 	printf( '<div class="wrap"><h1>%1$s</h1>%2$s</div>', esc_html__( 'Gestion des versions', 'entrepot' ), $output );
 }
 
+function entrepot_admin_blocks_load() {
+	wp_enqueue_script( 'entrepot-manage-blocks' );
+}
+
 /**
  * Blocks administration screen.
  *
  * @since 1.5.0
  */
 function entrepot_admin_blocks() {
-	$output = 'TBD';
-
-	printf( '<div class="wrap"><h1>%1$s</h1>%2$s</div>', esc_html__( 'Gestion des types de bloc', 'entrepot' ), $output );
+	printf( '<div class="wrap"><h1>%s</h1><div id="entrepot-blocks"></div></div>', esc_html__( 'Gestion des types de bloc', 'entrepot' ) );
 }
 
 /**

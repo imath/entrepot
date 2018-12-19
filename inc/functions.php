@@ -33,6 +33,17 @@ function entrepot_db_version() {
 }
 
 /**
+ * Gets the plugin's root URL.
+ *
+ * @since 1.5.0
+ *
+ * @return string The plugin's root URL.
+ */
+function entrepot_root_url() {
+	return entrepot()->url;
+}
+
+/**
  * Gets the plugin's assets folder URL.
  *
  * @since 1.0.0
@@ -59,7 +70,7 @@ function entrepot_assets_dir() {
  *
  * @since 1.0.0
  *
- * @return The plugin's JS folder URL.
+ * @return String The plugin's JS folder URL.
  */
 function entrepot_js_url() {
 	return entrepot()->js_url;
