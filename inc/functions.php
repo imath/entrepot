@@ -205,6 +205,8 @@ function entrepot_load_textdomain() {
 function entrepot_map_custom_caps( $caps = array(), $cap = '', $user_id = 0, $args = array() ) {
 	if ( 'activate_entrepot_blocks' === $cap ) {
 		$caps = array( 'activate_plugins' );
+	} elseif ( 'update_entrepot_blocks' === $cap ) {
+		$caps = array( 'update_plugins' );
 	}
 
 	return $caps;
@@ -1147,4 +1149,10 @@ function entrepot_rest_routes() {
 	// Plugins.
 	$controller = new Entrepot_REST_Plugins_Controller;
 	$controller->register_routes();
+
+	// Blocks
+	if ( function_exists( 'render_block' ) ) {
+		$controller = new Entrepot_REST_Blocks_Controller;
+		$controller->register_routes();
+	}
 }

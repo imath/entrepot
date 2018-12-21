@@ -3,6 +3,6 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "X-Generator: babel-plugin-makepot\n"
 
-#: src/manage-block-types/index.js:4
+#: src/manage-block-types/index.js:10
 msgid "Liste de blocs"
 msgstr ""
