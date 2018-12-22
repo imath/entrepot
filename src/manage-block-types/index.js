@@ -1,6 +1,7 @@
 const { Component, render, createElement, Fragment } = wp.element;
 const { __ } = wp.i18n;
 const { apiFetch } = wp;
+const { head } = lodash;
 
 class ManageBlocks extends Component {
     constructor() {
@@ -10,8 +11,6 @@ class ManageBlocks extends Component {
     }
 
     componentDidMount() {
-        var that = this;
-
         apiFetch( { path: '/wp/v2/entrepot-blocks' } ).then( types => {
             this.setState( { blocks: types } );
         } );
@@ -20,13 +19,14 @@ class ManageBlocks extends Component {
     render() {
         const blocks = this.state.blocks.map( ( block ) => (
             <Block
-                key={'block-' + block.id}
-                id={block.id}
-                name={block.name}
-                description={block.description}
-                README={block.README}
-                icon={block.icon}
-                author={block.author}
+                key={ 'block-' + block.id }
+                id={ block.id }
+                name={ block.name }
+                description={ block.description }
+                README={ block.README }
+                icon={ block.icon }
+                author={ block.author }
+                action={ head( block._links.action ) }
             />
         ) );
 
@@ -48,16 +48,23 @@ class Block extends Component {
                 <div className="plugin-card-top">
                     <div className="name column-name">
                         <h3>
-                            <a href={this.props.README} className="thickbox open-plugin-details-modal">
-                                {this.props.name}
-                                <img src={this.props.icon} className="plugin-icon" alt=""/>
+                            <a href={ this.props.README } className="thickbox open-plugin-details-modal">
+                                { this.props.name }
+                                <img src={ this.props.icon } className="plugin-icon" alt=""/>
                             </a>
                         </h3>
                     </div>
+                    <div class="action-links">
+                        <ul class="plugin-action-buttons">
+                            <li>
+                                <a href={ this.props.action.href } class="button button-primary activate-now" aria-label={ this.props.action.title }>{ this.props.action.title }</a>
+                            </li>
+                        </ul>
+                    </div>
                     <div className="desc column-description">
-                        <p>{this.props.description}</p>
+                        <p>{ this.props.description }</p>
                         <p className="authors">
-                            <cite>{this.props.author}</cite>
+                            <cite>{ this.props.author }</cite>
                         </p>
                     </div>
                 </div>

@@ -1051,7 +1051,7 @@ function entrepot_block_types_loaded() {
 	}
 
 	$blocks        = entrepot_get_blocks();
-	$active_blocks = get_option( 'entrepot_active_blocks', array( 'imath/formulaire-de-recherche' ) );
+	$active_blocks = get_option( 'entrepot_active_blocks', array() );
 
 	foreach ( $blocks as $block ) {
 		if ( ! in_array( $block->id, $active_blocks, true ) || ! isset( $block->php_relative_path ) ) {
@@ -1084,7 +1084,7 @@ function entrepot_register_block_types() {
 	}
 
 	$blocks        = entrepot_get_blocks();
-	$active_blocks = get_option( 'entrepot_active_blocks', array( 'imath/formulaire-de-recherche' ) );
+	$active_blocks = get_option( 'entrepot_active_blocks', array() );
 	$blocks_url    = trailingslashit( entrepot_blocks_url() );
 
 	foreach ( $blocks as $block_dir => $block ) {

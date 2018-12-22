@@ -96,7 +96,8 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 		}
 
 		foreach ( $blocks as $id => $block ) {
-			$response[]  = $this->prepare_item_for_response( $block, $request );
+			$data       = $this->prepare_item_for_response( $block, $request );
+			$response[] = $this->prepare_response_for_collection( $data );
 		}
 
 		if ( ! $response ) {
@@ -107,13 +108,63 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 	}
 
 	/**
+	 * Prepares links for the request.
+	 *
+	 * @since 1.5.0
+	 *
+	 * @param array $block The block type data.
+	 * @return array Links for the given block type.
+	 */
+	protected function prepare_links( $block ) {
+		$base = sprintf( '%s/%s', $this->namespace, $this->rest_base );
+
+		// Entity meta.
+		$links = array(
+			'self' => array(
+				'href'   => rest_url( trailingslashit( $base ) . $block['id'] ),
+			),
+			'collection' => array(
+				'href'   => rest_url( $base ),
+			),
+		);
+
+		$active_blocks = get_option( 'entrepot_active_blocks', array() );
+
+		if ( in_array( $block['id'], $active_blocks, true ) ) {
+			$links['action'] = array(
+				'href'       => add_query_arg( array(
+					'page'     => 'entrepot-blocks',
+					'_wpnonce' => wp_create_nonce( 'deactivate-block_' . $block['id'] ),
+					'action'   => 'deactivate',
+					'block'    => $block['id'],
+				), network_admin_url( 'admin.php' ) ),
+				'embeddable' => true,
+				'title'      => __( 'Désactiver', 'entrepot' ),
+			);
+		} else {
+			$links['action'] = array(
+				'href'       => add_query_arg( array(
+					'page'     => 'entrepot-blocks',
+					'_wpnonce' => wp_create_nonce( 'activate-block_' . $block['id'] ),
+					'action'   => 'activate',
+					'block'    => $block['id'],
+				), network_admin_url( 'admin.php' ) ),
+				'embeddable' => true,
+				'title'      => __( 'Activer', 'entrepot' ),
+			);
+		}
+
+		return $links;
+	}
+
+	/**
 	 * Prepares a single block type output for response.
 	 *
 	 * @since 1.5.0
 	 *
-	 * @param array           $block  Block types data.
+	 * @param array $block Block type data.
 	 * @param WP_REST_Request $request Request object.
-	 * @return array Array of plugin header tags.
+	 * @return WP_REST_Response Response object for the Block type data.
 	 */
 	public function prepare_item_for_response( $block, $request ) {
 		if ( ! is_array( $block ) ) {
@@ -135,9 +186,15 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
         }
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
-		$block = $this->filter_response_by_context( $block, $context );
+		$block   = $this->filter_response_by_context( $block, $context );
 
-		return $block;
+		// Wrap the data in a response object.
+		$response = rest_ensure_response( $block );
+
+		$links = $this->prepare_links( $block );
+		$response->add_links( $links );
+
+		return $response;
 	}
 
 	/**
@@ -146,7 +203,7 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 	 * @since 1.5.0
 	 *
 	 * @param  boolean $schema True to get the additionnal schema.
-	 * @return array Array of registered options.
+	 * @return array array of registered options.
 	 */
 	protected function get_installed_blocks( $schema = false ) {
 		$rest_blocks = array();

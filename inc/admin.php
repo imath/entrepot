@@ -428,7 +428,7 @@ function entrepot_admin_register_scripts() {
 		wp_register_script(
 			'entrepot-manage-blocks',
 			sprintf( '%1$sdist/index%2$s.js', entrepot_root_url(), entrepot_min_suffix() ),
-			array( 'wp-element', 'wp-i18n', 'wp-api-fetch' ),
+			array( 'wp-element', 'wp-i18n', 'wp-api-fetch', 'lodash' ),
 			entrepot_version(),
 			true
 		);
@@ -1579,10 +1579,48 @@ function entrepot_admin_versions() {
 	printf( '<div class="wrap"><h1>%1$s</h1>%2$s</div>', esc_html__( 'Gestion des versions', 'entrepot' ), $output );
 }
 
+/**
+ * Handle Admin screen actions.
+ *
+ * @since 1.5.0
+ */
 function entrepot_admin_blocks_load() {
 	wp_enqueue_script( 'entrepot-manage-blocks' );
 	add_thickbox();
 	wp_enqueue_style( 'list-tables' );
+
+	if ( isset( $_REQUEST['action'] ) && isset( $_REQUEST['block'] ) ) {
+		$redirect = add_query_arg( array(
+			'page'     => 'entrepot-blocks',
+			'updated'  => true,
+		), network_admin_url( 'admin.php' ) );
+
+		$block_id      = wp_unslash( $_REQUEST['block'] );
+		$action        = wp_unslash( $_REQUEST['action'] );
+		$active_blocks = get_option( 'entrepot_active_blocks', array() );
+
+		check_admin_referer( "$action-block_$block_id" );
+
+		if ( 'activate' === $action ) {
+			// @todo Check for PHP errors in a Sandbox.
+			$slug = wp_basename( $block_id );
+
+			if ( ! in_array( $block_id, $active_blocks, true ) ) {
+				$active_blocks[] = $block_id;
+			}
+		} elseif ( 'deactivate' === $action ) {
+			$block_index = array_search( $block_id, $active_blocks, true );
+
+			if ( false !== $block_index ) {
+				unset( $active_blocks[ $block_index ] );
+			}
+		}
+
+		update_option( 'entrepot_active_blocks', array_unique( $active_blocks ) );
+
+		wp_safe_redirect( $redirect );
+		exit();
+	}
 }
 
 /**
