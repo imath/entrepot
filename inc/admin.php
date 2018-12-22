@@ -1581,6 +1581,8 @@ function entrepot_admin_versions() {
 
 function entrepot_admin_blocks_load() {
 	wp_enqueue_script( 'entrepot-manage-blocks' );
+	add_thickbox();
+	wp_enqueue_style( 'list-tables' );
 }
 
 /**

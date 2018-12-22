@@ -206,7 +206,7 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
                 }
 
                 if ( isset( $repository->icon ) ) {
-                    $rest_data['icon'] = $repository->icon;
+					$rest_data['icon'] = $repository->icon;
                 }
             }
 
