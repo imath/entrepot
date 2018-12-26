@@ -7,34 +7,53 @@ class ManageBlocks extends Component {
     constructor() {
         super( ...arguments );
 
-        this.state = { blocks: [] };
+        this.state = {
+            blocks: [],
+            status: 'loading',
+            message: '',
+        };
     }
 
     componentDidMount() {
         apiFetch( { path: '/wp/v2/entrepot-blocks' } ).then( types => {
-            this.setState( { blocks: types } );
+            this.setState( { blocks: types, status: 'success' } );
+        }, error => {
+            this.setState( { status: 'error', message: error.message } );
         } );
     }
 
     render() {
-        const blocks = this.state.blocks.map( ( block ) => (
-            <Block
-                key={ 'block-' + block.id }
-                id={ block.id }
-                name={ block.name }
-                description={ block.description }
-                README={ block.README }
-                icon={ block.icon }
-                author={ block.author }
-                action={ head( block._links.action ) }
-            />
-        ) );
+        const { blocks, status, message } = this.state;
+        let blockTypes, loader;
+
+        if ( 'success' === status ) {
+            blockTypes = blocks.map( ( block ) => (
+                <Block
+                    key={ 'block-' + block.id }
+                    id={ block.id }
+                    name={ block.name }
+                    description={ block.description }
+                    README={ block.README }
+                    icon={ block.icon }
+                    author={ block.author }
+                    action={ head( block._links.action ) }
+                />
+            ) );
+        }
+
+        if ( 'loading' === status ) {
+            loader = <p>{ __( 'Chargement en cours, merci de patienter.', 'entrepot' ) }</p>;
+        }
 
         return (
             <Fragment>
                 <h2 className="screen-reader-text">{ __( 'Liste de blocs', 'entrepot' ) }</h2>
                 <div className="blocks">
-                    { blocks }
+                    { loader }
+                    { blockTypes }
+                    { message && (
+                        <p> { message } </p>
+                    ) }
                 </div>
             </Fragment>
         );
