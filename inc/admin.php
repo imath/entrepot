@@ -1580,6 +1580,95 @@ function entrepot_admin_versions() {
 }
 
 /**
+ * Used to check PHP errors while activating blocks.
+ *
+ * @since 1.5.0
+ *
+ * @param object $block A block type object.
+ */
+function entrepot_block_sandbox( $block = null ) {
+	if ( ! isset( $block->path ) || ! isset( $block->php_relative_path ) ) {
+		return false;
+	}
+
+	$loader = trailingslashit( $block->path ) . $block->php_relative_path;
+
+	if ( file_exists( $loader ) ) {
+		include_once trailingslashit( $block->path ) . $block->php_relative_path;
+
+		/**
+		 * Add custom code once the PHP parts of blocks is loaded.
+		 *
+		 * @since 1.5.0
+		 */
+		do_action( 'entrepot_block_types_loaded' );
+	}
+}
+
+/**
+ * Activate a block type making sure no PHP errors are triggered.
+ *
+ * @since 1.5.0
+ *
+ * @param string $block_type_id The block type ID.
+ * @param string $redirect The url to redirect the user to.
+ * @return WP_Error|boolean True if the block type was activated. An error object otherwise.
+ */
+function entrepot_activate_block( $block_type_id = '', $redirect = '' ) {
+	$active_blocks = (array) get_option( 'entrepot_active_blocks', array() );
+	$block_dir     = wp_basename( $block_type_id );
+	$block         = entrepot_get_blocks( $block_dir );
+
+	if ( ! isset( $block->id ) || ! isset( $block->path ) || $block_type_id !== $block->id ) {
+		return new WP_Error( 'entrepot_blocks_not_installed', __( 'Le type de bloc n’est pas installé.', 'entrepot' ), array( 'status' => 404 ) );
+	}
+
+	if ( in_array( $block->id, $active_blocks, true ) ) {
+		return new WP_Error( 'entrepot_blocks_allready_installed', __( 'Le type de bloc est déjà activé.', 'entrepot' ), array( 'status' => 403 ) );
+	}
+
+	if ( $redirect ) {
+		wp_redirect( add_query_arg( '_error_nonce', wp_create_nonce( 'block-activation-error_' . $block->id ), $redirect ) );
+	}
+
+	ob_start();
+	entrepot_block_sandbox( $block );
+
+	if ( ob_get_length() > 0 ) {
+		$output = ob_get_clean();
+		return new WP_Error( 'entrepot_blocks_unexpected_output', __( 'Le bloc a généré un affichage inattendu.', 'entrepot' ), $output );
+	}
+
+	ob_end_clean();
+
+	$active_blocks[] = $block->id;
+	update_option( 'entrepot_active_blocks', array_unique( $active_blocks ) );
+
+	return true;
+}
+
+/**
+ * Deactivate a block.
+ *
+ * @since 1.5.0
+ *
+ * @param string $block_type_id The block type ID.
+ * @return boolean True.
+ */
+function entrepot_deactivate_block( $block_type_id = '' ) {
+	$active_blocks = (array) get_option( 'entrepot_active_blocks', array() );
+
+	$block_index = array_search( $block_type_id, $active_blocks, true );
+
+	if ( false !== $block_index ) {
+		unset( $active_blocks[ $block_index ] );
+		update_option( 'entrepot_active_blocks', array_unique( $active_blocks ) );
+	}
+
+	return true;
+}
+
+/**
  * Handle Admin screen actions.
  *
  * @since 1.5.0
@@ -1592,31 +1681,72 @@ function entrepot_admin_blocks_load() {
 	if ( isset( $_REQUEST['action'] ) && isset( $_REQUEST['block'] ) ) {
 		$redirect = add_query_arg( array(
 			'page'     => 'entrepot-blocks',
-			'updated'  => true,
 		), network_admin_url( 'admin.php' ) );
 
-		$block_id      = wp_unslash( $_REQUEST['block'] );
-		$action        = wp_unslash( $_REQUEST['action'] );
-		$active_blocks = get_option( 'entrepot_active_blocks', array() );
+		$block_id = wp_unslash( $_REQUEST['block'] );
+		$action   = wp_unslash( $_REQUEST['action'] );
 
-		check_admin_referer( "$action-block_$block_id" );
-
-		if ( 'activate' === $action ) {
-			// @todo Check for PHP errors in a Sandbox.
-			$slug = wp_basename( $block_id );
-
-			if ( ! in_array( $block_id, $active_blocks, true ) ) {
-				$active_blocks[] = $block_id;
-			}
-		} elseif ( 'deactivate' === $action ) {
-			$block_index = array_search( $block_id, $active_blocks, true );
-
-			if ( false !== $block_index ) {
-				unset( $active_blocks[ $block_index ] );
-			}
+		if ( ! current_user_can( 'activate_entrepot_blocks' ) && in_array( $action, array( 'activate', 'error_scrape', 'deactivate' ), true ) ) {
+			wp_die( __( 'Désolé, vous n’êtes pas autorisé·e à activer ou à désactiver des blocs.', 'entrepot' ) );
 		}
 
-		update_option( 'entrepot_active_blocks', array_unique( $active_blocks ) );
+		// Activate a block.
+		if ( 'activate' === $action ) {
+			check_admin_referer( "$action-block_$block_id" );
+
+			$activated = entrepot_activate_block( $block_id, add_query_arg( array(
+				'error'    => true,
+				'block'    => $block_id,
+			), $redirect ) );
+
+			if ( is_wp_error( $activated ) ) {
+				if ( 'entrepot_blocks_unexpected_output' === $activated->get_error_code() ) {
+					wp_redirect( add_query_arg( array(
+						'error'        => true,
+						'charsout'     => strlen( $activated->get_error_data() ),
+						'block'        => $block_id,
+						'_error_nonce' => wp_create_nonce( 'block-activation-error_' . $block_id )
+					), $redirect ) );
+					exit;
+				} else {
+					wp_die( $activated );
+				}
+			}
+
+			$redirect = add_query_arg( array(
+				'updated' => true,
+				'enabled' => $block_id,
+			), $redirect );
+
+		// Display the error into an iframe.
+		} elseif ( 'error_scrape' === $action ) {
+			check_admin_referer( 'block-activation-error_' . $block_id );
+
+			if ( ! WP_DEBUG ) {
+				error_reporting( E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_ERROR | E_ERROR | E_WARNING | E_PARSE | E_USER_ERROR | E_USER_WARNING | E_RECOVERABLE_ERROR );
+			}
+
+			@ini_set( 'display_errors', true );
+
+			// Get the block.
+			$block_dir = wp_basename( $block_id );
+			$block     = entrepot_get_blocks( $block_dir );
+
+			// Go back to "sandbox" to get the same errors as before.
+			entrepot_block_sandbox( $block );
+			exit;
+
+		// Deactivate a block.
+		} elseif ( 'deactivate' === $action ) {
+			check_admin_referer( "$action-block_$block_id" );
+
+			entrepot_deactivate_block( $block_id );
+
+			$redirect = add_query_arg( array(
+				'updated' => true,
+				'disabled' => $block_id,
+			), $redirect );
+		}
 
 		wp_safe_redirect( $redirect );
 		exit();
@@ -1629,7 +1759,42 @@ function entrepot_admin_blocks_load() {
  * @since 1.5.0
  */
 function entrepot_admin_blocks() {
-	printf( '<div class="wrap"><h1>%s</h1><div id="entrepot-blocks"></div></div>', esc_html__( 'Gestion des types de bloc', 'entrepot' ) );
+	$feedback = '';
+
+	if ( isset( $_GET['error'] ) && isset( $_GET['block'] ) ) {
+		$block_id = wp_unslash( $_GET['block'] );
+
+		if ( isset( $_GET['charsout'] ) ) {
+			$feedback = sprintf( '<div id="message" class="error notice is-dismissible"><p>%s</p></div>', sprintf(
+				esc_html__( 'Le bloc a généré un affichage inattendu de %d caractère(s) et n’a pas été activé.', 'entrepot' ),
+				$_GET['charsout']
+			) );
+		} elseif ( wp_verify_nonce( $_GET['_error_nonce'], 'block-activation-error_' . $block_id ) ) {
+			$iframe_url = add_query_arg( array(
+				'page'     => 'entrepot-blocks',
+				'action'   => 'error_scrape',
+				'block'    => $block_id,
+				'_wpnonce' => $_GET['_error_nonce'],
+			), network_admin_url( 'admin.php' ) );
+			$feedback = sprintf( '<div id="message" class="error notice is-dismissible"><p>%1$s</p><iframe style="border:0" width="%2$s" height="70px" src="%3$s"></iframe></div>',
+				esc_html__( 'Le bloc a généré une erreur fatale et n’a pas été activé.', 'entrepot' ),
+				'100%',
+				esc_url_raw( $iframe_url )
+			);
+		}
+	} elseif ( isset( $_GET['updated'] ) ) {
+		if ( isset( $_GET['enabled'] ) && $_GET['enabled'] ) {
+			$feedback = sprintf( '<div id="message" class="updated notice is-dismissible"><p>%s</p></div>',
+				esc_html__( 'Le bloc a été activé avec succès.', 'entrepot' )
+			);
+		} elseif ( isset( $_GET['disabled'] ) && $_GET['disabled'] ) {
+			$feedback = sprintf( '<div id="message" class="updated notice is-dismissible"><p>%s</p></div>',
+				esc_html__( 'Le bloc a été désactivé avec succès.', 'entrepot' )
+			);
+		}
+	}
+
+	printf( '<div class="wrap"><h1>%1$s</h1>%2$s<div id="entrepot-blocks"></div></div>', esc_html__( 'Types de bloc', 'entrepot' ), $feedback );
 }
 
 /**
