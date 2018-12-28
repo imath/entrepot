@@ -30,13 +30,6 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 	protected $blocks;
 
 	/**
-	 * Current uploaded package
-	 *
-	 * @var File_Upload_Upgrader
-	 */
-	protected $upload;
-
-	/**
 	 * Constructor.
 	 *
 	 * @since 1.5.0
@@ -54,7 +47,6 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 	 * @see register_rest_route()
 	 */
 	public function register_routes() {
-
 		register_rest_route( $this->namespace, '/' . $this->rest_base, array(
 			array(
 				'methods'             => WP_REST_Server::READABLE,
@@ -99,16 +91,19 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 			$params[ $key ] = $param;
 		}
 
-		$blocks   = $this->get_installed_blocks();
+		// List all available blocks.
+		if ( $params['tab'] !== 'installed' ) {
+			$blocks = $this->get_available_blocks();
+
+		// List all installed blocks.
+		} else {
+			$blocks = $this->get_installed_blocks();
+		}
+
 		$response = array();
 		$error    = new WP_Error( 'rest_entrepot_blocks_no_blocks', __( 'Aucun type de bloc disponible.', 'entrepot' ), array( 'status' => 404 ) );
 
 		if ( ! is_array( $blocks ) || ! $blocks ) {
-			return $error;
-		}
-
-		// @todo list all available blocks.
-		if ( $params['tab'] !== 'installed' ) {
 			return $error;
 		}
 
@@ -130,9 +125,10 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 	 * @since 1.5.0
 	 *
 	 * @param array $block The block type data.
+	 * @param string $type Whether the block is installed or available.
 	 * @return array Links for the given block type.
 	 */
-	protected function prepare_links( $block ) {
+	protected function prepare_links( $block, $type = 'installed' ) {
 		$base = sprintf( '%s/%s', $this->namespace, $this->rest_base );
 
 		// Entity meta.
@@ -145,29 +141,42 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 			),
 		);
 
-		$active_blocks = get_option( 'entrepot_active_blocks', array() );
+		if ( 'installed' === $type ) {
+			$active_blocks = get_option( 'entrepot_active_blocks', array() );
 
-		if ( in_array( $block['id'], $active_blocks, true ) ) {
-			$links['action'] = array(
-				'href'       => add_query_arg( array(
-					'page'     => 'entrepot-blocks',
-					'_wpnonce' => wp_create_nonce( 'deactivate-block_' . $block['id'] ),
-					'action'   => 'deactivate',
-					'block'    => $block['id'],
-				), network_admin_url( 'admin.php' ) ),
-				'embeddable' => true,
-				'title'      => __( 'Désactiver', 'entrepot' ),
-			);
+			if ( in_array( $block['id'], $active_blocks, true ) ) {
+				$links['action'] = array(
+					'href'       => add_query_arg( array(
+						'page'     => 'entrepot-blocks',
+						'_wpnonce' => wp_create_nonce( 'deactivate-block_' . $block['id'] ),
+						'action'   => 'deactivate',
+						'block'    => $block['id'],
+					), network_admin_url( 'admin.php' ) ),
+					'embeddable' => true,
+					'title'      => __( 'Désactiver', 'entrepot' ),
+				);
+			} else {
+				$links['action'] = array(
+					'href'       => add_query_arg( array(
+						'page'     => 'entrepot-blocks',
+						'_wpnonce' => wp_create_nonce( 'activate-block_' . $block['id'] ),
+						'action'   => 'activate',
+						'block'    => $block['id'],
+					), network_admin_url( 'admin.php' ) ),
+					'embeddable' => true,
+					'title'      => __( 'Activer', 'entrepot' ),
+				);
+			}
 		} else {
 			$links['action'] = array(
 				'href'       => add_query_arg( array(
 					'page'     => 'entrepot-blocks',
-					'_wpnonce' => wp_create_nonce( 'activate-block_' . $block['id'] ),
-					'action'   => 'activate',
+					'_wpnonce' => wp_create_nonce( 'install-block_' . $block['id'] ),
+					'action'   => 'install',
 					'block'    => $block['id'],
 				), network_admin_url( 'admin.php' ) ),
 				'embeddable' => true,
-				'title'      => __( 'Activer', 'entrepot' ),
+				'title'      => __( 'Installer', 'entrepot' ),
 			);
 		}
 
@@ -208,10 +217,33 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 		// Wrap the data in a response object.
 		$response = rest_ensure_response( $block );
 
-		$links = $this->prepare_links( $block );
+		$links = $this->prepare_links( $block, $request['tab'] );
 		$response->add_links( $links );
 
 		return $response;
+	}
+
+	/**
+	 * Translate the block type's description.
+	 *
+	 * @since 1.5.0
+	 *
+	 * @return object $description The available localized descriptions.
+	 * @return string The translated block type's description.
+	 */
+	protected function translate_block_description( $description = null ) {
+		$locale = get_user_locale();
+		if ( ! $locale ) {
+			$locale = 'en_US';
+		}
+
+		if ( isset( $description->{$locale} ) ) {
+			return $description->{$locale};
+		} elseif ( isset( $description->en_US ) ) {
+			return $description->en_US;
+		}
+
+		return __( 'Aucune description fournie.', 'entrepot' );
 	}
 
 	/**
@@ -262,22 +294,11 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 				} else {
                     $rest_data[ $prop ] = $data->{$keys[ $key_id ]};
 				}
-            }
+			}
 
-            if ( isset( $rest_data['slug'] ) ) {
-                $repository = entrepot_get_repositories( $rest_data['slug'], 'blocks' );
-                $locale     = get_user_locale();
-                if ( ! $locale ) {
-                    $locale = 'en_US';
-                }
-
-                if ( isset( $repository->description ) ) {
-                    $rest_data['description'] = $repository->description->en_US;
-
-                    if ( isset( $repository->description->{$locale} ) ) {
-                        $rest_data['description'] = $repository->description->{$locale};
-                    }
-                }
+			if ( isset( $rest_data['slug'] ) ) {
+				$repository = entrepot_get_repositories( $rest_data['slug'], 'blocks' );
+				$rest_data['description'] = $this->translate_block_description( $rest_data['description'] );
 
                 if ( isset( $repository->icon ) ) {
 					$rest_data['icon'] = $repository->icon;
@@ -290,6 +311,52 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 				}
 
 				$rest_blocks[ $rest_data['id'] ] = $rest_data;
+			}
+		}
+
+		return $rest_blocks;
+	}
+
+	/**
+	 * Retrieves all of the available block types.
+	 *
+	 * @since 1.5.0
+	 *
+	 * @return array array of available block types.
+	 */
+	protected function get_available_blocks() {
+		$rest_blocks     = array();
+		$entrepot_blocks = entrepot_get_repositories( '', 'blocks' );
+
+		if ( ! $this->blocks ) {
+			$this->blocks = entrepot_get_blocks();
+		}
+
+		$installed_block_ids = wp_list_pluck( $this->blocks, 'id' );
+
+		foreach ( $entrepot_blocks as $block ) {
+			if ( ! isset( $block->slug ) || ! isset( $block->author ) ) {
+				continue;
+			}
+
+			$block_id = $block->author . '/' . $block->slug;
+
+			// Make sure to avoid including installed blocks.
+			if ( in_array( $block_id, $installed_block_ids, true ) ) {
+				continue;
+			}
+
+			// Set the ID of the block type.
+			$block->id = $block_id;
+			$block->github_url = sprintf( 'https://github.com/%1$s/%2$s.git', $block->author, $block->slug );
+
+			$rest_blocks[ $block->slug ] = (array) $block;
+			if ( isset( $rest_blocks[ $block->slug ]['description'] ) ) {
+				$rest_blocks[ $block->slug ]['description'] = $this->translate_block_description( $rest_blocks[ $block->slug ]['description'] );
+			}
+
+			if ( empty( $rest_blocks[ $block->slug ]['icon'] ) ) {
+				$rest_blocks[ $block->slug ]['icon'] = esc_url( trailingslashit( entrepot_assets_url() ) . 'block.svg' );
 			}
 		}
 
