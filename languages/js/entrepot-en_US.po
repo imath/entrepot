@@ -13,10 +13,18 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
-#: src/manage-block-types/index.js:45
+#: src/manage-block-types/index.js:106
+msgid "Installés"
+msgstr "Installed"
+
+#: src/manage-block-types/index.js:111
+msgid "Disponibles"
+msgstr "Available"
+
+#: src/manage-block-types/index.js:60
 msgid "Chargement en cours, merci de patienter."
 msgstr "Loading, please wait."
 
-#: src/manage-block-types/index.js:50
+#: src/manage-block-types/index.js:65
 msgid "Liste de blocs"
 msgstr "Blocks list"

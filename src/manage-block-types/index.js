@@ -11,19 +11,34 @@ class ManageBlocks extends Component {
             blocks: [],
             status: 'loading',
             message: '',
+            tab: 'installed',
         };
+
+        this.handleTabSwitch = this.handleTabSwitch.bind( this );
+        this.getBlocks = this.getBlocks.bind( this );
     }
 
-    componentDidMount() {
-        apiFetch( { path: '/wp/v2/entrepot-blocks' } ).then( types => {
-            this.setState( { blocks: types, status: 'success' } );
+    getBlocks( tab ) {
+        const path = !! tab ? '/wp/v2/entrepot-blocks?tab=' + tab : '/wp/v2/entrepot-blocks?tab=installed';
+
+        apiFetch( { path: path } ).then( types => {
+            this.setState( { blocks: types, status: 'success',  message: '' } );
         }, error => {
             this.setState( { status: 'error', message: error.message } );
         } );
     }
 
+    componentDidMount() {
+        this.getBlocks();
+    }
+
+    handleTabSwitch( tab ) {
+        this.setState( { status: 'loading', tab: tab } );
+        this.getBlocks( tab );
+    }
+
     render() {
-        const { blocks, status, message } = this.state;
+        const { blocks, status, message, tab } = this.state;
         let blockTypes, loader;
 
         if ( 'success' === status ) {
@@ -48,6 +63,10 @@ class ManageBlocks extends Component {
         return (
             <Fragment>
                 <h2 className="screen-reader-text">{ __( 'Liste de blocs', 'entrepot' ) }</h2>
+                <BlockFilters
+                    current= { tab }
+                    onTabSwitch={ this.handleTabSwitch }
+                />
                 <div className="blocks">
                     { loader }
                     { blockTypes }
@@ -56,6 +75,44 @@ class ManageBlocks extends Component {
                     ) }
                 </div>
             </Fragment>
+        );
+    }
+}
+
+class BlockFilters extends Component {
+    constructor() {
+        super( ...arguments );
+
+        this.switchTab = this.switchTab.bind( this );
+        this.isCurrentTab = this.isCurrentTab.bind( this );
+    }
+
+    switchTab( tab, event ) {
+        event.preventDefault();
+
+        this.props.onTabSwitch( tab );
+    }
+
+    isCurrentTab( tab ) {
+        return tab === this.props.current ? 'current' : '';
+    }
+
+    render() {
+        return (
+            <div class="wp-filter">
+                <ul class="filter-links">
+                    <li id="installed-blocks">
+                        <a href="#installed-blocks" onClick={ ( e ) => this.switchTab( 'installed', e ) } className={ this.isCurrentTab( 'installed' ) }>
+                            { __( 'Installés', 'entrepot' ) }
+                        </a>
+                    </li>
+                    <li id="available-blocks">
+                        <a href="#available-blocks" onClick={ ( e ) => this.switchTab( 'available', e ) } className={ this.isCurrentTab( 'available' ) }>
+                            { __( 'Disponibles', 'entrepot' ) }
+                        </a>
+                    </li>
+                </ul>
+            </div>
         );
     }
 }

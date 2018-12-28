@@ -59,7 +59,7 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 			array(
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => array( $this, 'get_items' ),
-				'args'                => array(),
+				'args'                => $this->get_collection_params(),
 				'permission_callback' => array( $this, 'permissions_check' ),
 			),
 			'schema' => array( $this, 'get_public_item_schema' ),
@@ -87,11 +87,28 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function get_items( $request ) {
+		// Retrieve the list of registered collection query parameters.
+		$registered  = $this->get_collection_params();
+		$params      = array( 'tab' => 'installed' );
+
+		foreach ( $request->get_params() as $key => $param ) {
+			if ( ! isset( $registered[ $key ] ) ) {
+				continue;
+			}
+
+			$params[ $key ] = $param;
+		}
+
 		$blocks   = $this->get_installed_blocks();
 		$response = array();
 		$error    = new WP_Error( 'rest_entrepot_blocks_no_blocks', __( 'Aucun type de bloc disponible.', 'entrepot' ), array( 'status' => 404 ) );
 
 		if ( ! is_array( $blocks ) || ! $blocks ) {
+			return $error;
+		}
+
+		// @todo list all available blocks.
+		if ( $params['tab'] !== 'installed' ) {
 			return $error;
 		}
 
@@ -198,7 +215,7 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 	}
 
 	/**
-	 * Retrieves all of the installed plugins or the Rest additionnal shema.
+	 * Retrieves all of the installed block types or the Rest additionnal shema.
 	 *
 	 * @since 1.5.0
 	 *
@@ -280,7 +297,7 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 	}
 
 	/**
-	 * Retrieves the blocks schema, conforming to JSON Schema.
+	 * Retrieves the block types schema, conforming to JSON Schema.
 	 *
 	 * @since 1.5.0
 	 *
@@ -312,5 +329,27 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 		}
 
 		return $this->add_additional_fields_schema( $schema );
+	}
+
+	/**
+	 * Retrieves the query params for the block types collection.
+	 *
+	 * @since 1.5.0
+	 *
+	 * @return array Collection parameters.
+	 */
+	public function get_collection_params() {
+		$query_params = parent::get_collection_params();
+
+		$query_params['context']['default'] = 'edit';
+
+		$query_params['tab'] = array(
+			'description' => __( 'Limit response to blocks corresponding to the current tab.' ),
+			'type'        => 'string',
+			'default'     => 'installed',
+			'enum'        => array( 'installed', 'available' ),
+		);
+
+		return $query_params;
 	}
 }
