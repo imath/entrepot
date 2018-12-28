@@ -344,7 +344,7 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 		$query_params['context']['default'] = 'edit';
 
 		$query_params['tab'] = array(
-			'description' => __( 'Limit response to blocks corresponding to the current tab.' ),
+			'description' => __( 'Limit response to blocks corresponding to the current tab.', 'entrepot' ),
 			'type'        => 'string',
 			'default'     => 'installed',
 			'enum'        => array( 'installed', 'available' ),
