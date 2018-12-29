@@ -289,7 +289,7 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 						'type'        => is_bool( $data->{$keys[ $key_id ]} ) ? 'boolean' : 'string',
 					), $default_schema );
 
-					$rest_blocks[ $rest_data['id'] ] = $rest_args;
+					$rest_blocks[ $rest_data['id'] ] = $rest_data;
 
 				} else {
                     $rest_data[ $prop ] = $data->{$keys[ $key_id ]};

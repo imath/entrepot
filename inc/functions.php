@@ -1122,10 +1122,13 @@ function entrepot_register_block_types() {
 			);
 		}
 
+		if ( isset( $block->render_callback ) && $block->render_callback && function_exists( $block->render_callback ) ) {
+			$block_args['render_callback'] = $block->render_callback;
+		}
+
 		/**
 		 * @todo editor_style
 		 * @todo style
-		 * @todo render_callback
 		 */
 		if ( $block_args ) {
 			register_block_type( $block->block_id, $block_args );
