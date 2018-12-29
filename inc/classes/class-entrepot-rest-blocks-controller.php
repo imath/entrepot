@@ -298,7 +298,11 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 
 			if ( isset( $rest_data['slug'] ) ) {
 				$repository = entrepot_get_repositories( $rest_data['slug'], 'blocks' );
-				$rest_data['description'] = $this->translate_block_description( $rest_data['description'] );
+				$rest_data['description'] = $this->translate_block_description( $repository->description );
+
+				if ( isset( $repository->README ) ) {
+					$rest_data['README'] = $repository->README;
+				}
 
                 if ( isset( $repository->icon ) ) {
 					$rest_data['icon'] = $repository->icon;
