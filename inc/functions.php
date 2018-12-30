@@ -1126,6 +1126,18 @@ function entrepot_register_block_types() {
 			$block_args['render_callback'] = $block->render_callback;
 		}
 
+		if ( isset( $block->attributes ) && is_object( $block->attributes ) ) {
+			$attributes = array();
+
+			foreach ( $block->attributes as $key_attribute => $attribute ) {
+				$attributes[ $key_attribute ] = (array) $attribute;
+			}
+
+			if ( $attributes ) {
+				$block_args['attributes'] = $attributes;
+			}
+		}
+
 		/**
 		 * @todo editor_style
 		 * @todo style
