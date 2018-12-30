@@ -1138,10 +1138,30 @@ function entrepot_register_block_types() {
 			}
 		}
 
-		/**
-		 * @todo editor_style
-		 * @todo style
-		 */
+		foreach ( array( 'editor_style', 'style' ) as $style ) {
+			if ( isset( $block->{$style} ) && is_object( $block->{$style} ) ) {
+				$style_data = wp_parse_args( (array) $block->{$style}, array(
+					'handle'        => '',
+					'relative_path' => '',
+					'dependencies'  => array(),
+				) );
+
+				if ( ! $style_data['handle'] || ! $style_data['relative_path'] || ! file_exists( trailingslashit( $block->path ) . $style_data['relative_path'] ) ) {
+					continue;
+				}
+
+				$style_data['url'] = trailingslashit( $blocks_url . $block_dir ) . ltrim( $style_data['relative_path'], '/' );
+				$block_args[ $style ] = sanitize_key( $style_data['handle'] );
+
+				wp_register_style(
+					$block_args[ $style ],
+					esc_url_raw( $style_data['url'] ),
+					(array) $style_data['dependencies'],
+					esc_attr( $block_version )
+				);
+			}
+		}
+
 		if ( $block_args ) {
 			register_block_type( $block->block_id, $block_args );
 		}
