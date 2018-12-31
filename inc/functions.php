@@ -205,6 +205,8 @@ function entrepot_load_textdomain() {
 function entrepot_map_custom_caps( $caps = array(), $cap = '', $user_id = 0, $args = array() ) {
 	if ( 'activate_entrepot_blocks' === $cap ) {
 		$caps = array( 'activate_plugins' );
+	} elseif ( 'install_entrepot_blocks' === $cap ) {
+		$caps = array( 'install_plugins' );
 	} elseif ( 'update_entrepot_blocks' === $cap ) {
 		$caps = array( 'update_plugins' );
 	}
@@ -427,9 +429,14 @@ function entrepot_get_repository_latest_stable_release( $atom_url = '', $reposit
 			'package'     => '',
 		);
 
-		if ( 'theme' === $type ) {
+		if ( 'theme' === $type || 'block' === $type ) {
 			unset( $response['plugin'] );
-			$response['theme'] = '';
+
+			if ( 'theme' === $type ) {
+				$response['theme'] = '';
+			} else {
+				$response['block'] = '';
+			}
 		}
 
 		if ( ! empty( $repository['Version'] ) ) {
@@ -453,6 +460,8 @@ function entrepot_get_repository_latest_stable_release( $atom_url = '', $reposit
 
 			if ( 'theme' === $type ) {
 				$response['theme'] = $repository['theme'];
+			} elseif ( 'block' === $type ) {
+				$response['block'] = $repository['block'];
 			} else {
 				$response['plugin'] = $repository['plugin'];
 			}
@@ -961,6 +970,21 @@ function entrepot_set_block_data( $blocks = array(), $json ) {
 	}
 
 	return $blocks;
+}
+
+/**
+ * Clears the Blocks cache used by entrepot_get_blocks() and by default, the Blocks Update cache.
+ *
+ * @since 1.5.0
+ *
+ * @param bool $clear_update_cache Whether to clear the Block updates cache.
+ */
+function entrepot_blocks_clear_cache( $clear_update_cache = true ) {
+	if ( $clear_update_cache ) {
+		delete_site_transient( 'entrepot_update_blocks' );
+	}
+
+	wp_cache_delete( 'blocks', 'entrepot' );
 }
 
 /**

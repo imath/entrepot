@@ -345,6 +345,11 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 
 			$block_id = $block->author . '/' . $block->slug;
 
+			// Do not display the testing block when WP Debug is off.
+			if ( ( ! defined( 'WP_DEBUG' ) || ! WP_DEBUG ) && 'imath/entrepot-test-block' === $block_id ) {
+				continue;
+			}
+
 			// Make sure to avoid including installed blocks.
 			if ( in_array( $block_id, $installed_block_ids, true ) ) {
 				continue;

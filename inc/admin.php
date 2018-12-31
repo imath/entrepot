@@ -578,7 +578,6 @@ function entrepot_repositories_api( $res = false, $action = '', $args = null ) {
 			), 'plugin' );
 		}
 
-	// @todo merge this statement with previous one.
 	} elseif ( 'theme_information' === $action && ! empty( $args->slug ) ) {
 		$json = entrepot_get_repository_json( $args->slug, 'themes' );
 
@@ -589,6 +588,17 @@ function entrepot_repositories_api( $res = false, $action = '', $args = null ) {
 				'Version'           => 'latest',
 				'GitHub Theme URI' => str_replace( '/releases', '', $json->releases ),
 			), 'theme' );
+		}
+	} elseif ( 'block_information' === $action && ! empty( $args->slug ) ) {
+		$json = entrepot_get_repository_json( $args->slug, 'blocks' );
+
+		if ( $json && $json->releases ) {
+			$res = entrepot_get_repository_latest_stable_release( $json->releases, array(
+				'block'             => $json->name,
+				'slug'              => $args->slug,
+				'Version'           => 'latest',
+				'GitHub Block URI' => str_replace( '/releases', '', $json->releases ),
+			), 'block' );
 		}
 	}
 
@@ -1746,6 +1756,39 @@ function entrepot_admin_blocks_load() {
 				'updated' => true,
 				'disabled' => $block_id,
 			), $redirect );
+
+		// Install a block.
+		} elseif ( 'install' === $action ) {
+			if ( ! current_user_can( 'install_entrepot_blocks' ) ) {
+				wp_die( __( 'Désolé, vous n’êtes pas autorisé·e à installer des blocs.', 'entrepot' ) );
+			}
+
+			check_admin_referer( "$action-block_$block_id" );
+
+			require_once ABSPATH . 'wp-admin/admin-header.php';
+
+			$args = (object) array( 'slug' => wp_basename( $block_id ), );
+			$api  = entrepot_repositories_api( false, 'block_information', $args );
+
+			if ( ! $api ) {
+				wp_die( __( 'Désolé, le bloc à installer n’est pas enregistré dans l’Entrepôt.', 'entrepot' ) );
+			}
+
+			$upgrader = new Entrepot_Block_Upgrader( new Entrepot_Block_Installer_Skin( array(
+				'title' => sprintf( __( 'Installation du bloc : %s', 'entrepot' ), $api->name . ' ' . $api->version ),
+				'url'   => add_query_arg( array(
+					'page'     => 'entrepot-blocks',
+					'action'   => 'install',
+					'block'    => $block_id,
+				), network_admin_url( 'admin.php' ) ),
+				'nonce' => 'install-block_' . $block_id,
+				'block' => $block_id,
+				'api'   => $api,
+			) ) );
+			$upgrader->install( $api->download_link, array( 'block' => $block_id ) );
+
+			require ABSPATH . 'wp-admin/admin-footer.php';
+			exit();
 		}
 
 		wp_safe_redirect( $redirect );
