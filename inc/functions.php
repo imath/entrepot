@@ -209,6 +209,8 @@ function entrepot_map_custom_caps( $caps = array(), $cap = '', $user_id = 0, $ar
 		$caps = array( 'install_plugins' );
 	} elseif ( 'update_entrepot_blocks' === $cap ) {
 		$caps = array( 'update_plugins' );
+	} elseif ( 'entrepot_delete_blocks' === $cap ) {
+		$caps = array( 'delete_plugins' );
 	}
 
 	return $caps;

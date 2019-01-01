@@ -1667,12 +1667,111 @@ function entrepot_activate_block( $block_type_id = '', $redirect = '' ) {
  */
 function entrepot_deactivate_block( $block_type_id = '' ) {
 	$active_blocks = (array) get_option( 'entrepot_active_blocks', array() );
-
-	$block_index = array_search( $block_type_id, $active_blocks, true );
+	$block_index   = array_search( $block_type_id, $active_blocks, true );
 
 	if ( false !== $block_index ) {
 		unset( $active_blocks[ $block_index ] );
 		update_option( 'entrepot_active_blocks', array_unique( $active_blocks ) );
+	}
+
+	return true;
+}
+
+/**
+ * Outputs a form to request Filesystem credentials.
+ *
+ * @since 1.5.0
+ *
+ * @param string $data The HTML form output.
+ */
+function entrepot_block_request_credentials_form( $data = '' ) {
+	require_once ABSPATH . 'wp-admin/admin-header.php';
+	echo $data;
+	require ABSPATH . 'wp-admin/admin-footer.php';
+}
+
+/**
+ * Delete a block.
+ *
+ * @since 1.5.0
+ *
+ * @param string $block_type_id The block type ID.
+ * @return WP_Error|boolean True if the block type was deleted. An error object otherwise.
+ */
+function entrepot_delete_block( $block_type_id = '' ) {
+	global $wp_filesystem;
+
+	// Get the block.
+	$block_dir = wp_basename( $block_type_id );
+	$block     = entrepot_get_blocks( $block_dir );
+
+	if ( ! isset( $block->name ) ) {
+		return new WP_Error( 'entrepot_delete_unknown_block', __( 'Le bloc n’a pas été trouvé. Il ne semble pas être installé.', 'entrepot' ) );
+	}
+
+	$active_blocks = (array) get_option( 'entrepot_active_blocks', array() );
+	$block_index   = array_search( $block_type_id, $active_blocks, true );
+
+	if ( false !== $block_index ) {
+		return new WP_Error( 'entrepot_delete_active_block', __( 'Le bloc est activé. Merci de le désactiver avant de le supprimer.', 'entrepot' ) );
+	}
+
+	$url = wp_nonce_url( add_query_arg( array(
+		'page'     => 'entrepot-blocks',
+		'action'   => 'delete',
+		'block'    => $block_type_id,
+	), network_admin_url( 'admin.php' ) ), 'delete-block_' . $block_type_id );
+
+	ob_start();
+	$credentials = request_filesystem_credentials( $url );
+	$data = ob_get_clean();
+
+	if ( false === $credentials ) {
+		if ( ! empty( $data ) ){
+			entrepot_block_request_credentials_form( $data );
+			exit;
+		}
+		return;
+	}
+
+	if ( ! WP_Filesystem( $credentials ) ) {
+		ob_start();
+		request_filesystem_credentials( $url, '', true );
+		$data = ob_get_clean();
+
+		if ( ! empty( $data ) ){
+			entrepot_block_request_credentials_form( $data );
+			exit;
+		}
+		return;
+	}
+
+	if ( ! is_object( $wp_filesystem ) ) {
+		return new WP_Error( 'fs_unavailable', __( 'Impossible de se connecter au système de fichiers.', 'entrepot' ) );
+	}
+
+	if ( is_wp_error( $wp_filesystem->errors ) && $wp_filesystem->errors->get_error_code() ) {
+		return new WP_Error( 'fs_error', __( 'Erreur du système de fichiers.', 'entrepot' ), $wp_filesystem->errors );
+	}
+
+	// Get the base Blocks folder.
+	$blocks_dir = $wp_filesystem->find_folder( entrepot_blocks_dir() );
+
+	if ( empty( $blocks_dir ) ) {
+		return new WP_Error( 'fs_no_entrepot_blocks_dir', __( 'Le dossier des blocs de l’Entrepôt n’a pu être localisé.', 'entrepot' ) );
+	}
+
+	$block_dir = trailingslashit( $blocks_dir ) . $block_dir;
+	$deleted   = $wp_filesystem->delete( $block_dir, true );
+
+	/**
+	 * @todo remove the deleted blocks from the Blocks to upgrade.
+	 *
+	 * (once implemented)
+	 */
+
+	if ( ! $deleted ) {
+		return new WP_Error( 'could_not_remove_block', __( 'Une erreur inconnue est survenue lors de la suppression du bloc.', 'entrepot' ) );
 	}
 
 	return true;
@@ -1789,6 +1888,24 @@ function entrepot_admin_blocks_load() {
 
 			require ABSPATH . 'wp-admin/admin-footer.php';
 			exit();
+
+		// Delete a block
+		} elseif ( 'delete' === $action ) {
+			if ( ! current_user_can('entrepot_delete_blocks') ) {
+				wp_die( __( 'Désolé, vous n’êtes pas autorisé·e à supprimer des blocs.', 'entrepot' ));
+			}
+
+			check_admin_referer( "$action-block_$block_id" );
+
+			$deleted = entrepot_delete_block( $block_id );
+
+			if ( is_wp_error( $deleted ) ) {
+				wp_die( $deleted->get_error_message(), __( 'Erreur de suppression du bloc', 'entrepot' ), array(
+					'back_link' => true,
+				) );
+			} else {
+				$redirect = add_query_arg( 'deleted', $block_id, $redirect );
+			}
 		}
 
 		wp_safe_redirect( $redirect );
@@ -1835,6 +1952,10 @@ function entrepot_admin_blocks() {
 				esc_html__( 'Le bloc a été désactivé avec succès.', 'entrepot' )
 			);
 		}
+	} elseif ( isset( $_GET['deleted'] ) ) {
+		$feedback = sprintf( '<div id="message" class="updated notice is-dismissible"><p>%s</p></div>',
+			esc_html__( 'Le bloc a été supprimé avec succès.', 'entrepot' )
+		);
 	}
 
 	printf( '<div class="wrap"><h1>%1$s</h1>%2$s<div id="entrepot-blocks"></div></div>', esc_html__( 'Types de bloc', 'entrepot' ), $feedback );

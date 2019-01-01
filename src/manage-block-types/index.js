@@ -126,7 +126,13 @@ class Block extends Component {
         const { actions } = this.props;
         const actionLinks = Object.values( actions ).map( ( action ) => (
             <li>
-                <a href={ action[0].href } className={ action[0].classes } aria-label={ action[0].title }>{ action[0].title }</a>
+                <a
+                    href={ action[0].href }
+                    onClick={ ( e ) => { action[0].confirm && ! window.confirm( action[0].confirm ) ? e.preventDefault() : e } }
+                    className={ action[0].classes } aria-label={ action[0].title }
+                >
+                    { action[0].title }
+                </a>
             </li>
         ) );
 

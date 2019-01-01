@@ -179,6 +179,7 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 						'embeddable' => true,
 						'title'      => __( 'Supprimer', 'entrepot' ),
 						'classes'    => 'delete-now attention',
+						'confirm'    => __( 'Êtes-vous certain·e de vouloir supprimer ce bloc ? Cette action ne peut être annulée.', 'entrepot' ),
 					),
 				);
 			}
