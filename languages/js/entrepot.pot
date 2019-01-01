@@ -3,18 +3,18 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "X-Generator: babel-plugin-makepot\n"
 
-#: src/manage-block-types/index.js:106
+#: src/manage-block-types/index.js:110
 msgid "Installés"
 msgstr ""
 
-#: src/manage-block-types/index.js:111
+#: src/manage-block-types/index.js:115
 msgid "Disponibles"
 msgstr ""
 
-#: src/manage-block-types/index.js:60
+#: src/manage-block-types/index.js:64
 msgid "Chargement en cours, merci de patienter."
 msgstr ""
 
-#: src/manage-block-types/index.js:65
+#: src/manage-block-types/index.js:69
 msgid "Liste de blocs"
 msgstr ""

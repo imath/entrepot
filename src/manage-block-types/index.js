@@ -1,7 +1,7 @@
 const { Component, render, createElement, Fragment } = wp.element;
 const { __ } = wp.i18n;
 const { apiFetch } = wp;
-const { head } = lodash;
+const { pick } = lodash;
 
 class ManageBlocks extends Component {
     constructor() {
@@ -42,18 +42,22 @@ class ManageBlocks extends Component {
         let blockTypes, loader;
 
         if ( 'success' === status ) {
-            blockTypes = blocks.map( ( block ) => (
-                <Block
-                    key={ 'block-' + block.id }
-                    id={ block.id }
-                    name={ block.name }
-                    description={ block.description }
-                    README={ block.README }
-                    icon={ block.icon }
-                    author={ block.author }
-                    action={ head( block._links.action ) }
-                />
-            ) );
+            blockTypes = blocks.map( ( block ) => {
+                let actions = pick( block._links, [ 'activate', 'deactivate', 'install', 'delete' ] );
+
+                return (
+                    <Block
+                        key={ 'block-' + block.id }
+                        id={ block.id }
+                        name={ block.name }
+                        description={ block.description }
+                        README={ block.README }
+                        icon={ block.icon }
+                        author={ block.author }
+                        actions={ actions }
+                    />
+                );
+            } );
         }
 
         if ( 'loading' === status ) {
@@ -119,6 +123,13 @@ class BlockFilters extends Component {
 
 class Block extends Component {
     render() {
+        const { actions } = this.props;
+        const actionLinks = Object.values( actions ).map( ( action ) => (
+            <li>
+                <a href={ action[0].href } className={ action[0].classes } aria-label={ action[0].title }>{ action[0].title }</a>
+            </li>
+        ) );
+
         return (
             <div className="block plugin-card">
                 <div className="plugin-card-top">
@@ -132,9 +143,7 @@ class Block extends Component {
                     </div>
                     <div class="action-links">
                         <ul class="plugin-action-buttons">
-                            <li>
-                                <a href={ this.props.action.href } class="button button-primary activate-now" aria-label={ this.props.action.title }>{ this.props.action.title }</a>
-                            </li>
+                            { actionLinks }
                         </ul>
                     </div>
                     <div className="desc column-description">

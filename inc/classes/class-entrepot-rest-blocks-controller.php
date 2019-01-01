@@ -145,7 +145,7 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 			$active_blocks = get_option( 'entrepot_active_blocks', array() );
 
 			if ( in_array( $block['id'], $active_blocks, true ) ) {
-				$links['action'] = array(
+				$links['deactivate'] = array(
 					'href'       => add_query_arg( array(
 						'page'     => 'entrepot-blocks',
 						'_wpnonce' => wp_create_nonce( 'deactivate-block_' . $block['id'] ),
@@ -154,21 +154,36 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 					), network_admin_url( 'admin.php' ) ),
 					'embeddable' => true,
 					'title'      => __( 'Désactiver', 'entrepot' ),
+					'classes'    => 'deactivate-now button',
 				);
 			} else {
-				$links['action'] = array(
-					'href'       => add_query_arg( array(
-						'page'     => 'entrepot-blocks',
-						'_wpnonce' => wp_create_nonce( 'activate-block_' . $block['id'] ),
-						'action'   => 'activate',
-						'block'    => $block['id'],
-					), network_admin_url( 'admin.php' ) ),
-					'embeddable' => true,
-					'title'      => __( 'Activer', 'entrepot' ),
+				$links = array(
+					'activate' => array(
+						'href'       => add_query_arg( array(
+							'page'     => 'entrepot-blocks',
+							'_wpnonce' => wp_create_nonce( 'activate-block_' . $block['id'] ),
+							'action'   => 'activate',
+							'block'    => $block['id'],
+						), network_admin_url( 'admin.php' ) ),
+						'embeddable' => true,
+						'title'      => __( 'Activer', 'entrepot' ),
+						'classes'    => 'activate-now button-primary button',
+					),
+					'delete' => array(
+						'href'       => add_query_arg( array(
+							'page'     => 'entrepot-blocks',
+							'_wpnonce' => wp_create_nonce( 'delete-block_' . $block['id'] ),
+							'action'   => 'delete',
+							'block'    => $block['id'],
+						), network_admin_url( 'admin.php' ) ),
+						'embeddable' => true,
+						'title'      => __( 'Supprimer', 'entrepot' ),
+						'classes'    => 'delete-now attention',
+					),
 				);
 			}
 		} else {
-			$links['action'] = array(
+			$links['install'] = array(
 				'href'       => add_query_arg( array(
 					'page'     => 'entrepot-blocks',
 					'_wpnonce' => wp_create_nonce( 'install-block_' . $block['id'] ),
@@ -177,6 +192,7 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 				), network_admin_url( 'admin.php' ) ),
 				'embeddable' => true,
 				'title'      => __( 'Installer', 'entrepot' ),
+				'classes'    => 'install-now button',
 			);
 		}
 
