@@ -428,7 +428,7 @@ function entrepot_admin_register_scripts() {
 		wp_register_script(
 			'entrepot-manage-blocks',
 			sprintf( '%1$sdist/index%2$s.js', entrepot_root_url(), entrepot_min_suffix() ),
-			array( 'wp-element', 'wp-i18n', 'wp-api-fetch', 'lodash' ),
+			array( 'wp-element', 'wp-i18n', 'wp-api-fetch', 'lodash', 'plugin-install' ),
 			entrepot_version(),
 			true
 		);
@@ -796,7 +796,7 @@ function entrepot_admin_repository_iframe( $args = array() ) {
 					$repository_info = wp_remote_retrieve_body( $request );
 					$parsedown       = new Parsedown();
 					$r['text']       = $parsedown->text( $repository_info );
-					$r['result']       = 'success';
+					$r['result']     = 'success';
 				}
 			}
 		}
@@ -1590,6 +1590,41 @@ function entrepot_admin_versions() {
 }
 
 /**
+ * Display more information about the Block.
+ *
+ * @since 1.5.0
+ *
+ * @param string $block_name The name of the Block repository.
+ */
+function entrepot_admin_block_detail( $block_name ) {
+	define( 'IFRAME_REQUEST', true );
+	wp_add_inline_style( 'common', 'body { background: #FFF }' );
+
+	$repository = entrepot_get_repository_json( $block_name, 'blocks' );
+	if ( ! $repository ) {
+		return;
+	}
+
+	$section  = '';
+	if ( isset( $_REQUEST['section'] ) ) {
+		$section = wp_unslash( $_REQUEST['section'] );
+	}
+
+	$args = array(
+		'type'       => 'blocks',
+		'repo_name'  => $block_name,
+		'repository' => $repository,
+		'section'    => $section,
+	);
+
+	if ( 'changelog' === $section ) {
+		$args = array_merge( $args, entrepot_admin_get_changelog_section( $block_name, 'blocks' ) );
+	}
+
+	return entrepot_admin_repository_iframe( $args );
+}
+
+/**
  * Used to check PHP errors while activating blocks.
  *
  * @since 1.5.0
@@ -1783,10 +1818,6 @@ function entrepot_delete_block( $block_type_id = '' ) {
  * @since 1.5.0
  */
 function entrepot_admin_blocks_load() {
-	wp_enqueue_script( 'entrepot-manage-blocks' );
-	add_thickbox();
-	wp_enqueue_style( 'list-tables' );
-
 	if ( isset( $_REQUEST['action'] ) && isset( $_REQUEST['block'] ) ) {
 		$redirect = add_query_arg( array(
 			'page'     => 'entrepot-blocks',
@@ -1799,8 +1830,12 @@ function entrepot_admin_blocks_load() {
 			wp_die( __( 'Désolé, vous n’êtes pas autorisé·e à activer ou à désactiver des blocs.', 'entrepot' ) );
 		}
 
+		// Block information.
+		if ( 'block-information' === $action ) {
+			entrepot_admin_block_detail( wp_basename( $block_id ) );
+
 		// Activate a block.
-		if ( 'activate' === $action ) {
+		} elseif ( 'activate' === $action ) {
 			check_admin_referer( "$action-block_$block_id" );
 
 			$activated = entrepot_activate_block( $block_id, add_query_arg( array(
@@ -1911,6 +1946,10 @@ function entrepot_admin_blocks_load() {
 		wp_safe_redirect( $redirect );
 		exit();
 	}
+
+	wp_enqueue_script( 'entrepot-manage-blocks' );
+	add_thickbox();
+	wp_enqueue_style( 'list-tables' );
 }
 
 /**

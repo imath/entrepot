@@ -139,6 +139,9 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 			'collection' => array(
 				'href'   => rest_url( $base ),
 			),
+			'block_information' => array(
+				'href' => network_admin_url( sprintf( 'admin.php?page=entrepot-blocks&amp;action=block-information&amp;block=%s&amp;TB_iframe=true&amp;width=600&amp;height=550', $block['id'] ) ),
+			),
 		);
 
 		if ( 'installed' === $type ) {

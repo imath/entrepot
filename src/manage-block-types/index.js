@@ -51,7 +51,7 @@ class ManageBlocks extends Component {
                         id={ block.id }
                         name={ block.name }
                         description={ block.description }
-                        README={ block.README }
+                        info={ block._links.block_information ? block._links.block_information[0].href : null }
                         icon={ block.icon }
                         author={ block.author }
                         actions={ actions }
@@ -141,7 +141,7 @@ class Block extends Component {
                 <div className="plugin-card-top">
                     <div className="name column-name">
                         <h3>
-                            <a href={ this.props.README } className="thickbox open-plugin-details-modal">
+                            <a href={ this.props.info } className="thickbox open-plugin-details-modal">
                                 { this.props.name }
                                 <img src={ this.props.icon } className="plugin-icon" alt=""/>
                             </a>
