@@ -91,15 +91,8 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 			$params[ $key ] = $param;
 		}
 
-		// List all available blocks.
-		if ( $params['tab'] !== 'installed' ) {
-			$blocks = $this->get_available_blocks();
-
-		// List all installed blocks.
-		} else {
-			$blocks = $this->get_installed_blocks();
-		}
-
+		// List blocks correponding to the current tab.
+		$blocks   = $this->get_blocks( $params['tab'] );
 		$response = array();
 		$error    = new WP_Error( 'rest_entrepot_blocks_no_blocks', __( 'Aucun type de bloc disponible.', 'entrepot' ), array( 'status' => 404 ) );
 
@@ -144,21 +137,45 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 			),
 		);
 
+		$delete_link = array(
+			'href'       => add_query_arg( array(
+				'page'     => 'entrepot-blocks',
+				'_wpnonce' => wp_create_nonce( 'delete-block_' . $block['id'] ),
+				'action'   => 'delete',
+				'block'    => $block['id'],
+			), network_admin_url( 'admin.php' ) ),
+			'embeddable' => true,
+			'title'      => __( 'Supprimer', 'entrepot' ),
+			'classes'    => 'delete-now attention',
+			'confirm'    => __( 'Êtes-vous certain·e de vouloir supprimer ce bloc ? Cette action ne peut être annulée.', 'entrepot' ),
+		);
+
 		if ( 'installed' === $type ) {
 			$active_blocks = get_option( 'entrepot_active_blocks', array() );
 
 			if ( in_array( $block['id'], $active_blocks, true ) ) {
-				$links['deactivate'] = array(
-					'href'       => add_query_arg( array(
-						'page'     => 'entrepot-blocks',
-						'_wpnonce' => wp_create_nonce( 'deactivate-block_' . $block['id'] ),
-						'action'   => 'deactivate',
-						'block'    => $block['id'],
-					), network_admin_url( 'admin.php' ) ),
-					'embeddable' => true,
-					'title'      => __( 'Désactiver', 'entrepot' ),
-					'classes'    => 'deactivate-now button',
-				);
+				// Deactivate blocks if a dependency is not satisfied
+				if ( isset( $block['dependencies'] ) && $block['dependencies'] ) {
+					entrepot_deactivate_block( $block['id'] );
+
+					/**
+					 * Make sure there's no need to refresh the page
+					 * to have the delete link displayed.
+					 */
+					$links['delete'] = $delete_link;
+				} else {
+					$links['deactivate'] = array(
+						'href'       => add_query_arg( array(
+							'page'     => 'entrepot-blocks',
+							'_wpnonce' => wp_create_nonce( 'deactivate-block_' . $block['id'] ),
+							'action'   => 'deactivate',
+							'block'    => $block['id'],
+						), network_admin_url( 'admin.php' ) ),
+						'embeddable' => true,
+						'title'      => __( 'Désactiver', 'entrepot' ),
+						'classes'    => 'deactivate-now button',
+					);
+				}
 			} else {
 				$links['activate'] = array(
 					'href'       => add_query_arg( array(
@@ -171,18 +188,7 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 					'title'      => __( 'Activer', 'entrepot' ),
 					'classes'    => 'activate-now button-primary button',
 				);
-				$links['deactivate'] = array(
-					'href'       => add_query_arg( array(
-						'page'     => 'entrepot-blocks',
-						'_wpnonce' => wp_create_nonce( 'delete-block_' . $block['id'] ),
-						'action'   => 'delete',
-						'block'    => $block['id'],
-					), network_admin_url( 'admin.php' ) ),
-					'embeddable' => true,
-					'title'      => __( 'Supprimer', 'entrepot' ),
-					'classes'    => 'delete-now attention',
-					'confirm'    => __( 'Êtes-vous certain·e de vouloir supprimer ce bloc ? Cette action ne peut être annulée.', 'entrepot' ),
-				);
+				$links['delete'] = $delete_link;
 			}
 		} else {
 			$links['install'] = array(
@@ -196,6 +202,15 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 				'title'      => __( 'Installer', 'entrepot' ),
 				'classes'    => 'install-now button',
 			);
+		}
+
+		if ( isset( $block['dependencies'] ) && $block['dependencies'] ) {
+			$links = array_intersect_key( $links, array(
+				'delete'            => true,
+				'self'              => true,
+				'collection'        => true,
+				'block_information' => true,
+			) );
 		}
 
 		return $links;
@@ -215,22 +230,41 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 			return array();
         }
 
-		$schema     = $this->get_item_schema();
-        $properties = wp_list_filter( $schema['properties'], array( 'type' => 'string' ) );
+		// Get available fields.
+		$fields = $this->get_fields_for_response( $request );
 
-		// Sanitize Block data to translate.
-		foreach ( $properties as $property => $params ) {
-            $value = $block[ $property ];
-
-			if ( 'description' === $property ) {
-				$value = wp_trim_words( $value, 15 );
+		// Sanitize Block fields data.
+		foreach ( $fields as $property ) {
+			if ( ! isset( $block[ $property ] ) ) {
+				continue;
 			}
 
-			$block[ $property ] = strip_tags( $value );
-        }
+			if ( in_array( $property, array( 'icon', 'releases', 'README', 'urls' ) ) ) {
+				if ( 'urls' === $property ) {
+					foreach ( $property as $property_key => $property_value ) {
+						$block[ $property ]->{$property_key} = esc_url_raw( $property_value );
+					}
+				} else {
+					$block[ $property ] = esc_url_raw( $block[ $property ] );
+				}
+			} elseif ( in_array( $property, array( 'name', 'slug', 'author', 'description' ) ) ) {
+				$property_value = $block[ $property ];
+				if ( 'description' === $property ) {
+					$property_value = wp_trim_words( $property_value, 15 );
+				}
+
+				$block[ $property ] = strip_tags( $property_value );
+			} elseif ( 'tags' === $property ) {
+				$block[ $property ] = array_map( 'santize_text_field', $block[ $property ] );
+			} elseif ( 'dependencies' === $property ) {
+				$block[ $property ] = entrepot_get_repository_dependencies( $block[ $property ] );
+			}
+		}
 
 		$context = ! empty( $request['context'] ) ? $request['context'] : 'view';
-		$block   = $this->filter_response_by_context( $block, $context );
+
+		$block = $this->add_additional_fields_to_object( $block, $request );
+		$block = $this->filter_response_by_context( $block, $context );
 
 		// Wrap the data in a response object.
 		$response = rest_ensure_response( $block );
@@ -265,88 +299,14 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 	}
 
 	/**
-	 * Retrieves all of the installed block types or the Rest additionnal shema.
+	 * Retrieves installed or available block types.
 	 *
 	 * @since 1.5.0
 	 *
-	 * @param  boolean $schema True to get the additionnal schema.
-	 * @return array array of registered options.
+	 * @param  string $tab The type of blocks to get (installed or available).
+	 * @return array array The list of matching block types.
 	 */
-	protected function get_installed_blocks( $schema = false ) {
-		$rest_blocks = array();
-
-		if ( ! $this->blocks ) {
-			$this->blocks = entrepot_get_blocks();
-        }
-
-		foreach ( $this->blocks as $dir => $data ) {
-			if ( $schema ) {
-				$rest_data = array();
-
-				$default_schema = array(
-					'type'        => 'string',
-					'description' => '',
-					'context'     => array( 'view', 'edit', 'embed' ),
-				);
-
-			} else {
-				$rest_data = array(
-                    'id'   => $data->id,
-                    'slug' => wp_basename( $dir ),
-                );
-			}
-
-            $vars = get_object_vars( $data );
-            $keys = array_keys( $vars );
-
-			foreach ( array_map( 'sanitize_key', $keys ) as $key_id => $prop ) {
-				if ( $schema && ! isset( $rest_blocks[ $prop ] ) ) {
-					$rest_data['id']     = $prop;
-					$rest_data['schema'] = wp_parse_args( array(
-						'description' => $keys[ $key_id ],
-						'type'        => is_bool( $data->{$keys[ $key_id ]} ) ? 'boolean' : 'string',
-					), $default_schema );
-
-					$rest_blocks[ $rest_data['id'] ] = $rest_data;
-
-				} else {
-                    $rest_data[ $prop ] = $data->{$keys[ $key_id ]};
-				}
-			}
-
-			if ( isset( $rest_data['slug'] ) ) {
-				$repository = entrepot_get_repositories( $rest_data['slug'], 'blocks' );
-				$rest_data['description'] = $this->translate_block_description( $repository->description );
-
-				if ( isset( $repository->README ) ) {
-					$rest_data['README'] = $repository->README;
-				}
-
-                if ( isset( $repository->icon ) ) {
-					$rest_data['icon'] = $repository->icon;
-                }
-            }
-
-			if ( ! $schema ) {
-				if ( empty( $rest_data['icon'] ) ) {
-					$rest_data['icon'] = esc_url( trailingslashit( entrepot_assets_url() ) . 'block.svg' );
-				}
-
-				$rest_blocks[ $rest_data['id'] ] = $rest_data;
-			}
-		}
-
-		return $rest_blocks;
-	}
-
-	/**
-	 * Retrieves all of the available block types.
-	 *
-	 * @since 1.5.0
-	 *
-	 * @return array array of available block types.
-	 */
-	protected function get_available_blocks() {
+	protected function get_blocks( $tab = 'installed' ) {
 		$rest_blocks     = array();
 		$entrepot_blocks = entrepot_get_repositories( '', 'blocks' );
 
@@ -368,8 +328,10 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 				continue;
 			}
 
-			// Make sure to avoid including installed blocks.
-			if ( in_array( $block_id, $installed_block_ids, true ) ) {
+			$is_installed = in_array( $block_id, $installed_block_ids, true );
+
+			// Depending on the active tab, fetch the right blocks.
+			if ( ( 'installed' === $tab && ! $is_installed ) || ( 'available' === $tab && $is_installed ) ) {
 				continue;
 			}
 
@@ -387,6 +349,30 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 			}
 		}
 
+		// Append installed blocks even if unregistered.
+		if ( 'installed' === $tab ) {
+			$unregistered_blocks = array_diff( array_flip( $installed_block_ids ), array_keys( $rest_blocks ) );
+
+			if ( $unregistered_blocks ) {
+				foreach ( $unregistered_blocks as $unregistered_block_id => $unregistered_block_slug ) {
+					$rest_blocks[ $unregistered_block_slug ] = array(
+						'id'          => $unregistered_block_id,
+						'slug'        => $unregistered_block_slug,
+						'icon'        => trailingslashit( entrepot_assets_url() ) . 'block.svg',
+						'description' => $this->translate_block_description( '' ),
+					);
+
+					if ( isset( $this->blocks[ $unregistered_block_slug ]->name ) ) {
+						$rest_blocks[ $unregistered_block_slug ]['name'] = $this->blocks[ $unregistered_block_slug ]->name;
+					}
+
+					if ( isset( $this->blocks[ $unregistered_block_slug ]->author ) ) {
+						$rest_blocks[ $unregistered_block_slug ]['author'] = $this->blocks[ $unregistered_block_slug ]->author;
+					}
+				}
+			}
+		}
+
 		return $rest_blocks;
 	}
 
@@ -398,29 +384,78 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 	 * @return array Item schema data.
 	 */
 	public function get_item_schema() {
-		$blocks = $this->get_installed_blocks( true );
-
 		$schema = array(
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
-			'title'      => 'blocks',
+			'title'      => 'entrepot_blocks',
 			'type'       => 'object',
 			'properties' => array(
-				'id'            => array(
-					'description' => __( 'Un identifiant alphanumérique unique par rapport au répertoire et au fichier principal de l\'extension.', 'entrepot' ),
+				'id' => array(
+					'description' => __( 'Un identifiant alphanumérique unique par rapport au nom de l’auteur et du type de bloc.', 'entrepot' ),
+					'type'        => 'string',
+					'context'     => array( 'view', 'edit', 'embed' ),
+					'readonly'    => true,
+				),
+				'slug' => array(
+					'description' => __( 'Un identifiant alphanumérique unique par rapport à la terminaison de l’URL GitHub du type de bloc.', 'entrepot' ),
+					'type'        => 'string',
+					'context'     => array( 'view', 'edit', 'embed' ),
+					'readonly'    => true,
+				),
+				'name' => array(
+					'description' => __( 'Le nom du type de bloc.', 'entrepot' ),
+					'type'        => 'string',
+					'context'     => array( 'view', 'edit', 'embed' ),
+					'readonly'    => true,
+				),
+				'author' => array(
+					'description' => __( 'Le nom d’utilisateur GitHub de l’auteur du type de bloc.', 'entrepot' ),
+					'type'        => 'string',
+					'context'     => array( 'view', 'edit', 'embed' ),
+					'readonly'    => true,
+				),
+				'icon' => array(
+					'description' => __( 'L’URL vers le fichier image de l’icône représentant le type de bloc.', 'entrepot' ),
 					'type'        => 'string',
 					'context'     => array( 'view', 'edit', 'embed' ),
 				),
-				'slug'            => array(
-					'description' => __( 'Un identifiant alphanumérique unique par rapport à la terminaison de l\'extension.', 'entrepot' ),
+				'tags' => array(
+					'description' => __( 'La liste des étiquettes qui caractérisent le type de bloc.', 'entrepot' ),
+					'type'        => 'array',
+					'items'       => array(
+						'type'    => 'string',
+					),
+					'context'     => array( 'view', 'edit', 'embed' ),
+				),
+				'dependencies' => array(
+					'description' => __( 'Une liste d’objets ayant pour nom de propriété le nom de la fonction requise et pour valeur de propriété le nom de la version de WordPress de l’extension ou du thème correspondant pour le type de bloc.', 'entrepot' ),
+					'type'        => 'array',
+					'items'       => array(
+						'type'    => 'object',
+					),
+					'context'     => array( 'view', 'edit', 'embed' ),
+				),
+				'releases' => array(
+					'description' => __( 'L’URL vers la liste des versions disponibles pour le type de bloc.', 'entrepot' ),
 					'type'        => 'string',
+					'context'     => array( 'view', 'edit', 'embed' ),
+				),
+				'description' => array(
+					'description' => __( 'Un object ayant pour noms de propriété les locales disponibles et valeurs la description correspondante pour le type de bloc.', 'entrepot' ),
+					'type'        => 'object',
+					'context'     => array( 'view', 'edit', 'embed' ),
+				),
+				'README' => array(
+					'description' => __( 'L’URL vers le fichier README.md du dépôt GitHub du type de bloc.', 'entrepot' ),
+					'type'        => 'string',
+					'context'     => array( 'view', 'edit', 'embed' ),
+				),
+				'urls' => array(
+					'description' => __( 'Un object ayant pour noms de propriété les sections d’information disponibles et leurs URLs correspondantes pour le type de bloc.', 'entrepot' ),
+					'type'        => 'object',
 					'context'     => array( 'view', 'edit', 'embed' ),
 				),
 			),
 		);
-
-		foreach ( $blocks as $property_name => $property ) {
-			$schema['properties'][ $property_name ] = $property['schema'];
-		}
 
 		return $this->add_additional_fields_schema( $schema );
 	}

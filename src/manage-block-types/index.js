@@ -55,6 +55,7 @@ class ManageBlocks extends Component {
                         icon={ block.icon }
                         author={ block.author }
                         actions={ actions }
+                        dependencies={ block.dependencies }
                     />
                 );
             } );
@@ -123,7 +124,7 @@ class BlockFilters extends Component {
 
 class Block extends Component {
     render() {
-        const { actions } = this.props;
+        const { actions, dependencies } = this.props;
         const actionLinks = Object.values( actions ).map( ( action ) => (
             <li>
                 <a
@@ -159,6 +160,20 @@ class Block extends Component {
                         </p>
                     </div>
                 </div>
+                { dependencies &&
+                     <div className="plugin-card-bottom">
+                        <div className="column-downloaded">
+                            { __( 'Dépendance(s) insatisfaite(s):', 'entrepot' ) }
+                        </div>
+                        <div className="column-compatibility">
+                            <ul>
+                                { dependencies.map( ( dependency ) => (
+                                    <li><strong>{ dependency }</strong></li>
+                                ) ) }
+                            </ul>
+                        </div>
+                    </div>
+                }
             </div>
         );
     }

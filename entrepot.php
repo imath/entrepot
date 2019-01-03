@@ -105,6 +105,10 @@ final class Entrepot {
 		require $this->inc_dir . 'functions.php';
 		require $this->inc_dir . 'customizer.php';
 
+		if ( function_exists( 'render_block' ) ) {
+			require $this->inc_dir . 'blocks.php';
+		}
+
 		if ( is_admin() ) {
 			require $this->inc_dir . 'admin.php';
 		}
