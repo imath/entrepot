@@ -160,30 +160,28 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 					'classes'    => 'deactivate-now button',
 				);
 			} else {
-				$links = array(
-					'activate' => array(
-						'href'       => add_query_arg( array(
-							'page'     => 'entrepot-blocks',
-							'_wpnonce' => wp_create_nonce( 'activate-block_' . $block['id'] ),
-							'action'   => 'activate',
-							'block'    => $block['id'],
-						), network_admin_url( 'admin.php' ) ),
-						'embeddable' => true,
-						'title'      => __( 'Activer', 'entrepot' ),
-						'classes'    => 'activate-now button-primary button',
-					),
-					'delete' => array(
-						'href'       => add_query_arg( array(
-							'page'     => 'entrepot-blocks',
-							'_wpnonce' => wp_create_nonce( 'delete-block_' . $block['id'] ),
-							'action'   => 'delete',
-							'block'    => $block['id'],
-						), network_admin_url( 'admin.php' ) ),
-						'embeddable' => true,
-						'title'      => __( 'Supprimer', 'entrepot' ),
-						'classes'    => 'delete-now attention',
-						'confirm'    => __( 'Êtes-vous certain·e de vouloir supprimer ce bloc ? Cette action ne peut être annulée.', 'entrepot' ),
-					),
+				$links['activate'] = array(
+					'href'       => add_query_arg( array(
+						'page'     => 'entrepot-blocks',
+						'_wpnonce' => wp_create_nonce( 'activate-block_' . $block['id'] ),
+						'action'   => 'activate',
+						'block'    => $block['id'],
+					), network_admin_url( 'admin.php' ) ),
+					'embeddable' => true,
+					'title'      => __( 'Activer', 'entrepot' ),
+					'classes'    => 'activate-now button-primary button',
+				);
+				$links['deactivate'] = array(
+					'href'       => add_query_arg( array(
+						'page'     => 'entrepot-blocks',
+						'_wpnonce' => wp_create_nonce( 'delete-block_' . $block['id'] ),
+						'action'   => 'delete',
+						'block'    => $block['id'],
+					), network_admin_url( 'admin.php' ) ),
+					'embeddable' => true,
+					'title'      => __( 'Supprimer', 'entrepot' ),
+					'classes'    => 'delete-now attention',
+					'confirm'    => __( 'Êtes-vous certain·e de vouloir supprimer ce bloc ? Cette action ne peut être annulée.', 'entrepot' ),
 				);
 			}
 		} else {

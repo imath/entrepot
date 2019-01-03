@@ -7,6 +7,9 @@
 	  "test",
 	  "check"
 	],
+	"dependencies": [
+		{ "mediatheque": "MediaThèque" }
+	],
 	"country": "fr_FR",
 	"releases": "https://github.com/imath/entrepot-test-block/releases",
 	"issues": "https://github.com/imath/entrepot-test-block/issues",
@@ -14,5 +17,10 @@
 		"en_US" : "Useless Block used for testing purpose.",
 		"fr_FR" : "Bloc inutile utilisé à des fins de test."
 	},
-	"README": "https://raw.githubusercontent.com/imath/entrepot-test-block/master/README.md"
+	"README": "https://raw.githubusercontent.com/imath/entrepot-test-block/master/README.md",
+	"urls": {
+		"history": "https://raw.githubusercontent.com/imath/entrepot-test-block/master/CHANGELOG.md",
+		"donate": "https://paypal.me/imath",
+		"wiki": "https://github.com/imath/entrepot-test-block/wiki"
+	}
 }

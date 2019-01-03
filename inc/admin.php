@@ -1602,7 +1602,7 @@ function entrepot_admin_block_detail( $block_name ) {
 
 	$repository = entrepot_get_repository_json( $block_name, 'blocks' );
 	if ( ! $repository ) {
-		return;
+		wp_die( __( 'Ce bloc n’est pas enregistré dans l’Entrepôt, désolé.', 'entrepot' ) );
 	}
 
 	$section  = '';
