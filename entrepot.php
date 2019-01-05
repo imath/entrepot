@@ -92,6 +92,9 @@ final class Entrepot {
 
 		// Plugins upgrade tasks.
 		$this->upgrades = array();
+
+		// Block supports
+		$this->block_supports = function_exists( 'render_block' );
 	}
 
 	/**
@@ -105,7 +108,7 @@ final class Entrepot {
 		require $this->inc_dir . 'functions.php';
 		require $this->inc_dir . 'customizer.php';
 
-		if ( function_exists( 'render_block' ) ) {
+		if ( $this->block_supports ) {
 			require $this->inc_dir . 'blocks.php';
 		}
 

@@ -7,9 +7,6 @@
 	  "test",
 	  "check"
 	],
-	"dependencies": [
-		{ "mediatheque": "MediaThèque" }
-	],
 	"country": "fr_FR",
 	"releases": "https://github.com/imath/entrepot-test-block/releases",
 	"issues": "https://github.com/imath/entrepot-test-block/issues",

@@ -142,6 +142,18 @@ function entrepot_repositories_dir( $type = 'plugins' ) {
 }
 
 /**
+ * Does the current site/network supports blocks.
+ *
+ * @since 1.5.0
+ *
+ * @return boolean True if the the current site/network supports blocks.
+ *                 False otherwise.
+ */
+function entrepot_block_supports() {
+	return entrepot()->block_supports;
+}
+
+/**
  * Loads translation.
  *
  * @since 1.0.0
@@ -879,7 +891,7 @@ function entrepot_rest_routes() {
 	$controller->register_routes();
 
 	// Blocks
-	if ( function_exists( 'render_block' ) ) {
+	if ( entrepot_block_supports() ) {
 		$controller = new Entrepot_REST_Blocks_Controller;
 		$controller->register_routes();
 	}
