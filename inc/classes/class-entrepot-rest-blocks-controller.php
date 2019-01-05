@@ -151,7 +151,7 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 		);
 
 		if ( 'installed' === $type ) {
-			$active_blocks = get_option( 'entrepot_active_blocks', array() );
+			$active_blocks = get_site_option( 'entrepot_active_blocks', array() );
 
 			if ( in_array( $block['id'], $active_blocks, true ) ) {
 				// Deactivate blocks if a dependency is not satisfied
