@@ -1,0 +1,16 @@
+{
+	"name": "Random Block",
+	"author": "imath",
+	"keywords": [
+	  "test",
+	  "plugin"
+	],
+	"country": "fr_FR",
+	"releases": "",
+	"issues": "https://github.com/imath/test-upgrade/issues",
+	"description": {
+		"en_US" : "Testing description",
+		"fr_FR" : "Description de test"
+	},
+	"README": ""
+}

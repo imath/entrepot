@@ -12,10 +12,6 @@ class entrepot_Functions_Tests extends WP_UnitTestCase {
 		return PR_TESTING_ASSETS . '/';
 	}
 
-	public function blocks_dir() {
-		return PR_TESTING_ASSETS . '/blocks';
-	}
-
 	public function repositories_list( $list = array(), $type = '' ) {
 		if ( 'themes' === $type ) {
 			return array( 'test-theme' => array(

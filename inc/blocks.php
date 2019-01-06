@@ -27,7 +27,7 @@ function entrepot_blocks_dir() {
 	 *
 	 * @param  string  $blocks_dir The repository name of standalone blocks.
 	 */
-	return apply_filters( 'entrepot_blocks_dir', $blocks_dir );
+	return apply_filters( 'entrepot_installed_blocks_dir', $blocks_dir );
 }
 
 /**
@@ -343,9 +343,21 @@ function entrepot_register_block_types() {
  * @since 1.5.0
  */
 function entrepot_blocks_admin_menu() {
+	/* Translators: %s is the Update notice bubble html */
+	$menu_title = __( 'Types de Bloc%s', 'entrepot' );
+	$notice     = '';
+
+	$block_updates = get_site_transient( 'entrepot_update_blocks' );
+	if ( isset( $block_updates->response ) && $block_updates->response ) {
+		$count  = count( $block_updates->response );
+		$notice = sprintf( ' <span class="update-plugins count-%1$s">
+			<span class="update-count">%2$s</span>
+		</span>', $count, number_format_i18n( $count ) );
+	}
+
 	$screen = add_menu_page(
 		__( 'Gestion des types de bloc', 'entrepot' ),
-		__ ( 'Types de Bloc', 'entrepot' ),
+		sprintf( $menu_title, $notice ),
 		'activate_entrepot_blocks',
 		'entrepot-blocks',
 		'entrepot_admin_blocks',
@@ -813,6 +825,132 @@ function entrepot_admin_blocks() {
 	printf( '<div class="wrap"><h1>%1$s</h1>%2$s<div id="entrepot-blocks"></div></div>', esc_html__( 'Types de bloc', 'entrepot' ), $feedback );
 }
 
+/**
+ * Get Blocks to update.
+ *
+ * @since 1.5.0
+ *
+ * @param  array $repositories The installed Block repositories.
+ * @return array               The ones to update.
+ */
+function entrepot_blocks_get_updates( $repositories = array() ) {
+	if ( ! $repositories ) {
+		$repositories = entrepot_get_blocks();
+	}
+
+	$repositories_data = array();
+	foreach ( $repositories as $slug => $block ) {
+		$json = entrepot_get_repository_json( $slug, 'blocks' );
+
+		if ( ! $json || ! isset( $json->releases ) ) {
+			continue;
+		}
+
+		$response = entrepot_get_repository_latest_stable_release( $json->releases, array(
+			'block'            => $json->name,
+			'slug'             => $slug,
+			'Version'          => $block->version,
+			'GitHub Block URI' => str_replace( '/releases', '', $json->releases ),
+		), 'block' );
+
+		$repositories_data[ $block->id ] = $response;
+	}
+
+	$updated_repositories = wp_list_filter( $repositories_data, array( 'is_update' => true ) );
+
+	if ( ! $updated_repositories ) {
+		return null;
+	}
+
+	return $updated_repositories;
+}
+
+/**
+ * Save Available Block updates information in a transient.
+ *
+ * @since 1.5.0
+ */
+function entrepot_blocks_update() {
+	if ( wp_installing() ) {
+		return;
+	}
+
+	$blocks  = entrepot_get_blocks();
+	$current = get_site_transient( 'entrepot_update_blocks' );
+
+	if ( ! is_object( $current ) ) {
+		$current = new stdClass;
+	}
+
+	$new_option = new stdClass;
+	$new_option->last_checked = time();
+
+	$doing_cron = wp_doing_cron();
+	$action     = current_action();
+
+	$timeout = 12 * HOUR_IN_SECONDS;
+	if ( $doing_cron ) {
+		$timeout = 2 * HOUR_IN_SECONDS;
+	}
+
+	if ( 'upgrader_process_complete' === $action ) {
+		$timeout = 0;
+	} elseif ( 'load-toplevel_page_entrepot-blocks' === $action || 'load-update.php' === $action ) {
+		$timeout = HOUR_IN_SECONDS;
+	}
+
+	if ( isset( $current->last_checked ) && $timeout > ( time() - $current->last_checked ) ) {
+		$block_changed = false;
+		foreach ( $blocks as $block ) {
+			$new_option->checked[ $block->id ] = $block->version;
+
+			if ( ! isset( $current->checked[ $block->id ] ) || strval( $current->checked[ $block->id ] ) !== strval( $block->version ) ) {
+				$block_changed = true;
+			}
+		}
+
+		if ( isset ( $current->response ) && is_array( $current->response ) ) {
+			foreach ( $current->response as $block_id => $update_details ) {
+				if ( ! isset( $blocks[ $block_id ] ) ) {
+					$block_changed = true;
+					break;
+				}
+			}
+		}
+
+		// Bail if we've checked recently and if nothing has changed
+		if ( ! $block_changed ) {
+			return;
+		}
+	}
+
+	// Update last_checked for current to prevent multiple blocking requests if request hangs
+	$current->last_checked = time();
+	set_site_transient( 'entrepot_update_blocks', $current );
+
+	// Get Block updates
+	$updates = entrepot_blocks_get_updates( $blocks );
+
+	if ( is_array( $updates ) ) {
+		$new_option->response = $updates;
+	} else {
+		$new_option->response = array();
+	}
+
+	set_site_transient( 'entrepot_update_blocks', $new_option );
+}
+
+/**
+ * Schedule a Cron Job to check for block updates.
+ *
+ * @since 1.5.0
+ */
+function entrepot_blocks_schedule_update_checks() {
+	if ( ! wp_next_scheduled( 'entrepot_blocks_update' ) && ! wp_installing() ) {
+		wp_schedule_event( time(), 'twicedaily', 'entrepot_blocks_update' );
+	}
+}
+
 /** Hooks *******************************************************************/
 
 // Register Block Types.
@@ -834,3 +972,10 @@ if ( is_multisite() ) {
 
 // Register scripts.
 add_action( 'admin_init', 'entrepot_admin_blocks_register_scripts', 11 );
+
+// Register Block Updater's cron job.
+add_action( 'entrepot_admin_init', 'entrepot_blocks_schedule_update_checks', 1 );
+
+// Trigger Block updates on Blocks screen load & cron event.
+add_action( 'load-toplevel_page_entrepot-blocks', 'entrepot_blocks_update' );
+add_action( 'entrepot_blocks_update',             'entrepot_blocks_update' );

@@ -343,6 +343,11 @@ function entrepot_get_repository_latest_stable_release( $atom_url = '', $reposit
 			} else {
 				$test_releases = $repository['slug'];
 			}
+
+			if ( 'block' === $type ) {
+				$test_releases = trailingslashit( 'blocks' ) . $test_releases;
+			}
+
 			$atom_url = trailingslashit( entrepot()->dir ) . 'tests/phpunit/assets/' . $test_releases;
 		} else {
 			return $tag_data;
@@ -462,7 +467,7 @@ function entrepot_get_repository_latest_stable_release( $atom_url = '', $reposit
 			} else {
 				$tag_data->is_update = true;
 
-				$repository_data = entrepot_get_repositories( $response['slug'] );
+				$repository_data = entrepot_get_repositories( $response['slug'], $type . 's' );
 
 				if ( ! empty( $repository_data->icon ) ) {
 					$tag_data->icons = array( '1x' => esc_url_raw( $repository_data->icon ) );
