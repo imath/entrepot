@@ -152,6 +152,29 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 
 		if ( 'installed' === $type ) {
 			$active_blocks = get_site_option( 'entrepot_active_blocks', array() );
+			$block_updates = get_site_transient( 'entrepot_update_blocks' );
+
+			// Include update links for Blocks needing to be updated.
+			if ( current_user_can( 'update_entrepot_blocks' ) && isset( $block_updates->response[ $block['id'] ] ) && $block_updates->response[ $block['id'] ] ) {
+				$links = array_merge( $links, array(
+					'update'    => array(
+						'href'       => add_query_arg( array(
+							'page'     => 'entrepot-blocks',
+							'_wpnonce' => wp_create_nonce( 'update-block_' . $block['id'] ),
+							'action'   => 'update',
+							'block'    => $block['id'],
+						), network_admin_url( 'admin.php' ) ),
+						'embeddable' => true,
+						'title'      => __( 'Mettre à jour', 'entrepot' ),
+						'classes'    => 'update-now button',
+					),
+					'changelog' => array(
+						'href'    => network_admin_url( sprintf( 'admin.php?page=entrepot-blocks&amp;action=block-information&amp;block=%s&amp;section=changelog&amp;TB_iframe=true&amp;width=600&amp;height=550', $block['id'] ) ),
+						'title'   => __( 'Notes de version', 'entrepot' ),
+						'classes' => 'thickbox open-plugin-details-modal',
+					),
+				) );
+			}
 
 			if ( in_array( $block['id'], $active_blocks, true ) ) {
 				// Deactivate blocks if a dependency is not satisfied
@@ -163,7 +186,7 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 					 * to have the delete link displayed.
 					 */
 					$links['delete'] = $delete_link;
-				} else {
+				} elseif ( ! isset( $links['update'] ) ) {
 					$links['deactivate'] = array(
 						'href'       => add_query_arg( array(
 							'page'     => 'entrepot-blocks',
@@ -176,7 +199,7 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 						'classes'    => 'deactivate-now button',
 					);
 				}
-			} else {
+			} elseif ( ! isset( $links['update'] ) ) {
 				$links['activate'] = array(
 					'href'       => add_query_arg( array(
 						'page'     => 'entrepot-blocks',
@@ -188,6 +211,8 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 					'title'      => __( 'Activer', 'entrepot' ),
 					'classes'    => 'activate-now button-primary button',
 				);
+				$links['delete'] = $delete_link;
+			} else {
 				$links['delete'] = $delete_link;
 			}
 		} else {
@@ -210,6 +235,8 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 				'self'              => true,
 				'collection'        => true,
 				'block_information' => true,
+				'update'            => true,
+				'changelog'         => true,
 			) );
 		}
 

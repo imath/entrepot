@@ -876,7 +876,12 @@ function entrepot_admin_repository_iframe( $args = array() ) {
  * @return array        The changelog section attributes.
  */
 function entrepot_admin_get_changelog_section( $slug, $type = 'plugins' ) {
-	$repository_updates = get_site_transient( 'update_' . $type );
+	$transient_key = 'update_' . $type;
+	if ( 'blocks' === $type ) {
+		$transient_key = 'entrepot_update_blocks';
+	}
+
+	$repository_updates = get_site_transient( $transient_key );
 	$args = array();
 
 	if ( empty( $repository_updates->response ) ) {

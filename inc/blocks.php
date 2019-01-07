@@ -774,6 +774,11 @@ function entrepot_admin_blocks_load() {
 		.block.plugin-card .column-compatibility ul li {
 			text-align: left;
 		}
+
+		.block.plugin-card .plugin-action-buttons a:not( .button ) {
+			text-decoration: none;
+			border: none;
+		}
 	' );
 }
 

@@ -43,7 +43,7 @@ class ManageBlocks extends Component {
 
         if ( 'success' === status ) {
             blockTypes = blocks.map( ( block ) => {
-                let actions = pick( block._links, [ 'activate', 'deactivate', 'install', 'delete' ] );
+                let actions = pick( block._links, [ 'activate', 'deactivate', 'install', 'update', 'changelog', 'delete' ] );
 
                 return (
                     <Block
@@ -104,8 +104,8 @@ class BlockFilters extends Component {
 
     render() {
         return (
-            <div class="wp-filter">
-                <ul class="filter-links">
+            <div className="wp-filter">
+                <ul className="filter-links">
                     <li id="installed-blocks">
                         <a href="#installed-blocks" onClick={ ( e ) => this.switchTab( 'installed', e ) } className={ this.isCurrentTab( 'installed' ) }>
                             { __( 'Installés', 'entrepot' ) }
@@ -125,8 +125,8 @@ class BlockFilters extends Component {
 class Block extends Component {
     render() {
         const { actions, dependencies } = this.props;
-        const actionLinks = Object.values( actions ).map( ( action ) => (
-            <li>
+        const actionLinks = Object.values( actions ).map( ( action, key ) => (
+            <li key={key}>
                 <a
                     href={ action[0].href }
                     onClick={ ( e ) => { action[0].confirm && ! window.confirm( action[0].confirm ) ? e.preventDefault() : e } }
@@ -148,8 +148,8 @@ class Block extends Component {
                             </a>
                         </h3>
                     </div>
-                    <div class="action-links">
-                        <ul class="plugin-action-buttons">
+                    <div className="action-links">
+                        <ul className="plugin-action-buttons">
                             { actionLinks }
                         </ul>
                     </div>
