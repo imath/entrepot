@@ -615,11 +615,12 @@ function entrepot_delete_block( $block_type_id = '' ) {
 	$block_dir = trailingslashit( $blocks_dir ) . $block_dir;
 	$deleted   = $wp_filesystem->delete( $block_dir, true );
 
-	/**
-	 * @todo remove the deleted blocks from the Blocks to upgrade.
-	 *
-	 * (once implemented)
-	 */
+	// Remove the deleted block from the Blocks to upgrade.
+	$block_updates = get_site_transient( 'entrepot_update_blocks' );
+	if ( isset( $block_updates->response[ $block_type_id ] ) ) {
+		unset( $block_updates->response[ $block_type_id ] );
+		set_site_transient( 'entrepot_update_blocks', $block_updates );
+	}
 
 	if ( ! $deleted ) {
 		return new WP_Error( 'could_not_remove_block', __( 'Une erreur inconnue est survenue lors de la suppression du bloc.', 'entrepot' ) );
@@ -717,7 +718,7 @@ function entrepot_admin_blocks_load() {
 
 			require_once ABSPATH . 'wp-admin/admin-header.php';
 
-			$args = (object) array( 'slug' => wp_basename( $block_id ), );
+			$args = (object) array( 'slug' => wp_basename( $block_id ) );
 			$api  = entrepot_repositories_api( false, 'block_information', $args );
 
 			if ( ! $api ) {
@@ -736,6 +737,39 @@ function entrepot_admin_blocks_load() {
 				'api'   => $api,
 			) ) );
 			$upgrader->install( $api->download_link, array( 'block' => $block_id ) );
+
+			require ABSPATH . 'wp-admin/admin-footer.php';
+			exit();
+
+		// Update a block.
+		} elseif ( 'update' == $action ) {
+			if ( ! current_user_can( 'update_entrepot_blocks' ) ) {
+				wp_die( __( 'Désolé, vous n’êtes pas autorisé·e à mettre à jour des blocs.', 'entrepot' ) );
+			}
+
+			check_admin_referer( "$action-block_$block_id" );
+
+			require_once ABSPATH . 'wp-admin/admin-header.php';
+
+			$args = (object) array( 'slug' => wp_basename( $block_id ) );
+			$api  = entrepot_repositories_api( false, 'block_information', $args );
+
+			if ( ! $api ) {
+				wp_die( __( 'Désolé, le bloc à mettre à jour n’est pas enregistré dans l’Entrepôt.', 'entrepot' ) );
+			}
+
+			$upgrader = new Entrepot_Block_Upgrader( new Entrepot_Block_Upgrader_Skin( array(
+				'title' => sprintf( __( 'Mise à jour du bloc : %s', 'entrepot' ), $api->name . ' ' . $api->version ),
+				'url'   => add_query_arg( array(
+					'page'     => 'entrepot-blocks',
+					'action'   => 'update',
+					'block'    => $block_id,
+				), network_admin_url( 'admin.php' ) ),
+				'nonce' => 'update-block_' . $block_id,
+				'block' => $block_id,
+				'api'   => $api,
+			) ) );
+			$upgrader->upgrade( $block_id );
 
 			require ABSPATH . 'wp-admin/admin-footer.php';
 			exit();
