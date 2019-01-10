@@ -779,6 +779,16 @@ function entrepot_admin_blocks_load() {
 			text-decoration: none;
 			border: none;
 		}
+		.entrepot-blocks-loader {
+			width: 100%;
+			text-align: center;
+			padding-top: 100px;
+		}
+
+		.entrepot-blocks-loader .spinner {
+			display: inline-block;
+			float: none;
+		}
 	' );
 }
 

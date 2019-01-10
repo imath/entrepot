@@ -62,7 +62,10 @@ class ManageBlocks extends Component {
         }
 
         if ( 'loading' === status ) {
-            loader = <p>{ __( 'Chargement en cours, merci de patienter.', 'entrepot' ) }</p>;
+            loader = ( <div className="entrepot-blocks-loader">
+                <span className="spinner is-active" />
+                <p>{ __( 'Chargement en cours, merci de patienter.', 'entrepot' ) }</p>
+            </div> );
         }
 
         return (
@@ -75,8 +78,8 @@ class ManageBlocks extends Component {
                 <div className="blocks">
                     { loader }
                     { blockTypes }
-                    { message && (
-                        <p> { message } </p>
+                    { message && 'loading' !== status && (
+                        <div className="no-plugin-results"> { message } </div>
                     ) }
                 </div>
             </Fragment>
