@@ -639,10 +639,10 @@ function entrepot_delete_block( $block_type_id = '' ) {
 function entrepot_admin_get_feedback_messages() {
 	$feedback = '';
 
-	$is_dismissible = '';
+	$is_dismissible = ' is-dismissible';
 
-	if ( defined( 'IFRAME_REQUEST' ) && IFRAME_REQUEST ) {
-		$is_dismissible = ' is-dismissible';
+	if ( isset( $_GET['updating-block'] ) ) {
+		$is_dismissible = '';
 	}
 
 	if ( isset( $_GET['error'] ) && isset( $_GET['block'] ) ) {
