@@ -639,13 +639,14 @@ function entrepot_delete_block( $block_type_id = '' ) {
 function entrepot_admin_get_feedback_messages() {
 	$feedback = '';
 
+	$is_dismissible = '';
+
+	if ( defined( 'IFRAME_REQUEST' ) && IFRAME_REQUEST ) {
+		$is_dismissible = ' is-dismissible';
+	}
+
 	if ( isset( $_GET['error'] ) && isset( $_GET['block'] ) ) {
 		$block_id = wp_unslash( $_GET['block'] );
-		$is_dismissible = '';
-
-		if ( defined( 'IFRAME_REQUEST' ) && IFRAME_REQUEST ) {
-			$is_dismissible = ' is-dismissible';
-		}
 
 		if ( isset( $_GET['charsout'] ) ) {
 			$feedback = sprintf( '<div id="message" class="error notice%1$s"><p>%2$s</p></div>',
