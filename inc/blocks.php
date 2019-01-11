@@ -630,16 +630,84 @@ function entrepot_delete_block( $block_type_id = '' ) {
 }
 
 /**
+ * Get Entrepôt registered blocks action results' feedback.
+ *
+ * @since 1.5.0
+ *
+ * @return string HTML Output.
+ */
+function entrepot_admin_get_feedback_messages() {
+	$feedback = '';
+
+	if ( isset( $_GET['error'] ) && isset( $_GET['block'] ) ) {
+		$block_id = wp_unslash( $_GET['block'] );
+		$is_dismissible = '';
+
+		if ( defined( 'IFRAME_REQUEST' ) && IFRAME_REQUEST ) {
+			$is_dismissible = ' is-dismissible';
+		}
+
+		if ( isset( $_GET['charsout'] ) ) {
+			$feedback = sprintf( '<div id="message" class="error notice%1$s"><p>%2$s</p></div>',
+				$is_dismissible,
+				sprintf(
+					esc_html__( 'Le bloc a généré un affichage inattendu de %d caractère(s) et n’a pas été activé.', 'entrepot' ),
+					$_GET['charsout']
+				)
+			);
+		} elseif ( wp_verify_nonce( $_GET['_error_nonce'], 'block-activation-error_' . $block_id ) ) {
+			$iframe_url = add_query_arg( array(
+				'page'     => 'entrepot-blocks',
+				'action'   => 'error_scrape',
+				'block'    => $block_id,
+				'_wpnonce' => $_GET['_error_nonce'],
+			), network_admin_url( 'admin.php' ) );
+			$feedback = sprintf( '<div id="message" class="error notice%1$s"><p>%2$s</p><iframe style="border:0" width="%3$s" height="70px" src="%4$s"></iframe></div>',
+				$is_dismissible,
+				esc_html__( 'Le bloc a généré une erreur fatale et n’a pas été activé.', 'entrepot' ),
+				'100%',
+				esc_url_raw( $iframe_url )
+			);
+		}
+	} elseif ( isset( $_GET['updated'] ) ) {
+		if ( isset( $_GET['enabled'] ) && $_GET['enabled'] ) {
+			$feedback = sprintf( '<div id="message" class="updated notice%1$s"><p>%2$s</p></div>',
+				$is_dismissible,
+				esc_html__( 'Le bloc a été activé avec succès.', 'entrepot' )
+			);
+		} elseif ( isset( $_GET['disabled'] ) && $_GET['disabled'] ) {
+			$feedback = sprintf( '<div id="message" class="updated notice%1$s"><p>%2$s</p></div>',
+				$is_dismissible,
+				esc_html__( 'Le bloc a été désactivé avec succès.', 'entrepot' )
+			);
+		}
+	} elseif ( isset( $_GET['deleted'] ) ) {
+		$feedback = sprintf( '<div id="message" class="updated notice%1$s"><p>%2$s</p></div>',
+			$is_dismissible,
+			esc_html__( 'Le bloc a été supprimé avec succès.', 'entrepot' )
+		);
+	}
+
+	return $feedback;
+}
+
+/**
  * Handle Admin screen actions.
  *
  * @since 1.5.0
  */
 function entrepot_admin_blocks_load() {
-	if ( isset( $_REQUEST['action'] ) && isset( $_REQUEST['block'] ) ) {
-		$redirect = add_query_arg( array(
-			'page'     => 'entrepot-blocks',
-		), network_admin_url( 'admin.php' ) );
+	$in_iframe = false;
+	$redirect  = add_query_arg( array(
+		'page'     => 'entrepot-blocks',
+	), network_admin_url( 'admin.php' ) );
 
+	if ( isset( $_GET['updating-block'] ) ) {
+		$in_iframe = true;
+		$redirect  = add_query_arg( 'updating-block', 1, $redirect );
+	}
+
+	if ( isset( $_REQUEST['action'] ) && isset( $_REQUEST['block'] ) ) {
 		$block_id = wp_unslash( $_REQUEST['block'] );
 		$action   = wp_unslash( $_REQUEST['action'] );
 
@@ -797,33 +865,51 @@ function entrepot_admin_blocks_load() {
 		exit();
 	}
 
-	wp_enqueue_script( 'entrepot-manage-blocks' );
-	add_thickbox();
-	wp_enqueue_style( 'list-tables' );
-	wp_add_inline_style( 'list-tables', '
-		.block.plugin-card .column-compatibility ul {
-			margin: 0;
-		}
+	// During an update we do not need to load the full UI.
+	if ( $in_iframe && ! isset( $_REQUEST['action'] ) ) {
+		define( 'IFRAME_REQUEST', true );
 
-		.block.plugin-card .column-compatibility ul li {
-			text-align: left;
-		}
+		// Hide some admin UI parts for clarity.
+		wp_add_inline_style( 'common', '
+			#adminmenumain, #wpfooter { display: none; }
+			#wpcontent { margin-left: 0; padding-left: 0; }
+		' );
 
-		.block.plugin-card .plugin-action-buttons a:not( .button ) {
-			text-decoration: none;
-			border: none;
-		}
-		.entrepot-blocks-loader {
-			width: 100%;
-			text-align: center;
-			padding-top: 100px;
-		}
+		require_once ABSPATH . 'wp-admin/admin-header.php';
 
-		.entrepot-blocks-loader .spinner {
-			display: inline-block;
-			float: none;
-		}
-	' );
+		printf( '<div class="wrap">%s</div>', entrepot_admin_get_feedback_messages() );
+
+		require ABSPATH . 'wp-admin/admin-footer.php';
+		exit();
+	} else {
+		wp_enqueue_script( 'entrepot-manage-blocks' );
+		add_thickbox();
+		wp_enqueue_style( 'list-tables' );
+		wp_add_inline_style( 'list-tables', '
+			.block.plugin-card .column-compatibility ul {
+				margin: 0;
+			}
+
+			.block.plugin-card .column-compatibility ul li {
+				text-align: left;
+			}
+
+			.block.plugin-card .plugin-action-buttons a:not( .button ) {
+				text-decoration: none;
+				border: none;
+			}
+			.entrepot-blocks-loader {
+				width: 100%;
+				text-align: center;
+				padding-top: 100px;
+			}
+
+			.entrepot-blocks-loader .spinner {
+				display: inline-block;
+				float: none;
+			}
+		' );
+	}
 }
 
 /**
@@ -832,46 +918,11 @@ function entrepot_admin_blocks_load() {
  * @since 1.5.0
  */
 function entrepot_admin_blocks() {
-	$feedback = '';
-
-	if ( isset( $_GET['error'] ) && isset( $_GET['block'] ) ) {
-		$block_id = wp_unslash( $_GET['block'] );
-
-		if ( isset( $_GET['charsout'] ) ) {
-			$feedback = sprintf( '<div id="message" class="error notice is-dismissible"><p>%s</p></div>', sprintf(
-				esc_html__( 'Le bloc a généré un affichage inattendu de %d caractère(s) et n’a pas été activé.', 'entrepot' ),
-				$_GET['charsout']
-			) );
-		} elseif ( wp_verify_nonce( $_GET['_error_nonce'], 'block-activation-error_' . $block_id ) ) {
-			$iframe_url = add_query_arg( array(
-				'page'     => 'entrepot-blocks',
-				'action'   => 'error_scrape',
-				'block'    => $block_id,
-				'_wpnonce' => $_GET['_error_nonce'],
-			), network_admin_url( 'admin.php' ) );
-			$feedback = sprintf( '<div id="message" class="error notice is-dismissible"><p>%1$s</p><iframe style="border:0" width="%2$s" height="70px" src="%3$s"></iframe></div>',
-				esc_html__( 'Le bloc a généré une erreur fatale et n’a pas été activé.', 'entrepot' ),
-				'100%',
-				esc_url_raw( $iframe_url )
-			);
-		}
-	} elseif ( isset( $_GET['updated'] ) ) {
-		if ( isset( $_GET['enabled'] ) && $_GET['enabled'] ) {
-			$feedback = sprintf( '<div id="message" class="updated notice is-dismissible"><p>%s</p></div>',
-				esc_html__( 'Le bloc a été activé avec succès.', 'entrepot' )
-			);
-		} elseif ( isset( $_GET['disabled'] ) && $_GET['disabled'] ) {
-			$feedback = sprintf( '<div id="message" class="updated notice is-dismissible"><p>%s</p></div>',
-				esc_html__( 'Le bloc a été désactivé avec succès.', 'entrepot' )
-			);
-		}
-	} elseif ( isset( $_GET['deleted'] ) ) {
-		$feedback = sprintf( '<div id="message" class="updated notice is-dismissible"><p>%s</p></div>',
-			esc_html__( 'Le bloc a été supprimé avec succès.', 'entrepot' )
-		);
-	}
-
-	printf( '<div class="wrap"><h1>%1$s</h1>%2$s<div id="entrepot-blocks"></div></div>', esc_html__( 'Types de bloc', 'entrepot' ), $feedback );
+	printf(
+		'<div class="wrap"><h1>%1$s</h1>%2$s<div id="entrepot-blocks"></div></div>',
+		esc_html__( 'Types de bloc', 'entrepot' ),
+		entrepot_admin_get_feedback_messages()
+	);
 }
 
 /**

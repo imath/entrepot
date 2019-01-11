@@ -69,13 +69,14 @@ class Entrepot_Block_Upgrader_Skin extends WP_Upgrader_Skin {
         // Reactivate the block if needed, making sure the update does not contain errors.
         if ( $this->block_active && ! is_wp_error( $this->result ) && $this->block_active ) {
             printf(
-                '<iframe title="%1$s" style="border:0;overflow:hidden" width="100%" height="170" src="%2$s"></iframe>',
+                '<iframe title="%1$s" style="border:0;overflow:hidden" width="%2$s" height="170" src="%3$s"></iframe>',
                 esc_attr__( 'Progression de la mise à jour du bloc', 'entrepot' ),
-                esc_url_raw( $activate_url )
+                '100%',
+                esc_url_raw( add_query_arg( 'updating-block', 1, $activate_url ) )
             );
-		}
+        }
 
-		$update_actions =  array(
+        $update_actions = array(
             'activate' => sprintf( '<a class="button button-primary" href="%1$s" target="_parent">%2$s</a>',
                 $activate_url,
                 esc_html__( 'Activer le bloc', 'entrepot' )
