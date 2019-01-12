@@ -3,26 +3,36 @@
 # Entrepôt
 
 ## Français 🇫🇷
-*Inscrivez vos extensions et thèmes WordPress gratuits dans l'Entrepôt.*
+*Inscrivez vos extensions, thèmes et blocs WordPress gratuits dans l'Entrepôt.*
 
-Cette extension WordPress vous propose de recenser vos propres extensions et thèmes gratuits hébergés sur GitHub.com directement depuis l'onglet **Entrepôt** de l'écran d'administration de l'ajout d'extensions ou de thèmes de WordPress. Elle prendra en charge l'installation et la mise à jour de vos dépôts.
+Cette extension WordPress vous propose de recenser vos propres extensions, thèmes et blocs gratuits hébergés sur GitHub.com directement depuis :
+- l'onglet **Entrepôt** de l'écran d'administration de l'ajout d'extensions,
+- l'onglet **Entrepôt** de l'écran d'administration de l'ajout de thèmes ou depuis la section **Thèmes de l'Entrepôt** de l'interface de changement de thèmes du Customizer de WordPress,
+- le menu **Types de bloc** de l'administration de WordPress.
 
-Les utilisateurs peuvent télécharger cette extension pour disposer d'une source alternative d'extensions et de thèmes gratuits.
+Grâce à l'**Entrepôt** vos dépôts publics hébergés sur GitHub.com bénéficieront, par ailleurs, d'une installation et de mises à jour directement déclenchables depuis l'administration des sites WordPress de vos utilisateurs.
 
-Les *auteurs* peuvent, à l'aide d'une "Pull Request" particulière référencer leurs extensions ou thèmes gratuits hébergés sur GitHub.com. Pour en savoir plus, reporter vous à la [documentation](https://github.com/imath/entrepot/wiki).
+En téléchargeant et en installant cette extension, vos utilisateurs disposent donc d'une source alternative d'extensions, de thèmes et de blocs gratuits.
 
-Cette extension nécessite WordPress 4.8.
+Les *auteurs* d'extensions, de thèmes ou de blocs, peuvent, à l'aide d'une "Pull Request" particulière référencer les dépôts publics hébergés sur GitHub.com correspondants. Pour en savoir plus, reportez-vous à la [documentation](https://github.com/imath/entrepot/wiki).
+
+Cette extension nécessite WordPress 4.8 et a été testée jusqu'à sa version 5.1.
 
 ## English 🇬🇧
-*Register your free WordPress plugins and themes into Entrepôt*
+*Register your free WordPress plugins, themes and blocks into the Entrepôt*
 
-This plugin lets you list your own free GitHub.com hosted plugins and themes inside the **Entrepôt** tab of the Add Plugins/Themes Administration screens. It will take care of installing and upgrading your repositories.
+This plugin lets you list your own free & public GitHub.com hosted plugins themes, and blocks inside:
+- the **Entrepôt** tab of the Add Plugins Administration screen,
+- the **Entrepôt** tab of the Add Themes Administration screen, or from the **Entrepôt Themes** section of the area of the Customizer to change the active theme,
+- the **Block Types** menu of the WordPress Dashboard.
 
-Users can download this plugin to enjoy an alternative source of free WordPress plugins and themes.
+Thanks to the **Entrepôt** your free, public & GitHub hosted repositories will benefit from a one-click installation and updates directly from the WordPress site's Administration of your users.
 
-*Authors* can, using a particular "Pull Request" register their free GitHub.com hosted plugins or themes. For more information, see the [documentation](https://github.com/imath/entrepot/wiki).
+Users can download this plugin to enjoy an alternative source of free WordPress plugins, themes and blocks.
 
-This plugin requires WordPress 4.8.
+*Authors* can, using a particular "Pull Request" register their free GitHub.com hosted plugins, themes or blocks. For more information, see the [documentation](https://github.com/imath/entrepot/wiki).
+
+This plugin requires WordPress 4.8 and been tested up to 5.1.
 
 ## Code of Conduct
 

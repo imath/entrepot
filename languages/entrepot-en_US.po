@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Entrepôt 1.5.0-beta1\n"
 "Report-Msgid-Bugs-To: https://github.com/imath/entrepot/issues\n"
-"POT-Creation-Date: 2019-01-12 14:27:32+00:00\n"
-"PO-Revision-Date: 2019-01-12 15:28+0100\n"
+"POT-Creation-Date: 2019-01-12 22:24:21+00:00\n"
+"PO-Revision-Date: 2019-01-12 23:29+0100\n"
 "Last-Translator: imath <mathchristo@yahoo.fr>\n"
 "Language-Team: imath <contact@imathi.eu>\n"
 "Language: en_US\n"
@@ -291,59 +291,59 @@ msgid ""
 msgstr "The manual Plugin versions management feature requires WordPress 4.9."
 
 #. Translators: %s is the Update notice bubble html
-#: inc/blocks.php:359
+#: inc/blocks.php:365
 msgid "Types de Bloc%s"
 msgstr "Block types"
 
-#: inc/blocks.php:371
+#: inc/blocks.php:377
 msgid "Gestion des types de bloc"
 msgstr "Block Types Management"
 
-#: inc/blocks.php:396
+#: inc/blocks.php:402
 msgid "Types de Bloc"
 msgstr "Block Types"
 
-#: inc/blocks.php:433
+#: inc/blocks.php:439
 msgid "Ce bloc n’est pas enregistré dans l’Entrepôt, désolé."
 msgstr "This block is not registered into the Entrepôt, sorry."
 
-#: inc/blocks.php:496
+#: inc/blocks.php:502
 msgid "Le type de bloc n’est pas installé."
 msgstr "The block type is not installed."
 
-#: inc/blocks.php:500
+#: inc/blocks.php:506
 msgid "Le type de bloc est déjà activé."
 msgstr "The block type is already activated."
 
-#: inc/blocks.php:512
+#: inc/blocks.php:518
 msgid "Le bloc a généré un affichage inattendu."
 msgstr "The block generated unexpected output."
 
-#: inc/blocks.php:572
+#: inc/blocks.php:578
 msgid "Le bloc n’a pas été trouvé. Il ne semble pas être installé."
 msgstr "The block is missing. It looks like it is not yet installed."
 
-#: inc/blocks.php:579
+#: inc/blocks.php:585
 msgid "Le bloc est activé. Merci de le désactiver avant de le supprimer."
 msgstr "The block is active. Please deactivate it before deleting it."
 
-#: inc/blocks.php:613
+#: inc/blocks.php:619
 msgid "Impossible de se connecter au système de fichiers."
 msgstr "Unable to connect to the filesystem."
 
-#: inc/blocks.php:617
+#: inc/blocks.php:623
 msgid "Erreur du système de fichiers."
 msgstr "Filesystem error."
 
-#: inc/blocks.php:624 inc/classes/class-entrepot-block-upgrader.php:314
+#: inc/blocks.php:630 inc/classes/class-entrepot-block-upgrader.php:314
 msgid "Le dossier des blocs de l’Entrepôt n’a pu être localisé."
 msgstr "The Entrepôt registered blocks directory could not be found."
 
-#: inc/blocks.php:638
+#: inc/blocks.php:644
 msgid "Une erreur inconnue est survenue lors de la suppression du bloc."
 msgstr "Unknown error. The block was not deleted."
 
-#: inc/blocks.php:667
+#: inc/blocks.php:673
 msgid ""
 "Le bloc a généré un affichage inattendu de %d caractère(s) et n’a pas été "
 "activé."
@@ -351,61 +351,61 @@ msgstr ""
 "The block generated an unexpected output of %d characters and was not "
 "activated."
 
-#: inc/blocks.php:680
+#: inc/blocks.php:686
 msgid "Le bloc a généré une erreur fatale et n’a pas été activé."
 msgstr "The block generated a fatal error and was not activated."
 
-#: inc/blocks.php:689
+#: inc/blocks.php:695
 msgid "Le bloc a été activé avec succès."
 msgstr "The block has been successfully activated."
 
-#: inc/blocks.php:694
+#: inc/blocks.php:700
 msgid "Le bloc a été désactivé avec succès."
 msgstr "The block has been successfully deactivated."
 
-#: inc/blocks.php:700
+#: inc/blocks.php:706
 msgid "Le bloc a été supprimé avec succès."
 msgstr "The block was successfully removed."
 
-#: inc/blocks.php:728
+#: inc/blocks.php:734
 msgid "Désolé, vous n’êtes pas autorisé·e à activer ou à désactiver des blocs."
 msgstr "Sorry, you are not allowed to activate or deactivate blocks."
 
-#: inc/blocks.php:795
+#: inc/blocks.php:801
 msgid "Désolé, vous n’êtes pas autorisé·e à installer des blocs."
 msgstr "You are not allowed to install blocks."
 
-#: inc/blocks.php:806
+#: inc/blocks.php:812
 msgid "Désolé, le bloc à installer n’est pas enregistré dans l’Entrepôt."
 msgstr ""
 "Sorry, the block you want to install is not registered into the Entrepôt."
 
-#: inc/blocks.php:810
+#: inc/blocks.php:816
 msgid "Installation du bloc : %s"
 msgstr "Installing block: %s"
 
-#: inc/blocks.php:828
+#: inc/blocks.php:834
 msgid "Désolé, vous n’êtes pas autorisé·e à mettre à jour des blocs."
 msgstr "Sorry, you are not allowed to update blocks."
 
-#: inc/blocks.php:839
+#: inc/blocks.php:845
 msgid "Désolé, le bloc à mettre à jour n’est pas enregistré dans l’Entrepôt."
 msgstr ""
 "Sorry, the block you want to update is not registered into the Entrepôt."
 
-#: inc/blocks.php:843
+#: inc/blocks.php:849
 msgid "Mise à jour du bloc : %s"
 msgstr "Updating block %s"
 
-#: inc/blocks.php:861
+#: inc/blocks.php:867
 msgid "Désolé, vous n’êtes pas autorisé·e à supprimer des blocs."
 msgstr "You are not allowed to remove blocks."
 
-#: inc/blocks.php:869
+#: inc/blocks.php:875
 msgid "Erreur de suppression du bloc"
 msgstr "Error while trying to remove the block."
 
-#: inc/blocks.php:936
+#: inc/blocks.php:942
 msgid "Types de bloc"
 msgstr "Block types"
 
@@ -729,6 +729,3 @@ msgid "Erreur"
 msgid_plural "Erreurs"
 msgstr[0] "Error"
 msgstr[1] "Errors"
-
-#~ msgid "Limit response to blocks corresponding to the current tab."
-#~ msgstr "Limit response to blocks corresponding to the current tab."

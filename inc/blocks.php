@@ -294,6 +294,12 @@ function entrepot_register_block_types() {
 				esc_attr( $block_version ),
 				true
 			);
+
+			// Set script translations.
+			if ( isset( $block->translations->text_domain ) && isset( $block->translations->domain_path ) ) {
+				$translation_dir = trailingslashit( $block->path ) . untrailingslashit( ltrim( $block->translations->domain_path, '/' ) );
+				wp_set_script_translations( $block_args['editor_script'], $block->translations->text_domain, $translation_dir );
+			}
 		}
 
 		if ( isset( $block->render_callback ) && $block->render_callback && function_exists( $block->render_callback ) ) {
