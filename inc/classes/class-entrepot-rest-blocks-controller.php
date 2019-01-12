@@ -335,7 +335,7 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 	 */
 	protected function get_blocks( $tab = 'installed' ) {
 		$rest_blocks     = array();
-		$entrepot_blocks = entrepot_get_repositories( '', 'blocks' );
+		$entrepot_blocks = entrepot_get_block_repositories();
 
 		if ( ! $this->blocks ) {
 			$this->blocks = entrepot_get_blocks();

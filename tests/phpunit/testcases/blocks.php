@@ -81,4 +81,30 @@ class entrepot_Blocks_Tests extends WP_UnitTestCase {
 		$this->assertTrue( $release->is_update );
 		$this->assertTrue( '2.0.0' === $release->new_version );
 	}
+
+	/**
+	 * @group blocks
+	 * @group block_prs
+	 */
+	public function test_entrepot_get_block_repositories() {
+		$repositories = entrepot_get_block_repositories();
+		$slugs        = array();
+
+		foreach ( $repositories as $repository ) {
+			$this->assertNotEmpty( $repository->slug, 'The slug property of the block should be set.' );
+			$this->assertNotEmpty( $repository->author, 'The author property of the block should be set.' );
+			$this->assertNotEmpty( $repository->releases, 'The releases URL property of the block should be set.' );
+			$this->assertTrue(
+				rtrim( $repository->releases, '/' ) === 'https://github.com/' . $repository->author . '/' . $repository->slug . '/releases',
+				'The releases URL property should have this form https://github.com/{author}/{slug}/releases.'
+			);
+
+			$slugs[] = $repository->slug;
+			$this->assertTrue( file_exists( entrepot_repositories_dir( 'blocks' ) . $repository->slug . '.json' ), 'The slug property should be used as the json file name' );
+			$this->assertNotEmpty( $repository->description->en_US, 'An american (en_US) description should be provided for the block.' );
+			$this->assertNotEmpty( $repository->README, 'The README property of the block should be set.' );
+		}
+
+		$this->assertTrue( count( $repositories ) === count( array_unique( $slugs ) ), 'Block slugs should be unique, please choose another slug for your block.' );
+	}
 }

@@ -78,6 +78,18 @@ function entrepot_blocks_map_custom_caps( $caps = array(), $cap = '', $user_id =
 }
 
 /**
+ * Get a specific or all the Entrepôt registered block repositories.
+ *
+ * @since 1.5.0
+ *
+ * @param string        $block_slug The block slug of the requested block. Optional.
+ * @return array|object             The list of Entrepôt registered block repositories or a specific one.
+ */
+function entrepot_get_block_repositories( $block_slug = '' ) {
+	return entrepot_get_repositories( $block_slug, 'blocks' );
+}
+
+/**
  * Set a block's data from its block.json file.
  *
  * @since 1.5.0
