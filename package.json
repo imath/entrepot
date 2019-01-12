@@ -32,8 +32,8 @@
     "node": "~10.13.0"
   },
   "scripts": {
-    "start": "parcel watch src/*/*.js",
-    "build": "parcel build src/*/*.js",
+    "start": "parcel watch src/manage-block-types/index.js -d js --out-file manage-block-types.js",
+    "build": "parcel build src/manage-block-types/index.js -d js --out-file manage-block-types.min.js",
     "translate": "po2json languages/js/entrepot-en_US.po languages/js/entrepot-en_US-entrepot-manage-blocks.json -f jed"
   },
   "keywords": [
