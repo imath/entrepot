@@ -916,6 +916,8 @@ function entrepot_admin_blocks_load() {
 			.block.plugin-card .plugin-action-buttons a:not( .button ) {
 				text-decoration: none;
 				border: none;
+				padding-right: 20px;
+				display: inline-block;
 			}
 			.entrepot-blocks-loader {
 				width: 100%;

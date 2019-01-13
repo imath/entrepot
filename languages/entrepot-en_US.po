@@ -2,10 +2,10 @@
 # This file is distributed under the GNU/GPL 2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Entrepôt 1.5.0-beta1\n"
+"Project-Id-Version: Entrepôt 1.5.0\n"
 "Report-Msgid-Bugs-To: https://github.com/imath/entrepot/issues\n"
-"POT-Creation-Date: 2019-01-12 22:24:21+00:00\n"
-"PO-Revision-Date: 2019-01-12 23:29+0100\n"
+"POT-Creation-Date: 2019-01-13 23:04:37+00:00\n"
+"PO-Revision-Date: 2019-01-14 00:08+0100\n"
 "Last-Translator: imath <mathchristo@yahoo.fr>\n"
 "Language-Team: imath <contact@imathi.eu>\n"
 "Language: en_US\n"
@@ -293,7 +293,7 @@ msgstr "The manual Plugin versions management feature requires WordPress 4.9."
 #. Translators: %s is the Update notice bubble html
 #: inc/blocks.php:365
 msgid "Types de Bloc%s"
-msgstr "Block types"
+msgstr "Block types%s"
 
 #: inc/blocks.php:377
 msgid "Gestion des types de bloc"
@@ -405,7 +405,7 @@ msgstr "You are not allowed to remove blocks."
 msgid "Erreur de suppression du bloc"
 msgstr "Error while trying to remove the block."
 
-#: inc/blocks.php:942
+#: inc/blocks.php:944
 msgid "Types de bloc"
 msgstr "Block types"
 

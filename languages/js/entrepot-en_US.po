@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Entrepôt 1.5.0-beta1\n"
+"Project-Id-Version: Entrepôt 1.5.0\n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
 "Last-Translator: imath <mathchristo@yahoo.fr>\n"
