@@ -1,7 +1,10 @@
-## Please select a type for your pull request (PR)
+## What your pull request is about ?
 
-- [] My PR is about registering`*` a plugin repository.
-- [] My PR is about registering`*` a theme repository.
-- [] My PR is regular and is about the plugin's code improvement.
+<!-- Please choose only one of the option below. -->
 
-`*` Read the Plugin author's [documentation](https://github.com/imath/entrepot/wiki) for more information. By registering a plugin or a theme, I'm agreeing with the [code of conduct](https://github.com/imath/entrepot/blob/master/CODE_OF_CONDUCT.md).
+- [ ] it's about registering`*` a plugin repository.
+- [ ] it's about registering`*` a theme repository.
+- [ ] it's about registering`*` a block repository.
+- [ ] it's about the Entrepôt plugin's code improvement.
+
+`*` Read the Plugin author's [documentation](https://github.com/imath/entrepot/wiki) for more information. By registering a plugin, a theme or a block, I'm agreeing with the [code of conduct](https://github.com/imath/entrepot/blob/master/CODE_OF_CONDUCT.md).
