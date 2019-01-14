@@ -93,10 +93,8 @@
 	content: "\f182";
 	display: block;
 	font: normal 16px/20px dashicons;
-	speak: none;
 	height: 20px;
 	text-align: center;
-	vertical-align: top;
 	width: 20px;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
@@ -111,19 +109,24 @@
 .show-notice {
 	position: absolute;
 	top: -2px;
-	right: -30px;
+	right: -40px;
 	border: none;
 	margin: 0;
-	padding-left: 9px;
+	padding-left: 5px;
 	background: none;
 	color: #dc3232;
 	cursor: pointer;
 }
 
 .show-notice {
-	right: 10px;
+	right: -5px;
 	text-decoration: none;
 	color: #0073aa;
+}
+
+a.show-notice:focus {
+	outline: none;
+	box-shadow: none;
 }
 
 @media screen and ( max-width: 782px ) {

@@ -11,7 +11,7 @@ module.exports = function( grunt ) {
 			grunt: {
 				src: ['Gruntfile.js']
 			},
-			all: ['Gruntfile.js', 'js/*.js']
+			all: ['Gruntfile.js', 'js/*.js', '!js/manage-block-types*.js']
 		},
 		checktextdomain: {
 			options: {
@@ -40,8 +40,8 @@ module.exports = function( grunt ) {
 			}
 		},
 		clean: {
-			all: ['assets/*.min.css', 'js/*.min.js', 'assets/entrepot-plugins.min.json', 'assets/entrepot-themes.min.json'],
-			entrepot: ['assets/entrepot-plugins.min.json', 'assets/entrepot-themes.min.json']
+			all: ['assets/*.min.css', 'js/*.min.js', '!js/manage-block-types.min.js', 'assets/entrepot-plugins.min.json', 'assets/entrepot-themes.min.json', 'assets/entrepot-blocks.min.json'],
+			entrepot: ['assets/entrepot-plugins.min.json', 'assets/entrepot-themes.min.json', 'assets/entrepot-blocks.min.json']
 		},
 		makepot: {
 			target: {
@@ -65,7 +65,7 @@ module.exports = function( grunt ) {
 				extDot: 'last',
 				expand: true,
 				ext: '.min.js',
-				src: ['js/*.js', '!*.min.js']
+				src: ['js/*.js', '!js/*.min.js']
 			}
 		},
 		cssmin: {
@@ -73,7 +73,7 @@ module.exports = function( grunt ) {
 				extDot: 'last',
 				expand: true,
 				ext: '.min.css',
-				src: ['assets/*.css', '!*.min.css']
+				src: ['assets/*.css', '!assets/*.min.css']
 			}
 		},
 		jsvalidate:{
@@ -98,7 +98,8 @@ module.exports = function( grunt ) {
 			compile: {
 				files: {
 					'assets/entrepot-plugins.min.json': 'repositories/plugins/*.json',
-					'assets/entrepot-themes.min.json': 'repositories/themes/*.json'
+					'assets/entrepot-themes.min.json': 'repositories/themes/*.json',
+					'assets/entrepot-blocks.min.json': 'repositories/blocks/*.json'
 				}
 			}
 		},
@@ -109,6 +110,13 @@ module.exports = function( grunt ) {
 					'output'  : '<%= pkg.name %>.zip',
 					'tree-ish': 'HEAD@{0}'
 				}
+			}
+		},
+		exec: {
+			build_parcel: {
+				command: 'npm run build',
+				stdout: true,
+				stderr: true
 			}
 		}
 	} );
@@ -132,7 +140,7 @@ module.exports = function( grunt ) {
 
 	grunt.registerTask( 'compress', ['git-archive'] );
 
-	grunt.registerTask( 'release', ['checktextdomain', 'makepot', 'clean', 'jstest', 'shrink'] );
+	grunt.registerTask( 'release', ['checktextdomain', 'makepot', 'clean', 'jstest', 'shrink', 'exec'] );
 
 	// Travis CI Tasks.
 	grunt.registerTask( 'travis:build', ['jstest', 'checktextdomain', 'clean:entrepot', 'minjson', 'phpunit'] );

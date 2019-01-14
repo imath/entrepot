@@ -33,6 +33,28 @@ function entrepot_db_version() {
 }
 
 /**
+ * Gets the plugin's root path.
+ *
+ * @since 1.5.0
+ *
+ * @return string The plugin's root path.
+ */
+function entrepot_root_path() {
+	return entrepot()->dir;
+}
+
+/**
+ * Gets the plugin's root URL.
+ *
+ * @since 1.5.0
+ *
+ * @return string The plugin's root URL.
+ */
+function entrepot_root_url() {
+	return entrepot()->url;
+}
+
+/**
  * Gets the plugin's assets folder URL.
  *
  * @since 1.0.0
@@ -59,7 +81,7 @@ function entrepot_assets_dir() {
  *
  * @since 1.0.0
  *
- * @return The plugin's JS folder URL.
+ * @return String The plugin's JS folder URL.
  */
 function entrepot_js_url() {
 	return entrepot()->js_url;
@@ -120,6 +142,18 @@ function entrepot_repositories_dir( $type = 'plugins' ) {
 }
 
 /**
+ * Does the current site/network supports blocks.
+ *
+ * @since 1.5.0
+ *
+ * @return boolean True if the the current site/network supports blocks.
+ *                 False otherwise.
+ */
+function entrepot_block_supports() {
+	return entrepot()->block_supports;
+}
+
+/**
  * Loads translation.
  *
  * @since 1.0.0
@@ -150,24 +184,47 @@ function entrepot_setup_cache_group() {
  * @return array|object The list of repository objects or a single repository object.
  */
 function entrepot_get_repositories( $slug = '', $type = 'plugins' ) {
-	$repositories = wp_cache_get( $type, 'entrepot' );
+	$json = get_site_transient( "entrepot_registered_{$type}" );
 
-	if ( ! $repositories ) {
-		$src = sprintf( '%1$sentrepot-%2$s.min.json', entrepot_assets_dir(), $type );
+	if ( ! $json ) {
+		$file = sprintf( 'entrepot-%s.min.json', $type );
 
-		if ( ! file_exists( $src ) ) {
-			return array();
+		// Try to get distant repositories list.
+		if ( ! defined( 'PR_TESTING_ASSETS' ) ) {
+			$uri = 'https://api.github.com/repos/imath/entrepot/contents/assets/' . $file;
+
+			$request  = wp_remote_get( $uri, array(
+				'timeout'    => 30,
+				'user-agent' => 'Entrepôt/WordPress-Repositories-Fetcher; ' . get_bloginfo( 'url' ),
+			) );
+
+			if ( ! is_wp_error( $request ) && 200 === (int) wp_remote_retrieve_response_code( $request ) ) {
+				$dist_repos = json_decode( wp_remote_retrieve_body( $request ) );
+				$json       = base64_decode( $dist_repos->content );
+			}
 		}
 
-		$json         = file_get_contents( $src );
-		$repositories = json_decode( $json );
+		// Use local repositories by default.
+		if ( ! $json ) {
+			$src = sprintf( '%1$sentrepot-%2$s.min.json', entrepot_assets_dir(), $type );
 
-		if ( ! is_array( $repositories ) ) {
-			$repositories = array( $repositories );
+			if ( ! file_exists( $src ) ) {
+				return array();
+			}
+
+			$json = file_get_contents( $src );
 		}
 
-		// Cache repositories
-		wp_cache_add( $type, $repositories, 'entrepot' );
+		if ( ! empty( $json ) ) {
+			set_site_transient( "entrepot_registered_{$type}", $json, DAY_IN_SECONDS );
+		}
+	}
+
+	// Set repositories
+	$repositories = json_decode( $json );
+
+	if ( ! is_array( $repositories ) ) {
+		$repositories = array( $repositories );
 	}
 
 	if ( $slug ) {
@@ -286,6 +343,11 @@ function entrepot_get_repository_latest_stable_release( $atom_url = '', $reposit
 			} else {
 				$test_releases = $repository['slug'];
 			}
+
+			if ( 'block' === $type ) {
+				$test_releases = trailingslashit( 'blocks' ) . $test_releases;
+			}
+
 			$atom_url = trailingslashit( entrepot()->dir ) . 'tests/phpunit/assets/' . $test_releases;
 		} else {
 			return $tag_data;
@@ -321,9 +383,14 @@ function entrepot_get_repository_latest_stable_release( $atom_url = '', $reposit
 			'package'     => '',
 		);
 
-		if ( 'theme' === $type ) {
+		if ( 'theme' === $type || 'block' === $type ) {
 			unset( $response['plugin'] );
-			$response['theme'] = '';
+
+			if ( 'theme' === $type ) {
+				$response['theme'] = '';
+			} else {
+				$response['block'] = '';
+			}
 		}
 
 		if ( ! empty( $repository['Version'] ) ) {
@@ -347,6 +414,8 @@ function entrepot_get_repository_latest_stable_release( $atom_url = '', $reposit
 
 			if ( 'theme' === $type ) {
 				$response['theme'] = $repository['theme'];
+			} elseif ( 'block' === $type ) {
+				$response['block'] = $repository['block'];
 			} else {
 				$response['plugin'] = $repository['plugin'];
 			}
@@ -398,7 +467,7 @@ function entrepot_get_repository_latest_stable_release( $atom_url = '', $reposit
 			} else {
 				$tag_data->is_update = true;
 
-				$repository_data = entrepot_get_repositories( $response['slug'] );
+				$repository_data = entrepot_get_repositories( $response['slug'], $type . 's' );
 
 				if ( ! empty( $repository_data->icon ) ) {
 					$tag_data->icons = array( '1x' => esc_url_raw( $repository_data->icon ) );
@@ -825,4 +894,10 @@ function entrepot_rest_routes() {
 	// Plugins.
 	$controller = new Entrepot_REST_Plugins_Controller;
 	$controller->register_routes();
+
+	// Blocks
+	if ( entrepot_block_supports() ) {
+		$controller = new Entrepot_REST_Blocks_Controller;
+		$controller->register_routes();
+	}
 }

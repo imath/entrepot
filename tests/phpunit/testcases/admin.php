@@ -107,34 +107,6 @@ class entrepot_Admin_Tests extends WP_UnitTestCase {
 		set_current_screen( 'front' );
 	}
 
-	/**
-	 * @group cache
-	 */
-	public function test_entrepot_admin_updater() {
-		set_current_screen( 'dashboard' );
-
-		$db_version = entrepot_db_version();
-
-		$repositories = entrepot_get_repositories();
-		$this->assertSame( wp_cache_get( 'plugins', 'entrepot' ), $repositories );
-
-		do_action( 'entrepot_admin_init' );
-
-		// There was an upgrade, cache should be reset.
-		$this->assertFalse( wp_cache_get( 'plugins', 'entrepot' ) );
-
-		$repositories = entrepot_get_repositories();
-
-		do_action( 'entrepot_admin_init' );
-
-		// There was no upgrade, cache should not be reset.
-		$this->assertSame( wp_cache_get( 'plugins', 'entrepot' ), $repositories );
-
-		// Restore
-		set_current_screen( 'front' );
-		update_network_option( 0, '_entrepot_version', $db_version );
-	}
-
 	public function test_entrepot_all_installed_repositories_list() {
 		set_current_screen( 'dashboard' );
 

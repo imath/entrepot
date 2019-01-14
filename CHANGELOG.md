@@ -1,5 +1,32 @@
 # Change Log
 
+## 1.5.0
+
+_Requires WordPress 4.8_
+_Tested up to WordPress 5.1_
+
+### Features
+
+- Manage standalone Block Types from a specific Administration screen.
+  - handle Block Type installations
+  - handle Block Type updates
+  - handle Block Type activations
+  - handle Block Type deactivations
+  - handle Block Type deletions
+- Introduce a new Entrepôt Block Types API in order to use activated Block Types within the Block editor.
+- Introduce a distant way of getting registered repositories using the GitHub API.
+
+### Bug fixes
+
+- Fix PHPUnit7 failings in Travis
+
+### Newly Registered Block
+
+- [Formulaire de Recherche](https://github.com/imath/formulaire-de-recherche/)
+- [Entrepôt Test Block](https://github.com/imath/entrepot-test-block/) (Only loaded when `WP_DEBUG` is `true`)
+
+---
+
 ## 1.4.2
 
 _Requires WordPress 4.8_

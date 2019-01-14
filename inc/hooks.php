@@ -37,7 +37,7 @@ add_filter( 'all_plugins',     'entrepot_all_installed_repositories_list'       
 add_filter( 'plugin_row_meta', 'entrepot_plugin_row_meta',                10, 3 );
 add_action( 'in_admin_header', 'entrepot_catch_all_notices',               1    );
 
-// Enqueue scripts when needed
+// Enqueue scripts when needed.
 add_action( 'admin_enqueue_scripts', 'entrepot_admin_enqueue_scripts' );
 
 // Ease repositories identification
@@ -45,7 +45,7 @@ add_filter( 'extra_plugin_headers',     'entrepot_plugin_extra_header',    10, 1
 add_filter( 'extra_theme_headers',      'entrepot_theme_extra_header',     10, 1 );
 add_filter( 'wp_prepare_themes_for_js', 'entrepot_prepare_themes_for_js',  10, 1 );
 
-// Manage repository Updates
+// Manage repository Updates.
 add_action( 'set_site_transient_update_plugins', 'entrepot_update_plugin_repositories', 10, 1 );
 add_action( 'set_site_transient_update_themes',  'entrepot_update_theme_repositories',  10, 1 );
 
@@ -78,7 +78,7 @@ add_filter( 'customize_load_themes', 'entrepot_customize_load_themes', 10, 2 );
  */
 function entrepot_plugins_code_editor_restrictions() {
 	/**
-	 * Filter here returning false to disable these restrictions
+	 * Filter here returning false to disable these restrictions.
 	 *
 	 * @since 1.2.0
 	 *
@@ -95,5 +95,5 @@ function entrepot_plugins_code_editor_restrictions() {
 }
 add_action( 'entrepot_admin_init', 'entrepot_plugins_code_editor_restrictions' );
 
-// Load translations
+// Load translations.
 add_action( 'plugins_loaded', 'entrepot_load_textdomain', 9 );

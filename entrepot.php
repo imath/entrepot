@@ -2,8 +2,8 @@
 /**
  * Plugin Name: Entrepôt
  * Plugin URI: https://github.com/imath/entrepot/
- * Description: Une liste d'extensions et thèmes gratuits hébergés sur GitHub.com.
- * Version: 1.4.2
+ * Description: Une liste d'extensions, de blocs et de thèmes gratuits hébergés sur GitHub.com.
+ * Version: 1.5.0
  * Requires at least: 4.8
  * Tested up to: 5.0
  * License: GNU/GPL 2
@@ -69,7 +69,7 @@ final class Entrepot {
 	 */
 	private function globals() {
 		// Version
-		$this->version = '1.4.2';
+		$this->version = '1.5.0';
 
 		// Domain
 		$this->domain = 'entrepot';
@@ -92,6 +92,9 @@ final class Entrepot {
 
 		// Plugins upgrade tasks.
 		$this->upgrades = array();
+
+		// Block supports
+		$this->block_supports = function_exists( 'render_block' );
 	}
 
 	/**
@@ -104,6 +107,10 @@ final class Entrepot {
 
 		require $this->inc_dir . 'functions.php';
 		require $this->inc_dir . 'customizer.php';
+
+		if ( $this->block_supports ) {
+			require $this->inc_dir . 'blocks.php';
+		}
 
 		if ( is_admin() ) {
 			require $this->inc_dir . 'admin.php';

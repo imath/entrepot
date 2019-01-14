@@ -32,6 +32,18 @@ function entrepot_admin_updater() {
 		wp_cache_delete( 'repositories', 'entrepot' );
 	}
 
+	if ( 1.5 === (float) entrepot_version() ) {
+		$blocks_dir = entrepot_blocks_dir();
+		$index_file = trailingslashit( $blocks_dir ) . 'index.php';
+
+		// Create the wp-content/blocks directory.
+		if ( ! file_exists( $index_file ) && wp_mkdir_p( $blocks_dir ) ) {
+			$f = fopen( $index_file, 'w' );
+			fwrite( $f, "<?php\n// Silence is golden.\n" );
+			fclose( $f );
+		}
+	}
+
 	// Update Entrepôt version.
 	update_network_option( 0, '_entrepot_version', entrepot_version() );
 }
@@ -298,7 +310,7 @@ function entrepot_admin_add_menu() {
 
 	if ( $entrepot->upgrades ) {
 		$screens['upgrades'] = array(
-			'page_hook' =>add_plugins_page(
+			'page_hook' => add_plugins_page(
 				__( 'Mise à niveau des Extensions', 'entrepot' ),
 				__( 'Mettre à niveau', 'entrepot' ),
 				'install_plugins',
@@ -314,6 +326,10 @@ function entrepot_admin_add_menu() {
 	}
 
 	foreach ( $screens as $screen ) {
+		if ( ! isset( $screen['load_callback'] ) || ! $screen['load_callback'] ) {
+			continue;
+		}
+
 		add_action( 'load-' . $screen['page_hook'], $screen['load_callback'] );
 	}
 }
@@ -535,7 +551,6 @@ function entrepot_repositories_api( $res = false, $action = '', $args = null ) {
 			), 'plugin' );
 		}
 
-	// @todo merge this statement with previous one.
 	} elseif ( 'theme_information' === $action && ! empty( $args->slug ) ) {
 		$json = entrepot_get_repository_json( $args->slug, 'themes' );
 
@@ -546,6 +561,17 @@ function entrepot_repositories_api( $res = false, $action = '', $args = null ) {
 				'Version'           => 'latest',
 				'GitHub Theme URI' => str_replace( '/releases', '', $json->releases ),
 			), 'theme' );
+		}
+	} elseif ( 'block_information' === $action && ! empty( $args->slug ) ) {
+		$json = entrepot_get_repository_json( $args->slug, 'blocks' );
+
+		if ( $json && $json->releases ) {
+			$res = entrepot_get_repository_latest_stable_release( $json->releases, array(
+				'block'             => $json->name,
+				'slug'              => $args->slug,
+				'Version'           => 'latest',
+				'GitHub Block URI' => str_replace( '/releases', '', $json->releases ),
+			), 'block' );
 		}
 	}
 
@@ -743,7 +769,7 @@ function entrepot_admin_repository_iframe( $args = array() ) {
 					$repository_info = wp_remote_retrieve_body( $request );
 					$parsedown       = new Parsedown();
 					$r['text']       = $parsedown->text( $repository_info );
-					$r['result']       = 'success';
+					$r['result']     = 'success';
 				}
 			}
 		}
@@ -850,7 +876,12 @@ function entrepot_admin_repository_iframe( $args = array() ) {
  * @return array        The changelog section attributes.
  */
 function entrepot_admin_get_changelog_section( $slug, $type = 'plugins' ) {
-	$repository_updates = get_site_transient( 'update_' . $type );
+	$transient_key = 'update_' . $type;
+	if ( 'blocks' === $type ) {
+		$transient_key = 'entrepot_update_blocks';
+	}
+
+	$repository_updates = get_site_transient( $transient_key );
 	$args = array();
 
 	if ( empty( $repository_updates->response ) ) {
@@ -1147,7 +1178,7 @@ function entrepot_catch_all_notices() {
 				 * is different at every page load.
 				 */
 				if ( is_array( $hook_data['function'] ) ) {
-					$class = get_class( $hook_data['function'][0] );
+					$class = $hook_data['function'][0];
 					$n_key = $class . '::' . $hook_data['function'][1];
 				}
 

@@ -1,43 +1,43 @@
-# Copyright (C) 2018 imath
+# Copyright (C) 2019 imath
 # This file is distributed under the GNU/GPL 2.
 msgid ""
 msgstr ""
-"Project-Id-Version: Entrepôt 1.4.2\n"
+"Project-Id-Version: Entrepôt 1.5.0\n"
 "Report-Msgid-Bugs-To: https://github.com/imath/entrepot/issues\n"
-"POT-Creation-Date: 2018-12-09 06:48:03+00:00\n"
+"POT-Creation-Date: 2019-01-13 23:04:37+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2018-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2019-MO-DA HO:MI+ZONE\n"
 "Last-Translator: imath <contact@imathi.eu>\n"
 "Language-Team: FRENCH <contact@imathi.eu>\n"
 "X-Generator: grunt-wp-i18n1.0.2\n"
 
-#: inc/admin.php:102
+#: inc/admin.php:114
 msgid "Plus d'informations sur %s"
 msgstr ""
 
-#: inc/admin.php:236 inc/admin.php:935
+#: inc/admin.php:248 inc/admin.php:966
 msgid "Vous n'êtes pas autorisé à réaliser cette action."
 msgstr ""
 
-#: inc/admin.php:242
+#: inc/admin.php:254
 msgid "Un problème est survenu lors de la récupération des dépôts de plugin."
 msgstr ""
 
-#: inc/admin.php:267 inc/admin.php:268 inc/admin.php:288 inc/admin.php:289
+#: inc/admin.php:279 inc/admin.php:280 inc/admin.php:300 inc/admin.php:301
 msgid "Dépôts"
 msgstr ""
 
-#: inc/admin.php:277 inc/admin.php:278 inc/admin.php:1536
+#: inc/admin.php:289 inc/admin.php:290 inc/admin.php:1567
 msgid "Gestion des versions"
 msgstr ""
 
-#: inc/admin.php:302
+#: inc/admin.php:314
 msgid "Mise à niveau des Extensions"
 msgstr ""
 
-#: inc/admin.php:303 inc/admin.php:1409
+#: inc/admin.php:315 inc/admin.php:1440
 msgid "Mettre à niveau"
 msgstr ""
 
@@ -45,149 +45,149 @@ msgstr ""
 msgid "Entrepôt"
 msgstr ""
 
-#: inc/admin.php:450
+#: inc/admin.php:466
 msgid "Afficher les détails"
 msgstr ""
 
-#: inc/admin.php:451
+#: inc/admin.php:467
 msgid "Détails"
 msgstr ""
 
-#: inc/admin.php:566
+#: inc/admin.php:592
 msgid "Liste des dépôts"
 msgstr ""
 
-#: inc/admin.php:586
+#: inc/admin.php:612
 msgid "Installer maintenant"
 msgstr ""
 
-#: inc/admin.php:586
+#: inc/admin.php:612 inc/classes/class-entrepot-rest-blocks-controller.php:227
 msgid "Installer"
 msgstr ""
 
-#: inc/admin.php:589
+#: inc/admin.php:615
 msgid "Mettre à jour maintenant"
 msgstr ""
 
-#: inc/admin.php:589
+#: inc/admin.php:615 inc/classes/class-entrepot-rest-blocks-controller.php:168
 msgid "Mettre à jour"
 msgstr ""
 
-#: inc/admin.php:592
+#: inc/admin.php:618
 msgid "Activer sur le réseau"
 msgstr ""
 
-#: inc/admin.php:592
+#: inc/admin.php:618 inc/classes/class-entrepot-rest-blocks-controller.php:211
 msgid "Activer"
 msgstr ""
 
-#: inc/admin.php:595
+#: inc/admin.php:621
 msgid "Actif"
 msgstr ""
 
-#: inc/admin.php:598
+#: inc/admin.php:624
 msgid "Installé"
 msgstr ""
 
-#: inc/admin.php:604
+#: inc/admin.php:630
 msgid "Plus de détails"
 msgstr ""
 
-#: inc/admin.php:619 inc/admin.php:1097
+#: inc/admin.php:645 inc/admin.php:1128
 msgid "Dépendance(s) insatisfaite(s):"
 msgstr ""
 
-#: inc/admin.php:677
+#: inc/admin.php:703
 msgid "Détails du dépôt"
 msgstr ""
 
-#: inc/admin.php:687
+#: inc/admin.php:713
 msgid ""
 "Désolé, les détails concernant ce dépôt ne sont pas disponibles pour le "
 "moment."
 msgstr ""
 
-#: inc/admin.php:697
+#: inc/admin.php:723
 msgid "Faire une donation"
 msgstr ""
 
-#: inc/admin.php:698
+#: inc/admin.php:724
 msgid "Voir l'historique"
 msgstr ""
 
-#: inc/admin.php:699
+#: inc/admin.php:725
 msgid "Lire la documentation"
 msgstr ""
 
-#: inc/admin.php:726
+#: inc/admin.php:752
 msgid "Présentation"
 msgstr ""
 
-#: inc/admin.php:794
+#: inc/admin.php:820
 msgid "Rapporter une anomalie"
 msgstr ""
 
-#: inc/admin.php:799
+#: inc/admin.php:825
 msgid "Contribuer"
 msgstr ""
 
-#: inc/admin.php:810 inc/admin.php:1000
+#: inc/admin.php:836 inc/admin.php:1031
 msgid "Voir sur GitHub"
 msgstr ""
 
-#: inc/admin.php:813
+#: inc/admin.php:839
 msgid "Plus d'actions"
 msgstr ""
 
-#: inc/admin.php:833 inc/admin.php:996
+#: inc/admin.php:859 inc/admin.php:1027
 msgid "Signaler"
 msgstr ""
 
-#: inc/admin.php:872
+#: inc/admin.php:903
 msgid "Détails de la mise à jour"
 msgstr ""
 
-#: inc/admin.php:881
+#: inc/admin.php:912
 msgid ""
 "Désolé ce dépôt n'a pas inclu d'informations de mise à jour pour cette "
 "version."
 msgstr ""
 
-#: inc/admin.php:936
+#: inc/admin.php:967
 msgid "Accès interdit."
 msgstr ""
 
-#: inc/admin.php:1219
+#: inc/admin.php:1250
 msgid "%d extension nécessite une mise à niveau"
 msgid_plural "%d extensions nécessitent une mise à niveau."
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/admin.php:1220
+#: inc/admin.php:1251
 msgid ""
 "Merci de visiter la page d'administration des %s pour effecuer les "
 "opérations nécessaires."
 msgstr ""
 
-#: inc/admin.php:1222
+#: inc/admin.php:1253
 msgid "mises à niveau"
 msgstr ""
 
-#: inc/admin.php:1238
+#: inc/admin.php:1269
 msgid "<span class=\"count\">%d</span> Alerte"
 msgid_plural "<span class=\"count\">%d</span> Alertes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/admin.php:1261
+#: inc/admin.php:1292
 msgid "Ne plus afficher cette alerte"
 msgstr ""
 
-#: inc/admin.php:1262
+#: inc/admin.php:1293
 msgid "Ouvrir la notice."
 msgstr ""
 
-#: inc/admin.php:1280
+#: inc/admin.php:1311
 msgid ""
 "Voici votre nouveau gestionnaires d'alertes. Toutes vos prochaines alertes "
 "s'y afficheront. Les alertes d'information ou d'erreur peuvent être "
@@ -196,80 +196,195 @@ msgid ""
 "indésirables."
 msgstr ""
 
-#: inc/admin.php:1304
+#: inc/admin.php:1335
 msgid "La mise à niveau a été interrompue en raison d'une erreur."
 msgstr ""
 
-#: inc/admin.php:1317
+#: inc/admin.php:1348
 msgid "Vous n'êtes pas autorisé à réaliser cette mise à niveau."
 msgstr ""
 
-#: inc/admin.php:1322
+#: inc/admin.php:1353
 msgid "La fonction de mise à niveau pour cette tâche est inexistante."
 msgstr ""
 
-#: inc/admin.php:1355
+#: inc/admin.php:1386
 msgid "%d tâche de mise à niveau à effectuer."
 msgid_plural "%d tâches de mise à niveau à effectuer."
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/admin.php:1383
+#: inc/admin.php:1414
 msgid "Mis à niveau"
 msgstr ""
 
-#: inc/admin.php:1384
+#: inc/admin.php:1415
 msgid ""
 "Attention, vous ne pourrez pas faire machine arrière à moins d'avoir fait "
 "une sauvegarde de votre base de données. Souhaitez-vous poursuivre ?"
 msgstr ""
 
-#: inc/admin.php:1389
+#: inc/admin.php:1420
 msgid "Mise à niveau"
 msgid_plural "Mises à niveau"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/admin.php:1392
+#: inc/admin.php:1423
 msgid "Aucune opération de mise à niveau à réaliser."
 msgstr ""
 
-#: inc/admin.php:1395
+#: inc/admin.php:1426
 msgid ""
 "Une fois votre base de données sauvegardée, utilisez le bouton de Mise à "
 "niveau pour procéder aux opérations correspondantes."
 msgstr ""
 
-#: inc/admin.php:1437
+#: inc/admin.php:1468
 msgid ""
 "Dans WordPress les packages sont au format ZIP, merci de sélectionner ce "
 "type de fichier"
 msgstr ""
 
-#: inc/admin.php:1438
+#: inc/admin.php:1469
 msgid "Erreur inconnue, merci de renouveler un peu plus tard"
 msgstr ""
 
-#: inc/admin.php:1473
+#: inc/admin.php:1504
 msgid "Vue d’ensemble"
 msgstr ""
 
-#: inc/admin.php:1475
+#: inc/admin.php:1506
 msgid ""
 "Depuis cet écran vous pouvez manuellement administrer les versions "
 "installées pour vos extensions. Vous pouvez mettre à jour ou revenir à une "
 "version plus ancienne chacune des extensions listées."
 msgstr ""
 
-#: inc/admin.php:1476
+#: inc/admin.php:1507
 msgid ""
 "Pour cela, il suffit de cliquer sur le bouton indiquant la version actuelle "
 "de l'extension afin de sélectionner depuis votre appareil l'archive ZIP "
 "contenant la version de remplacement."
 msgstr ""
 
-#: inc/admin.php:1493
+#: inc/admin.php:1524
 msgid "La gestion manuelle des versions des extensions nécessite WordPress 4.9."
+msgstr ""
+
+#: inc/blocks.php:365
+#. Translators: %s is the Update notice bubble html
+msgid "Types de Bloc%s"
+msgstr ""
+
+#: inc/blocks.php:377
+msgid "Gestion des types de bloc"
+msgstr ""
+
+#: inc/blocks.php:402
+msgid "Types de Bloc"
+msgstr ""
+
+#: inc/blocks.php:439
+msgid "Ce bloc n’est pas enregistré dans l’Entrepôt, désolé."
+msgstr ""
+
+#: inc/blocks.php:502
+msgid "Le type de bloc n’est pas installé."
+msgstr ""
+
+#: inc/blocks.php:506
+msgid "Le type de bloc est déjà activé."
+msgstr ""
+
+#: inc/blocks.php:518
+msgid "Le bloc a généré un affichage inattendu."
+msgstr ""
+
+#: inc/blocks.php:578
+msgid "Le bloc n’a pas été trouvé. Il ne semble pas être installé."
+msgstr ""
+
+#: inc/blocks.php:585
+msgid "Le bloc est activé. Merci de le désactiver avant de le supprimer."
+msgstr ""
+
+#: inc/blocks.php:619
+msgid "Impossible de se connecter au système de fichiers."
+msgstr ""
+
+#: inc/blocks.php:623
+msgid "Erreur du système de fichiers."
+msgstr ""
+
+#: inc/blocks.php:630 inc/classes/class-entrepot-block-upgrader.php:314
+msgid "Le dossier des blocs de l’Entrepôt n’a pu être localisé."
+msgstr ""
+
+#: inc/blocks.php:644
+msgid "Une erreur inconnue est survenue lors de la suppression du bloc."
+msgstr ""
+
+#: inc/blocks.php:673
+msgid ""
+"Le bloc a généré un affichage inattendu de %d caractère(s) et n’a pas été "
+"activé."
+msgstr ""
+
+#: inc/blocks.php:686
+msgid "Le bloc a généré une erreur fatale et n’a pas été activé."
+msgstr ""
+
+#: inc/blocks.php:695
+msgid "Le bloc a été activé avec succès."
+msgstr ""
+
+#: inc/blocks.php:700
+msgid "Le bloc a été désactivé avec succès."
+msgstr ""
+
+#: inc/blocks.php:706
+msgid "Le bloc a été supprimé avec succès."
+msgstr ""
+
+#: inc/blocks.php:734
+msgid "Désolé, vous n’êtes pas autorisé·e à activer ou à désactiver des blocs."
+msgstr ""
+
+#: inc/blocks.php:801
+msgid "Désolé, vous n’êtes pas autorisé·e à installer des blocs."
+msgstr ""
+
+#: inc/blocks.php:812
+msgid "Désolé, le bloc à installer n’est pas enregistré dans l’Entrepôt."
+msgstr ""
+
+#: inc/blocks.php:816
+msgid "Installation du bloc : %s"
+msgstr ""
+
+#: inc/blocks.php:834
+msgid "Désolé, vous n’êtes pas autorisé·e à mettre à jour des blocs."
+msgstr ""
+
+#: inc/blocks.php:845
+msgid "Désolé, le bloc à mettre à jour n’est pas enregistré dans l’Entrepôt."
+msgstr ""
+
+#: inc/blocks.php:849
+msgid "Mise à jour du bloc : %s"
+msgstr ""
+
+#: inc/blocks.php:867
+msgid "Désolé, vous n’êtes pas autorisé·e à supprimer des blocs."
+msgstr ""
+
+#: inc/blocks.php:875
+msgid "Erreur de suppression du bloc"
+msgstr ""
+
+#: inc/blocks.php:944
+msgid "Types de bloc"
 msgstr ""
 
 #: inc/classes/class-entrepot-atom.php:64
@@ -291,6 +406,175 @@ msgstr ""
 #: inc/classes/class-entrepot-atom.php:140
 #. translators: do not translate this string, WordPress already handles it.
 msgid "Erreur XML durant l'analyse."
+msgstr ""
+
+#: inc/classes/class-entrepot-block-installer-skin.php:66
+msgid "Le bloc %1$s %2$s a été installé avec succès."
+msgstr ""
+
+#: inc/classes/class-entrepot-block-installer-skin.php:85
+#: inc/classes/class-entrepot-block-upgrader-skin.php:82
+msgid "Activer le bloc"
+msgstr ""
+
+#: inc/classes/class-entrepot-block-installer-skin.php:91
+#: inc/classes/class-entrepot-block-upgrader-skin.php:88
+msgid "Revenir à l’administration des blocs"
+msgstr ""
+
+#: inc/classes/class-entrepot-block-upgrader-skin.php:73
+msgid "Progression de la mise à jour du bloc"
+msgstr ""
+
+#: inc/classes/class-entrepot-block-upgrader.php:44
+msgid "Le bloc a été mis à jour pour sa version la plus récente."
+msgstr ""
+
+#: inc/classes/class-entrepot-block-upgrader.php:45
+msgid "L’archive du paquet de la mise à jour n’est pas disponible."
+msgstr ""
+
+#: inc/classes/class-entrepot-block-upgrader.php:47
+#. translators: %s: package URL
+msgid "Téléchargement de la mise à jour depuis %s..."
+msgstr ""
+
+#: inc/classes/class-entrepot-block-upgrader.php:48
+msgid "Décompression en cours de la mise à jour..."
+msgstr ""
+
+#: inc/classes/class-entrepot-block-upgrader.php:49
+msgid "Suppression de la précédente version du bloc..."
+msgstr ""
+
+#: inc/classes/class-entrepot-block-upgrader.php:50
+msgid "La suppression de la précédente version du bloc a échoué."
+msgstr ""
+
+#: inc/classes/class-entrepot-block-upgrader.php:51
+msgid "La mise à jour du bloc a échoué."
+msgstr ""
+
+#: inc/classes/class-entrepot-block-upgrader.php:52
+msgid "Mise à jour du bloc effectuée avec succès."
+msgstr ""
+
+#: inc/classes/class-entrepot-block-upgrader.php:63
+msgid "L’archive du paquet d’installation n’est pas disponible."
+msgstr ""
+
+#: inc/classes/class-entrepot-block-upgrader.php:65
+#. translators: %s: package URL
+msgid "Téléchargement du paquet d’installation depuis %s..."
+msgstr ""
+
+#: inc/classes/class-entrepot-block-upgrader.php:66
+msgid "Décompression en cours du paquet d’installation..."
+msgstr ""
+
+#: inc/classes/class-entrepot-block-upgrader.php:67
+msgid "Installation du bloc en cours..."
+msgstr ""
+
+#: inc/classes/class-entrepot-block-upgrader.php:68
+msgid "Le paquet d’installation ne contient aucun fichier."
+msgstr ""
+
+#: inc/classes/class-entrepot-block-upgrader.php:69
+msgid "L’installation du bloc a échoué."
+msgstr ""
+
+#: inc/classes/class-entrepot-block-upgrader.php:70
+msgid "L’installation du bloc effectuée avec succès."
+msgstr ""
+
+#: inc/classes/class-entrepot-block-upgrader.php:239
+msgid "Aucun bloc valide n’a été trouvé."
+msgstr ""
+
+#: inc/classes/class-entrepot-rest-blocks-controller.php:97
+msgid "Aucun type de bloc disponible."
+msgstr ""
+
+#: inc/classes/class-entrepot-rest-blocks-controller.php:148
+msgid "Supprimer"
+msgstr ""
+
+#: inc/classes/class-entrepot-rest-blocks-controller.php:150
+msgid ""
+"Êtes-vous certain·e de vouloir supprimer ce bloc ? Cette action ne peut "
+"être annulée."
+msgstr ""
+
+#: inc/classes/class-entrepot-rest-blocks-controller.php:173
+msgid "Notes de version"
+msgstr ""
+
+#: inc/classes/class-entrepot-rest-blocks-controller.php:198
+msgid "Désactiver"
+msgstr ""
+
+#: inc/classes/class-entrepot-rest-blocks-controller.php:325
+msgid "Aucune description fournie."
+msgstr ""
+
+#: inc/classes/class-entrepot-rest-blocks-controller.php:420
+msgid ""
+"Un identifiant alphanumérique unique par rapport au nom de l’auteur et du "
+"type de bloc."
+msgstr ""
+
+#: inc/classes/class-entrepot-rest-blocks-controller.php:426
+msgid ""
+"Un identifiant alphanumérique unique par rapport à la terminaison de l’URL "
+"GitHub du type de bloc."
+msgstr ""
+
+#: inc/classes/class-entrepot-rest-blocks-controller.php:432
+msgid "Le nom du type de bloc."
+msgstr ""
+
+#: inc/classes/class-entrepot-rest-blocks-controller.php:438
+msgid "Le nom d’utilisateur GitHub de l’auteur du type de bloc."
+msgstr ""
+
+#: inc/classes/class-entrepot-rest-blocks-controller.php:444
+msgid "L’URL vers le fichier image de l’icône représentant le type de bloc."
+msgstr ""
+
+#: inc/classes/class-entrepot-rest-blocks-controller.php:449
+msgid "La liste des étiquettes qui caractérisent le type de bloc."
+msgstr ""
+
+#: inc/classes/class-entrepot-rest-blocks-controller.php:457
+msgid ""
+"Une liste d’objets ayant pour nom de propriété le nom de la fonction "
+"requise et pour valeur de propriété le nom de la version de WordPress de "
+"l’extension ou du thème correspondant pour le type de bloc."
+msgstr ""
+
+#: inc/classes/class-entrepot-rest-blocks-controller.php:465
+msgid "L’URL vers la liste des versions disponibles pour le type de bloc."
+msgstr ""
+
+#: inc/classes/class-entrepot-rest-blocks-controller.php:470
+msgid ""
+"Un object ayant pour noms de propriété les locales disponibles et valeurs "
+"la description correspondante pour le type de bloc."
+msgstr ""
+
+#: inc/classes/class-entrepot-rest-blocks-controller.php:475
+msgid "L’URL vers le fichier README.md du dépôt GitHub du type de bloc."
+msgstr ""
+
+#: inc/classes/class-entrepot-rest-blocks-controller.php:480
+msgid ""
+"Un object ayant pour noms de propriété les sections d’information "
+"disponibles et leurs URLs correspondantes pour le type de bloc."
+msgstr ""
+
+#: inc/classes/class-entrepot-rest-blocks-controller.php:503
+msgid "Limiter les blocks retournés à ceux qui correspondent à l’onglet actif."
 msgstr ""
 
 #: inc/classes/class-entrepot-rest-plugins-controller.php:74
@@ -363,7 +647,9 @@ msgid "https://github.com/imath/entrepot/"
 msgstr ""
 
 #. Description of the plugin/theme
-msgid "Une liste d'extensions et thèmes gratuits hébergés sur GitHub.com."
+msgid ""
+"Une liste d'extensions, de blocs et de thèmes gratuits hébergés sur "
+"GitHub.com."
 msgstr ""
 
 #. Author of the plugin/theme
@@ -374,33 +660,33 @@ msgstr ""
 msgid "https://imathi.eu/"
 msgstr ""
 
-#: inc/admin.php:360
+#: inc/admin.php:376
 msgctxt "plugin"
 msgid "De %s"
 msgstr ""
 
-#: inc/admin.php:1243
+#: inc/admin.php:1274
 msgctxt "Admin Notices Center tab"
 msgid "Mise à niveau"
 msgid_plural "Mises à niveau"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/admin.php:1248
+#: inc/admin.php:1279
 msgctxt "Admin Notices Center tab"
 msgid "Info"
 msgid_plural "Infos"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/admin.php:1253
+#: inc/admin.php:1284
 msgctxt "Admin Notices Center tab"
 msgid "Succès"
 msgid_plural "Succès"
 msgstr[0] ""
 msgstr[1] ""
 
-#: inc/admin.php:1258
+#: inc/admin.php:1289
 msgctxt "Admin Notices Center tab"
 msgid "Erreur"
 msgid_plural "Erreurs"

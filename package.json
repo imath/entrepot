@@ -5,6 +5,9 @@
   },
   "description": "Store your free WordPress plugins and themes into the Entrepôt.",
   "devDependencies": {
+    "@babel/core": "^7.1.0",
+    "@wordpress/babel-plugin-makepot": "^2.1.2",
+    "@wordpress/babel-preset-default": "^2.1.0",
     "grunt": "^1.0.3",
     "grunt-check-dependencies": "~0.12.0",
     "grunt-checktextdomain": "~1.0.1",
@@ -21,10 +24,17 @@
     "grunt-legacy-util": "^1.1.1",
     "grunt-minjson": "~0.4.0",
     "grunt-wp-i18n": "^1.0.2",
-    "matchdep": "~1.0.1"
+    "matchdep": "~1.0.1",
+    "parcel-bundler": "^1.10.3",
+    "po2json": "^1.0.0-alpha"
   },
   "engines": {
-    "node": "~6.6.0"
+    "node": "~10.13.0"
+  },
+  "scripts": {
+    "start": "parcel watch src/manage-block-types/index.js -d js --out-file manage-block-types.js",
+    "build": "parcel build src/manage-block-types/index.js -d js --out-file manage-block-types.min.js",
+    "translate": "po2json languages/js/entrepot-en_US.po languages/js/entrepot-en_US-entrepot-manage-blocks.json -f jed"
   },
   "keywords": [
     "plugins",
@@ -37,5 +47,8 @@
     "type": "git",
     "url": "https://github.com/imath/entrepot.git"
   },
-  "version": "1.4.2"
+  "version": "1.5.0",
+  "dependencies": {
+    "@babel/runtime-corejs2": "^7.2.0"
+  }
 }

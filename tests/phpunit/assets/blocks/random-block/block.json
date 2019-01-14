@@ -1,0 +1,22 @@
+{
+    "name": "Random Block",
+    "author": "imath",
+    "github_url": "https://github.com/imath/random-block.git",
+    "version": "1.0.0",
+    "editor_script": {
+        "handle": "random-block",
+        "relative_path"  : "dist/index.js",
+        "dependencies": [
+            "wp-blocks",
+            "wp-element"
+        ]
+    },
+    "editor_style": {
+        "handle": "random-block",
+        "relative_path"  : "css/style.css",
+        "dependencies": []
+    },
+    "style": {},
+    "render_callback"  : "random-block_render_callback",
+    "php_relative_path": "lib/functions.php"
+}
