@@ -11,46 +11,6 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Gets the full path to the standalone blocks repository.
- *
- * @since 1.5.0
- *
- * @return string Full path to the standalone blocks repository.
- */
-function entrepot_blocks_dir() {
-	$blocks_dir = trailingslashit( WP_CONTENT_DIR ) . 'blocks';
-
-	/**
-	 * Use this filter to use another repository for standalone blocks.
-	 *
-	 * @since 1.5.0
-	 *
-	 * @param  string  $blocks_dir The repository name of standalone blocks.
-	 */
-	return apply_filters( 'entrepot_installed_blocks_dir', $blocks_dir );
-}
-
-/**
- * Gets the root url for standalone blocks.
- *
- * @since 1.5.0
- *
- * @return string The root url standalone blocks.
- */
-function entrepot_blocks_url() {
-	$blocks_url = trailingslashit( content_url( 'blocks' ) );
-
-	/**
-	 * Use this filter to use another url for standalone blocks.
-	 *
-	 * @since 1.5.0
-	 *
-	 * @param  string  $blocks_url The root url standalone blocks.
-	 */
-	return apply_filters( 'entrepot_blocks_url', $blocks_url );
-}
-
-/**
  * Map custom caps to existing WordPress caps.
  *
  * @since 1.5.0
