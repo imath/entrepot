@@ -1,5 +1,21 @@
 # Change Log
 
+## 1.5.1
+
+_Requires WordPress 4.8_
+_Tested up to WordPress 5.1_
+
+### Bug fixes
+
+- Make sure `entrepot_blocks_dir()` is available even if WordPress version < 5.0
+- Do not include `.babelrc` in built package.
+
+### Props
+
+@gregoirenoyelle
+
+---
+
 ## 1.5.0
 
 _Requires WordPress 4.8_
