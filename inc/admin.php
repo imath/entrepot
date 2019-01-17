@@ -1178,7 +1178,12 @@ function entrepot_catch_all_notices() {
 				 * is different at every page load.
 				 */
 				if ( is_array( $hook_data['function'] ) ) {
-					$class = $hook_data['function'][0];
+					if ( is_object( $hook_data['function'][0] ) ) {
+						$class = get_class( $hook_data['function'][0] );
+					} else {
+						$class = $hook_data['function'][0];
+					}
+
 					$n_key = $class . '::' . $hook_data['function'][1];
 				}
 
