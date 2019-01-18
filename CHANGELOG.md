@@ -1,5 +1,20 @@
 # Change Log
 
+## 1.5.2
+
+_Requires WordPress 4.8_
+_Tested up to WordPress 5.1_
+
+### Bug fixes
+
+- Check if the hook is a regular function or a class when dealing with admin notices.
+
+### Props
+
+@gregoirenoyelle
+
+---
+
 ## 1.5.1
 
 _Requires WordPress 4.8_
