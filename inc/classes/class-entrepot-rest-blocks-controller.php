@@ -268,7 +268,7 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 
 			if ( in_array( $property, array( 'icon', 'releases', 'README', 'urls' ) ) ) {
 				if ( 'urls' === $property ) {
-					foreach ( $property as $property_key => $property_value ) {
+					foreach ( (array) $property as $property_key => $property_value ) {
 						$block[ $property ]->{$property_key} = esc_url_raw( $property_value );
 					}
 				} else {
@@ -282,7 +282,7 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 
 				$block[ $property ] = strip_tags( $property_value );
 			} elseif ( 'tags' === $property ) {
-				$block[ $property ] = array_map( 'santize_text_field', $block[ $property ] );
+				$block[ $property ] = array_map( 'sanitize_text_field', $block[ $property ] );
 			} elseif ( 'dependencies' === $property ) {
 				$block[ $property ] = entrepot_get_repository_dependencies( $block[ $property ] );
 			}
