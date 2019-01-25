@@ -1,5 +1,20 @@
 # Change Log
 
+## 1.5.3
+
+_Requires WordPress 4.8_
+_Tested up to WordPress 5.1_
+
+### Bug fixes
+
+- Fix 2 warnings into `Entrepot_REST_Blocks_Controller->prepare_item_for_response()`
+
+### Newly Registered Block
+
+- [Section](https://github.com/imath/section/)
+
+---
+
 ## 1.5.2
 
 _Requires WordPress 4.8_
