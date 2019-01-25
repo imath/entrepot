@@ -1,0 +1,21 @@
+{
+    "name": "Section",
+    "author": "imath",
+    "slug": "section",
+    "icon": "https://raw.githubusercontent.com/imath/section/master/icon.png",
+    "tags": [
+      "section",
+      "organize"
+    ],
+    "country": "fr_FR",
+    "releases": "https://github.com/imath/section/releases",
+    "issues": "https://github.com/imath/section/issues",
+    "description": {
+        "en_US" : "The Section block is a block to put other blocks into it.",
+        "fr_FR" : "Le bloc de Section est un bloc pour y mettre d'autres blocs."
+    },
+    "README": "https://raw.githubusercontent.com/imath/section/master/README.md",
+    "urls": {
+		"donate": "https://paypal.me/imath"
+	}
+}

@@ -14,5 +14,8 @@
         "en_US" : "A block to insert a basic search form into WordPress posts.",
         "fr_FR" : "Un bloc pour intégrer un formulaire de recherche dans vos publications WordPress."
     },
-    "README": "https://raw.githubusercontent.com/imath/formulaire-de-recherche/master/README.md"
+    "README": "https://raw.githubusercontent.com/imath/formulaire-de-recherche/master/README.md",
+    "urls": {
+		"donate": "https://paypal.me/imath"
+	}
 }
