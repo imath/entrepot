@@ -1,0 +1,21 @@
+{
+	"name": "DezoTools",
+	"author": "Dezodev",
+	"slug": "dezo-tools",
+	"icon": "https://raw.githubusercontent.com/Dezodev/dezo-tools/master/assets/icon.svg",
+	"tags": [
+	  "all-in-one",
+	  "tools"
+	],
+	"country": "fr_FR",
+	"releases": "https://github.com/Dezodev/dezo-tools/releases",
+	"issues": "https://github.com/Dezodev/dezo-tools/issues",
+	"description": {
+		"en_US" : "DezoTools is an all-in-one plugin to improve WordPress",
+		"fr_FR" : "DezoTools est un plugin tout-en-un pour améliorer WordPress."
+	},
+	"README": "https://raw.githubusercontent.com/Dezodev/dezo-tools/master/README.md",
+	"urls": {
+		"donate": "https://paypal.me/imdezodev",
+	}
+}
