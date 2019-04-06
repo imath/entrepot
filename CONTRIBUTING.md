@@ -13,7 +13,11 @@ Before submitting an issue, please make sure it does not concerned one of the re
 
 ## Plugin/Theme Owners
 
-If you wish to register your repository into Entrepôt :
+If you wish to register your repository into the Entrepôt :
 
 + Read the "Developer Guides" section of the [documentation](https://github.com/imath/entrepot/wiki),
-+ Use the specific [pull request](https://github.com/imath/entrepot/pulls) described into the documentation to register a new plugin or theme.
++ Use the specific [pull request](https://github.com/imath/entrepot/pulls) described into the documentation to register a new plugin, theme or block.
++ Make sure to publish GitHub releases including a Zip Archive of your repository into its download section (using your plugin/theme/block's slug to name this Zip Archive).
++ Make sure to always be up to date with latest WordPress release.
++ Make sure your plugin/theme/block's slug is unique : there cannot be duplicates which means you cannot register to the Entrepôt if your plugin, theme or block is hosted on [WordPress.org](https://wordpress.org/plugins/).
++ Your plugin, theme or block must be **GPL** compatible, **free to use** with **no ads nowhere into its source code**.
