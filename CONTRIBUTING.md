@@ -11,7 +11,7 @@ Before submitting an issue, please make sure it does not concerned one of the re
 + Submit your [issue](https://github.com/imath/entrepot/issues).
 + If the issue is about the code of conduct, please use its [report link](https://github.com/imath/entrepot/blob/master/CODE_OF_CONDUCT.md).
 
-## Plugin/Theme Owners
+## Plugin/Theme/Block Owners
 
 If you wish to register your repository into the Entrepôt :
 
