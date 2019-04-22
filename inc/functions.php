@@ -226,7 +226,7 @@ function entrepot_setup_cache_group() {
  * @return array|object The list of repository objects or a single repository object.
  */
 function entrepot_get_repositories( $slug = '', $type = 'plugins' ) {
-	$json = get_site_transient( "entrepot_registered_{$type}" );
+	$json = false;//get_site_transient( "entrepot_registered_{$type}" );
 
 	if ( ! $json ) {
 		$file = sprintf( 'entrepot-%s.min.json', $type );
@@ -257,9 +257,9 @@ function entrepot_get_repositories( $slug = '', $type = 'plugins' ) {
 			$json = file_get_contents( $src );
 		}
 
-		if ( ! empty( $json ) ) {
+		/*if ( ! empty( $json ) ) {
 			set_site_transient( "entrepot_registered_{$type}", $json, DAY_IN_SECONDS );
-		}
+		}*/
 	}
 
 	// Set repositories
