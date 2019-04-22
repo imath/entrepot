@@ -1,0 +1,27 @@
+{
+    "name": "Meilleur Copain",
+    "author": "imath",
+    "slug": "meilleur-copain",
+    "dependencies": [
+        {
+          "parse_blocks" : "WordPress 5.0+",
+          "bp_check_theme_template_pack_dependency": "BuddyPress 3.1+"
+        }
+    ],
+    "icon": "https://raw.githubusercontent.com/imath/meilleur-copain/master/icon.png",
+    "tags": [
+      "BuddyPress",
+      "appearance"
+    ],
+    "country": "fr_FR",
+    "releases": "https://github.com/imath/meilleur-copain/releases",
+    "issues": "https://github.com/imath/meilleur-copain/issues",
+    "description": {
+        "en_US" : "Some appearance improvements to BuddyPress.",
+        "fr_FR" : "Une collection d’améliorations visuelles pour BuddyPress."
+    },
+    "README": "https://raw.githubusercontent.com/imath/meilleur-copain/master/README.md",
+    "urls": {
+		"donate": "https://paypal.me/imath"
+	}
+}
