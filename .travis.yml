@@ -21,6 +21,8 @@ php:
 # x.y mirrors the latest from the x.y branch
 env:
   - WP_VERSION=master PR_TRAVISCI=travis:build
+  - WP_VERSION=5.2 PR_TRAVISCI=travis:build
+  - WP_VERSION=5.1 PR_TRAVISCI=travis:build
   - WP_VERSION=5.0 PR_TRAVISCI=travis:build
   - WP_VERSION=4.9 PR_TRAVISCI=travis:build
   - WP_VERSION=4.8 PR_TRAVISCI=travis:build
