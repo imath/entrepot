@@ -1,0 +1,26 @@
+{
+  "name": "Carte de Survol",
+  "author": "imath",
+  "slug": "carte-de-survol",
+  "dependencies": [
+      {
+        "bp_rest_api_is_available": "BuddyPress 5.0+"
+      }
+  ],
+  "icon": "https://raw.githubusercontent.com/imath/carte-de-survol/master/icon.png",
+  "tags": [
+    "BuddyPress",
+    "hovercard"
+  ],
+  "country": "fr_FR",
+  "releases": "https://github.com/imath/carte-de-survol/releases",
+  "issues": "https://github.com/imath/carte-de-survol/issues",
+  "description": {
+      "en_US" : "BuddyPress plugin to add hovercards to user links.",
+      "fr_FR" : "Affichage d'informations détaillées d'un membre de votre communauté BuddyPress au survol du lien pointant vers son profil."
+  },
+  "README": "https://raw.githubusercontent.com/imath/carte-de-survol/master/README.md",
+  "urls": {
+      "donate": "https://paypal.me/imath"
+  }
+}
