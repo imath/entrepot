@@ -4,8 +4,8 @@
  * Plugin URI: https://github.com/imath/entrepot/
  * Description: Une liste d'extensions, de blocs et de thèmes gratuits hébergés sur GitHub.com.
  * Version: 1.5.3
- * Requires at least: 4.8
- * Tested up to: 5.0
+ * Requires at least: 5.0
+ * Tested up to: 5.3
  * License: GNU/GPL 2
  * Author: imath
  * Author URI: https://imathi.eu/
