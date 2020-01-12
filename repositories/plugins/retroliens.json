@@ -1,0 +1,27 @@
+{
+  "name": "Rétroliens",
+  "author": "imath",
+  "slug": "retroliens",
+  "dependencies": [
+      {
+        "unregister_block_style" : "WordPress 5.3"
+      }
+  ],
+  "icon": "https://raw.githubusercontent.com/imath/retroliens/master/icon.png",
+  "tags": [
+    "TrackBack",
+    "Block",
+    "Gutenberg"
+  ],
+  "country": "fr_FR",
+  "releases": "https://github.com/imath/retroliens/releases",
+  "issues": "https://github.com/imath/retroliens/issues",
+  "description": {
+      "en_US" : "Adds a new sidebar to the WordPress Blocks Editor to manage trackbacks.",
+      "fr_FR" : "Ajoute une barre latérale à l'éditeur de blocs pour envoyer des rétroliens."
+  },
+  "README": "https://raw.githubusercontent.com/imath/retroliens/master/README.md",
+  "urls": {
+    "donate": "https://paypal.me/imath"
+  }
+}
