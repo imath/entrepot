@@ -106,6 +106,7 @@
 	-webkit-appearance: none;
 	line-height: normal;
 	height: auto;
+	min-height: auto;
 	padding: 6px 14px;
 	background: #0085ba;
 	border-color: #0073aa #006799 #006799;
