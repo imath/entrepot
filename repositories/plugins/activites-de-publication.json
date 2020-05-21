@@ -3,10 +3,8 @@
     "author": "imath",
     "slug": "activites-de-publication",
     "dependencies": [
-        {
-          "render_block" : "WordPress 5.0+",
-          "bp_rest_api_is_available": "BuddyPress 5.0+"
-        }
+        { "render_block" : "WordPress 5.0+" },
+        { "bp_rest_api_is_available": "BuddyPress 5.0+" }
     ],
     "icon": "https://raw.githubusercontent.com/imath/activites-de-publication/master/icon.png",
     "tags": [
