@@ -1,4 +1,3 @@
-.wp-core-ui .entrepot-actions .entrepot-warning,
 .wp-core-ui .button-primary.entrepot-warning {
 	background: #dc3232;
 	border-color: #dc3232 #a00 #a00;
@@ -12,11 +11,23 @@
 	padding: 6px 14px;
 }
 
-.wp-core-ui .entrepot-actions .entrepot-warning:hover,
 .wp-core-ui .button-primary.entrepot-warning:hover {
 	background: #a00;
 	border-color: #dc3232;
 	color: #fff;
+}
+
+.wp-core-ui .entrepot-actions .entrepot-warning {
+    background: #dc3232;
+    border-color: #dc3232;
+    color: #fff;
+    text-decoration: none;
+    text-shadow: none;
+}
+
+.wp-core-ui .entrepot-actions .entrepot-warning:hover{
+   background: #a00;
+   border-color: #a00;
 }
 
 .wp-core-ui .entrepot-actions .entrepot-warning:focus,
