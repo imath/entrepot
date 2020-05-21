@@ -1,0 +1,22 @@
+{
+	"name": "DocuThèques",
+	"author": "imath",
+  "slug": "docutheques",
+  "dependencies": [
+		{ "is_favicon": "WordPress 5.4+" }
+	],
+	"icon": "https://raw.githubusercontent.com/imath/docutheques/master/icon.png",
+	"tags": [
+	  "media",
+	  "library",
+	  "documents"
+	],
+	"country": "fr_FR",
+	"releases": "https://github.com/imath/docutheques/releases",
+	"issues": "https://github.com/imath/docutheques/issues",
+	"description": {
+		"en_US" : "An alternative & document oriented organization for your WordPress media.",
+		"fr_FR" : "Une organisation des media de WordPress plus orientée vers des besoins documentaires."
+	},
+	"README": "https://raw.githubusercontent.com/imath/docutheques/master/README.md"
+}
