@@ -1,5 +1,21 @@
 # Change Log
 
+## 1.5.4
+
+_Requires WordPress 5.0_
+_Tested up to WordPress 5.4_
+
+### Bug fixes
+
+- Fix the appearance of the action buttons used into the Plugin/Theme's modal.
+- Fix the "Activités de publication" dependency descriptions into the repository's JSON file.
+
+### Newly Registered Plugin
+
+- [DocuThèques](https://github.com/imath/docutheques/)
+
+---
+
 ## 1.5.3
 
 _Requires WordPress 4.8_
