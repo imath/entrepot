@@ -1,0 +1,26 @@
+{
+	"name": "Réception",
+	"author": "imath",
+  "slug": "reception",
+  "dependencies": [
+    { "is_favicon": "WordPress 5.4+" },
+    { "bp_register_block": "BuddyPress 6.0+" }
+	],
+	"icon": "https://raw.githubusercontent.com/imath/reception/master/icon.png",
+	"tags": [
+	  "buddypress",
+	  "front",
+	  "contact"
+	],
+	"country": "fr_FR",
+	"releases": "https://github.com/imath/reception/releases",
+	"issues": "https://github.com/imath/reception/issues",
+	"description": {
+		"en_US" : "BuddyPress plugin to customize members front page using WordPress Blocks.",
+		"fr_FR" : "Page d’accueil des membres BuddyPress personnalisable à l’aide de blocs WordPress."
+	},
+	"README": "https://raw.githubusercontent.com/imath/reception/master/README.md",
+  "urls": {
+		"donate": "https://paypal.me/imath"
+	}
+}
