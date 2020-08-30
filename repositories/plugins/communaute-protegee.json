@@ -1,0 +1,27 @@
+{
+	"name": "Communauté Protégée",
+	"author": "imath",
+  "slug": "communaute-protegee",
+  "dependencies": [
+    { "is_favicon": "WordPress 5.5+" },
+    { "bp_register_block": "BuddyPress 6.2+" },
+    { "restricted_site_access_uninstall": "Restricted Site Access 7.2+" }
+	],
+	"icon": "https://raw.githubusercontent.com/imath/communaute-protegee/master/icon.png",
+	"tags": [
+	  "buddypress",
+	  "commmunity",
+	  "protected"
+	],
+	"country": "fr_FR",
+	"releases": "https://github.com/imath/communaute-protegee/releases",
+	"issues": "https://github.com/imath/communaute-protegee/issues",
+	"description": {
+		"en_US" : "Restricted Site Access companion to control your BuddyPress powered community site’s access.",
+		"fr_FR" : "Enrichit l’extension Restricted Site Access pour protéger l’accès aux sites communautaires motorisés par BuddyPress."
+	},
+	"README": "https://raw.githubusercontent.com/imath/communaute-protegee/master/README.md",
+  "urls": {
+		"donate": "https://paypal.me/imath"
+	}
+}
