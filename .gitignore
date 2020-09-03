@@ -11,3 +11,4 @@ npm-debug.log
 dist
 .cache
 entrepot.zip
+vendor
