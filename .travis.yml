@@ -21,6 +21,7 @@ php:
 # x.y mirrors the latest from the x.y branch
 env:
   - WP_VERSION=master PR_TRAVISCI=travis:build
+  - WP_VERSION=5.5 PR_TRAVISCI=travis:build
   - WP_VERSION=5.4 PR_TRAVISCI=travis:build
   - WP_VERSION=5.3 PR_TRAVISCI=travis:build
   - WP_VERSION=5.2 PR_TRAVISCI=travis:build
@@ -69,6 +70,8 @@ before_install:
 
   # setup NodeJS version using NVM
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
+  # make sure composer is < 2.0.0 to avoid dependencies install errors.
+  - composer self-update 1.10.16
   - node --version
   - nvm install 10.13.0
   - node --version
