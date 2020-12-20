@@ -1,0 +1,26 @@
+{
+	"name": "Types de membre",
+	"author": "imath",
+  "slug": "types-de-membre",
+  "dependencies": [
+    { "wp_is_application_passwords_available": "WordPress 5.6+" },
+    { "bp_get_member_type_metadata_schema": "BuddyPress 7.0+" }
+	],
+	"icon": "https://raw.githubusercontent.com/imath/types-de-membre/master/icon.png",
+	"tags": [
+	  "buddypress",
+	  "member",
+	  "types"
+	],
+	"country": "fr_FR",
+	"releases": "https://github.com/imath/types-de-membre/releases",
+	"issues": "https://github.com/imath/types-de-membre/issues",
+	"description": {
+		"en_US" : "Adds a dropdown control to filter the BuddyPress Members directory by types.",
+		"fr_FR" : "Ajoute une liste déroulante pour filtrer le répertoire BuddyPress des membres par type."
+	},
+	"README": "https://raw.githubusercontent.com/imath/types-de-membre/master/README.md",
+  "urls": {
+		"donate": "https://paypal.me/imath"
+	}
+}
