@@ -322,16 +322,6 @@ function entrepot_admin_add_menu() {
 				),
 				'load_callback' => 'entrepot_admin_send_json',
 			),
-			'overwrite' => array(
-				'page_hook' => add_plugins_page(
-					__( 'Gestion des versions', 'entrepot' ),
-					__( 'Gestion des versions', 'entrepot' ),
-					'update_plugins',
-					'repositories-manage-versions',
-					'entrepot_admin_versions'
-				),
-				'load_callback' => 'entrepot_admin_versions_load',
-			),
 			'theme-details' => array(
 				'page_hook' => add_submenu_page(
 					'themes.php',
@@ -443,14 +433,6 @@ function entrepot_admin_register_scripts() {
 	);
 
 	wp_register_script(
-		'entrepot-plugins-overwrite',
-		sprintf( '%1$splugins-overwrite%2$s.js', entrepot_js_url(), entrepot_min_suffix() ),
-		array( 'wp-api-request', 'wp-util' ),
-		entrepot_version(),
-		true
-	);
-
-	wp_register_script(
 		'entrepot-themes',
 		sprintf( '%1$sthemes%2$s.js', entrepot_js_url(), entrepot_min_suffix() ),
 		array( 'theme' ),
@@ -491,14 +473,6 @@ function entrepot_admin_register_scripts() {
 	wp_register_style(
 		'entrepot-upgrader',
 		sprintf( '%1$supgrader%2$s.css', entrepot_assets_url(), entrepot_min_suffix() ),
-		array(),
-		entrepot_version(),
-		'all'
-	);
-
-	wp_register_style(
-		'entrepot-plugins-overwrite',
-		sprintf( '%1$splugins-overwrite%2$s.css', entrepot_assets_url(), entrepot_min_suffix() ),
 		array(),
 		entrepot_version(),
 		'all'
@@ -1573,122 +1547,6 @@ function entrepot_admin_upgrade() {
 		<?php endif ; ?>
 	</div>
 	<?php
-}
-
-/**
- * Enqueues the needed script and style for the Plugin Versions screen.
- *
- * @since  1.4.0
- */
-function entrepot_admin_versions_enqueue_scripts() {
-	wp_enqueue_script( 'entrepot-plugins-overwrite' );
-	$l10n = array(
-		'filetypeError' => __( 'Dans WordPress les packages sont au format ZIP, merci de sélectionner ce type de fichier', 'entrepot' ),
-		'unknownError'  => __( 'Erreur inconnue, merci de renouveler un peu plus tard', 'entrepot' ),
-	);
-
-	/**
-	 * Are API settings available ?
-	 *
-	 * Gutenberg is arbitrary deregistering the `wp-api-request` script to replace
-	 * it with a new implementation. As we need the `wpApiSettings` object WordPress
-	 * Core adds to the "old implementation" of the WP API Request, we need to add it
-	 * to our script in case Gutenberg is active.
-	 *
-	 * @see https://github.com/WordPress/gutenberg/pull/7329
-	 */
-	$data = wp_scripts()->get_data( 'wp-api-request', 'data' );
-	if ( ! $data || false === strpos( $data, 'wpApiSettings' ) ) {
-		$l10n['wpApiSettings'] = array(
-			'root'          => esc_url_raw( get_rest_url() ),
-			'nonce'         => ( wp_installing() && ! is_multisite() ) ? '' : wp_create_nonce( 'wp_rest' ),
-			'versionString' => 'wp/v2/',
-		);
-	}
-
-	wp_localize_script( 'entrepot-plugins-overwrite', 'entrepotl10nPluginsOverwrite', $l10n );
-	wp_enqueue_style( 'entrepot-plugins-overwrite' );
-}
-
-/**
- * Enqueues the needed JavaScript for the Manage Plugins versions Admin screen.
- *
- * @since 1.2.0
- */
-function entrepot_admin_versions_load() {
-	if ( function_exists( 'validate_theme_requirements' ) ) {
-		return;
-	}
-
-	// Add the help tab to explain what can be done within this screen.
-	get_current_screen()->add_help_tab( array(
-		'id'      => 'bp-group-edit-overview',
-		'title'   => __( 'Vue d’ensemble', 'entrepot' ),
-		'content' => '<p>' . join( '</p><p>', array(
-			esc_html__( 'Depuis cet écran vous pouvez manuellement administrer les versions installées pour vos extensions. Vous pouvez mettre à jour ou revenir à une version plus ancienne chacune des extensions listées.', 'entrepot' ),
-			esc_html__( 'Pour cela, il suffit de cliquer sur le bouton indiquant la version actuelle de l\'extension afin de sélectionner depuis votre appareil l\'archive ZIP contenant la version de remplacement.', 'entrepot' ),
-		) ) . '</p>',
-	) );
-
-	add_action( 'admin_enqueue_scripts', 'entrepot_admin_versions_enqueue_scripts', 20 );
-}
-
-/**
- * Displays the Manage Plugins versions Admin screen.
- *
- * @since 1.2.0
- */
-function entrepot_admin_versions() {
-	// Check the wp.apiRequest is available as it was introduced in 4.9.
-	$is_supported = false !== wp_scripts()->query( 'wp-api-request' );
-
-	if ( function_exists( 'validate_theme_requirements' ) ) {
-		$output = sprintf( '<div id="message" class="update-nag notice notice-warning inline"><p>%s</p></div>', esc_html__( 'La gestion manuelle des versions des extensions a été intégrée dans WordPress 5.5. Merci de vous rendre sur l’écran d’ajout d’extensions et d’utiliser son outil de téléversement', 'entrepot' ) );
-	} elseif ( ! $is_supported ) {
-		$output = sprintf( '<div id="message" class="error"><p>%s</p></div>', esc_html__( 'La gestion manuelle des versions des extensions nécessite WordPress 4.9.', 'entrepot' ) );
-	} else {
-		$output = '<script type="text/html" id="tmpl-entrepot-plugin-version">
-			<div class="plugin-card plugin-version-info">
-				<div class="plugin-card-top">
-					<div class="name column-name">
-					<h3>
-						{{{data.name}}}
-						<# if ( data.icon ) { #>
-							<img src="{{data.icon}}" width="100px" height="100px" class="plugin-icon">
-						<# } #>
-
-						<span class="dashicons dashicons-admin-plugins plugin-icon <# if ( data.icon ) { #>hide<# } #>"></span>
-					</h3>
-				</div>
-				<div class="action-links">
-					<label for="file-{{data.slug}}" class="button button-primary button-large"><span class="dashicons dashicons-update"></span> {{data.version}}</label>
-					<input id="file-{{data.slug}}" type="file" name="{{data.slug}}" data-plugin-id="{{data.id}}"/>
-					<button class="button button-secondary button-large update-now" disabled="disabled">
-						{{data.version}}
-					</button>
-				</div>
-				<div class="desc column-description">
-					<p>{{{data.description}}}</p>
-					<p class="authors">
-						<cite>{{{data.author}}}</cite>
-					</p>
-				</div>
-			</div>
-		</script>
-		<script type="text/html" id="tmpl-entrepot-notice">
-			<div id="{{ data.id }}" class="notice <# if ( 200 !== data.code ) { #>notice-error<# } else { #>notice-success<# } #> is-dismissible">
-				<p>
-					{{data.message}}
-				</p>
-			</div>
-		</script>';
-
-		$output = "<ul id=\"list-plugin-versions\">
-			<li id=\"entrepot-loading-plugins\"><img src=\"" . esc_url( admin_url( 'images/spinner-2x.gif' ) ) . "\"/></li>
-		</ul>\n" . $output;
-	}
-
-	printf( '<div class="wrap"><h1>%1$s</h1>%2$s</div>', esc_html__( 'Gestion des versions', 'entrepot' ), $output );
 }
 
 /**

@@ -106,3 +106,34 @@ function entrepot_extra_header( $headers = array() ) {
 function _entrepot_admin_fix_plugin_updates_count() {
 	_deprecated_function( __FUNCTION__, '1.4.0' );
 }
+
+
+/**
+ * Enqueues the needed JavaScript for the Manage Plugins versions Admin screen.
+ *
+ * @deprecated 1.6.0 (Fixed in WordPress 5.6).
+ * @since 1.2.0
+ */
+function entrepot_admin_versions_load() {
+	_deprecated_function( __FUNCTION__, '1.6.0' );
+}
+
+/**
+ * Enqueues the needed script and style for the Plugin Versions screen.
+ *
+ * @deprecated 1.6.0 (Fixed in WordPress 5.6).
+ * @since  1.4.0
+ */
+function entrepot_admin_versions_enqueue_scripts() {
+	_deprecated_function( __FUNCTION__, '1.6.0' );
+}
+
+/**
+ * Displays the Manage Plugins versions Admin screen.
+ *
+ * @deprecated 1.6.0 (Fixed in WordPress 5.6).
+ * @since 1.2.0
+ */
+function entrepot_admin_versions() {
+	_deprecated_function( __FUNCTION__, '1.6.0' );
+}
