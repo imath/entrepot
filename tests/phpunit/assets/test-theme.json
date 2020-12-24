@@ -14,5 +14,9 @@
   "README": "https://raw.githubusercontent.com/imath/test-theme/master/README.md",
   "urls": {
     "preview_url": ""
+  },
+  "requirements": {
+    "WP": "5.5",
+    "PHP": "7.0"
   }
 }

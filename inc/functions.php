@@ -286,6 +286,19 @@ function entrepot_get_repositories( $slug = '', $type = 'plugins' ) {
 		return $single;
 	}
 
+	if ( defined( 'PR_TESTING_ASSETS' ) ) {
+		/**
+		 * Private hook used for testing purpose.
+		 *
+		 * @since 1.6.0
+		 *
+		 * @param array  $repositories The entrepôt repositories.
+		 * @param string $type         The kind of repositories. Possible values are:
+		 *                             `plugins`, `themes` & `blocks`
+		 */
+		$repositories = apply_filters( '_entrepot_get_repositories', $repositories, $type );
+	}
+
 	return $repositories;
 }
 

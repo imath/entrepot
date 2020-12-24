@@ -107,6 +107,37 @@ class entrepot_Admin_Tests extends WP_UnitTestCase {
 		set_current_screen( 'front' );
 	}
 
+	public function use_test_theme( $repositories = array() ) {
+		$json = file_get_contents( PR_TESTING_ASSETS . '/test-theme.json' );
+		return array( json_decode( $json ) );
+	}
+
+	/**
+	 * @group themes
+	 * @group requirements
+	 */
+	public function test_entrepot_admin_get_theme_requirements() {
+		set_current_screen( 'dashboard' );
+
+		add_filter( '_entrepot_get_repositories', array( $this, 'use_test_theme' ), 10, 1 );
+
+		$repositories = entrepot_admin_get_theme_repositories_list();
+
+		remove_filter( '_entrepot_get_repositories', array( $this, 'use_test_theme' ), 10, 1 );
+
+		$repository = reset( $repositories );
+
+		$this->assertObjectHasAttribute( 'requires', $repository );
+		$this->assertObjectHasAttribute( 'requires_php', $repository );
+		$this->assertObjectHasAttribute( 'compatibleWP', $repository );
+		$this->assertObjectHasAttribute( 'compatiblePHP', $repository );
+
+		$this->assertEquals( '5.5', $repository->requires );
+		$this->assertEquals( '7.0', $repository->requires_php );
+
+		set_current_screen( 'front' );
+	}
+
 	public function test_entrepot_all_installed_repositories_list() {
 		set_current_screen( 'dashboard' );
 
