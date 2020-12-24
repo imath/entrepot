@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/imath/entrepot.svg?branch=master)](https://travis-ci.org/imath/entrepot)
+[![Build Status](https://img.shields.io/travis/com/imath/entrepot/master.svg)](https://travis-ci.com/imath/entrepot)
 
 # Entrepôt
 

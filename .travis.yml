@@ -13,6 +13,7 @@ cache:
     - /tmp/node
 
 php:
+  - 7.4
   - 7.3
   - 7.1
   - 7.0
@@ -21,11 +22,8 @@ php:
 # x.y mirrors the latest from the x.y branch
 env:
   - WP_VERSION=master PR_TRAVISCI=travis:build
+  - WP_VERSION=5.6 PR_TRAVISCI=travis:build
   - WP_VERSION=5.5 PR_TRAVISCI=travis:build
-  - WP_VERSION=5.4 PR_TRAVISCI=travis:build
-  - WP_VERSION=5.3 PR_TRAVISCI=travis:build
-  - WP_VERSION=5.2 PR_TRAVISCI=travis:build
-  - WP_VERSION=5.1 PR_TRAVISCI=travis:build
 
 matrix:
   include:
@@ -33,16 +31,10 @@ matrix:
       env: WP_VERSION=master PR_TRAVISCI=travis:build
       dist: precise
     - php: 7.2
-      env: WP_VERSION=5.4 PR_TRAVISCI=travis:build
+      env: WP_VERSION=5.6 PR_TRAVISCI=travis:build
       dist: precise
     - php: 7.2
-      env: WP_VERSION=5.3 PR_TRAVISCI=travis:build
-      dist: precise
-    - php: 7.2
-      env: WP_VERSION=5.2 PR_TRAVISCI=travis:build
-      dist: precise
-    - php: 7.2
-      env: WP_VERSION=5.1 PR_TRAVISCI=travis:build
+      env: WP_VERSION=5.5 PR_TRAVISCI=travis:build
       dist: precise
 
 before_install:

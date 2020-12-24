@@ -1,7 +1,10 @@
 {
 	"name": "Entrepôt",
 	"author": "imath",
-	"slug": "entrepot",
+  "slug": "entrepot",
+  "dependencies": [
+		{ "validate_theme_requirements": "WordPress 5.5+" }
+	],
 	"icon": "https://raw.githubusercontent.com/imath/entrepot/master/icon.png",
 	"tags": [
 	  "plugins",
