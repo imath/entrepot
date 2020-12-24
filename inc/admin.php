@@ -245,7 +245,6 @@ function entrepot_admin_get_theme_repositories_list() {
 
 		$theme->requires     = false;
 		$theme->requires_php = '5.6';
-
 		if ( isset( $theme->requirements->WP ) ) {
 			$theme->requires = $theme->requirements->WP;
 		}
@@ -254,14 +253,8 @@ function entrepot_admin_get_theme_repositories_list() {
 			$theme->requires_php = $theme->requirements->PHP;
 		}
 
-		// These were added in WP 5.5.
-		if ( function_exists( 'is_wp_version_compatible' ) && function_exists( 'is_wp_version_compatible' ) ) {
-			$theme->compatibleWP  = is_wp_version_compatible( $theme->requires );
-			$theme->compatiblePHP = is_php_version_compatible( $theme->requires_php );
-		} else {
-			$theme->compatibleWP  = true;
-			$theme->compatiblePHP = true;
-		}
+		$theme->compatibleWP  = is_wp_version_compatible( $theme->requires );
+		$theme->compatiblePHP = is_php_version_compatible( $theme->requires_php );
 
 		if ( ! defined( 'PR_TESTING_ASSETS' ) ) {
 			foreach ( array( 'descriptions', 'country', 'releases', 'issues', 'README', 'urls', 'requirements' ) as $rk ) {
