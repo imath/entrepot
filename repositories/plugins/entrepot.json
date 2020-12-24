@@ -3,8 +3,8 @@
 	"author": "imath",
   "slug": "entrepot",
   "dependencies": [
-    { "render_block": "WordPress 5.0+" }
-  ],
+		{ "validate_theme_requirements": "WordPress 5.5+" }
+	],
 	"icon": "https://raw.githubusercontent.com/imath/entrepot/master/icon.png",
 	"tags": [
 	  "plugins",
