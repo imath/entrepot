@@ -115,6 +115,7 @@ final class Entrepot {
 
 		if ( is_admin() ) {
 			require $this->inc_dir . 'admin.php';
+			require $this->inc_dir . 'admin-hooks.php';
 		}
 
 		// Load deprecated functions.
