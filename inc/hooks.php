@@ -59,6 +59,8 @@ if ( is_admin() ) {
 	// Override the Plugins/Themes API to include Entrepôt repositories.
 	add_filter( 'plugins_api', 'entrepot_repositories_api', 10, 3 );
 	add_filter( 'themes_api',  'entrepot_repositories_api', 10, 3 );
+
+	add_action( 'core_upgrade_preamble', 'entrepot_admin_check_required_wp' );
 }
 
 // Filters for modal content.

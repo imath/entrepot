@@ -437,6 +437,14 @@ function entrepot_admin_register_scripts() {
 		true
 	);
 
+	wp_register_script(
+		'entrepot-updates',
+		sprintf( '%1$sentrepot-updates%2$s.js', entrepot_js_url(), entrepot_min_suffix() ),
+		array( 'updates' ),
+		entrepot_version(),
+		true
+	);
+
 	wp_register_style(
 		'entrepot-flag',
 		sprintf( '%1$sflag-button%2$s.css', entrepot_assets_url(), entrepot_min_suffix() ),
@@ -1132,6 +1140,41 @@ function entrepot_plugin_action_links( $actions = array(), $plugin_file = '', $p
 }
 
 /**
+ * Output warnings if the Plugin update requires a newer PHP/WP version comparing to the ones installed.
+ *
+ * @since 1.5.5
+ *
+ * @param array $plugin_data An array of the plugin's metadata.
+ * @param null|object $response The Plugins's update data.
+ */
+function entrepot_plugin_row_udpate_info( $plugin_data = array(), $response = null ) {
+	include ABSPATH . WPINC . '/version.php'; // include an unmodified $wp_version
+	$wp_version = preg_replace( '/-.*$/', '', $wp_version );
+
+	if ( isset( $response->requires_wp ) && $response->requires_wp && version_compare( $wp_version, $response->requires_wp, '<' ) ) {
+		printf(
+			'<span class="attention entrepot-warning" style="display: block; margin-left: 25px">%s</span>',
+			sprintf(
+				esc_html__( 'La version de WordPress requise pour cette mise à jour (%1$s) est supérieure à celle qui est installée sur ce site (%2$s).', 'entrepot' ),
+				esc_html( $response->requires_wp ),
+				esc_html( $wp_version )
+			)
+		);
+	}
+
+	if ( isset( $response->requires_php ) && $response->requires_php && version_compare( phpversion(), $response->requires_php, '<' ) ) {
+		printf(
+			'<span class="attention entrepot-warning" style="display: block; margin-left: 25px">%s</span>',
+			sprintf(
+				esc_html__( 'La version de PHP requise pour cette mise à jour (%1$s) est supérieure à celle qui est installée sur ce site (%2$s).', 'entrepot' ),
+				esc_html( $response->requires_wp ),
+				esc_html( $wp_version )
+			)
+		);
+	}
+}
+
+/**
  * Add a new meta to inform about unsatisfied dependencies for a repository.
  *
  * @since 1.1.0
@@ -1147,6 +1190,10 @@ function entrepot_plugin_row_meta( $plugin_meta = array(), $plugin_file = '', $p
 	}
 
 	$entrepot = entrepot();
+
+	if ( isset( $plugin_data['is_update'] ) && true === $plugin_data['is_update'] && isset( $plugin_data['full_upgrade_notice'] ) ) {
+		add_action( "in_plugin_update_message-{$plugin_file}", 'entrepot_plugin_row_udpate_info', 10, 2 );
+	}
 
 	if ( ! isset( $entrepot->miss_deps[ $plugin_data['slug'] ] ) ) {
 		return $plugin_meta;
@@ -1699,4 +1746,64 @@ function entrepot_ajax_after_edit_plugin_file() {
 	}
 
 	entrepot_admin_plugin_editor_footer();
+}
+
+/**
+ * Output warnings if the Plugin update requires a newer PHP/WP version comparing to the ones installed.
+ *
+ * @since 1.5.5
+ */
+function entrepot_admin_check_required_wp() {
+	include ABSPATH . WPINC . '/version.php'; // include an unmodified $wp_version
+	$wp_version = preg_replace( '/-.*$/', '', $wp_version );
+
+	$plugins     = get_site_transient( 'update_plugins' );
+	$script_data = array();
+
+	if ( isset( $plugins->response ) && is_array( $plugins->response ) ) {
+		foreach ( $plugins->response as $plugin_file => $plugin_data ) {
+			if ( ! entrepot_get_repository_json( $plugin_data->slug ) ) {
+				continue;
+			}
+
+			$script_data[ $plugin_file ] = array();
+			$requires_php                = '';
+			$requires_wp                 = '';
+
+			if ( isset( $plugin_data->requires_php ) && version_compare( phpversion(), $plugin_data->requires_php, '<' ) ) {
+				$requires_php = $plugin_data->requires_php;
+			}
+
+			if ( isset( $plugin_data->requires_wp ) && version_compare( $wp_version, $plugin_data->requires_wp, '<' ) ) {
+				$requires_wp = $plugin_data->requires_wp;
+			}
+
+			if ( isset( $plugin_data->icons['1x'] ) && ( $requires_php || $requires_wp ) ) {
+				$script_data[ $plugin_file ] = array(
+					'icon' => $plugin_data->icons['1x'],
+					'php'  => $requires_php,
+					'wp'   => $requires_wp,
+				);
+			}
+		}
+	}
+
+	$script_data = array_values( $script_data );
+
+	if ( ! array_filter( $script_data ) ) {
+		return;
+	}
+
+	wp_enqueue_script( 'entrepot-updates' );
+	wp_localize_script(
+		'entrepot-updates',
+		'entrepotRepositories',
+		array(
+			'plugins'  => $script_data,
+			'warnings' => array(
+				'WP'  => sprintf( __( 'La version de WordPress requise pour cette mise à jour (pluginVersion) est supérieure à celle qui est installée sur ce site (%s).', 'entrepot' ), esc_html( $wp_version ) ),
+				'PHP' => sprintf( __( 'La version de PHP requise pour cette mise à jour (phpVersion) est supérieure à celle qui est installée sur ce site (%s).', 'entrepot' ), esc_html( phpversion() ) ),
+			),
+		)
+	);
 }
