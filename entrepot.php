@@ -3,7 +3,7 @@
  * Plugin Name: Entrepôt
  * Plugin URI: https://github.com/imath/entrepot/
  * Description: Une liste d'extensions, de blocs et de thèmes gratuits hébergés sur GitHub.com.
- * Version: 1.5.4
+ * Version: 1.5.5
  * Requires at least: 5.0
  * Tested up to: 5.4
  * License: GNU/GPL 2
@@ -69,7 +69,7 @@ final class Entrepot {
 	 */
 	private function globals() {
 		// Version
-		$this->version = '1.5.4';
+		$this->version = '1.5.5';
 
 		// Domain
 		$this->domain = 'entrepot';

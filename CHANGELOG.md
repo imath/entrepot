@@ -1,5 +1,24 @@
 # Change Log
 
+## 1.5.5
+
+_Requires WordPress 5.0_
+_Tested up to WordPress 5.6_
+
+### Bug fixes
+
+- Avoids messing with the Block Editor `query_plugins` requests about block plugins.
+- Disable the Plugins overwrite feature used to manage plugin versions in favor of the WordPress 5.5 manual plugin down/upgrade feature.
+- Set default values for WP/PHP version theme requirements to make sure it's still possible to install a Theme registered into the Entrepôt using the Customizer.
+
+### Newly Registered Plugin
+
+- [Réception](https://github.com/imath/reception/)
+- [Communauté protégée](https://github.com/imath/communaute-protegee/)
+- [Type de membres](https://github.com/imath/types-de-membre/)
+
+---
+
 ## 1.5.4
 
 _Requires WordPress 5.0_
