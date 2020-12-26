@@ -320,6 +320,15 @@ function entrepot_admin_add_menu() {
 				'load_callback' => 'entrepot_admin_theme_details',
 			),
 		);
+
+		/*
+		 * WordPress has started to manage Plugin/Theme update from
+		 * the Plugin/Theme zip uploader in WP 5.5
+		 */
+		if ( function_exists( 'validate_theme_requirements' ) ) {
+			remove_submenu_page( 'plugins.php', 'repositories-manage-versions' );
+			unset( $screens['overwrite'] );
+		}
 	}
 
 	if ( $entrepot->upgrades ) {
@@ -1517,6 +1526,10 @@ function entrepot_admin_versions_enqueue_scripts() {
  * @since 1.2.0
  */
 function entrepot_admin_versions_load() {
+	if ( function_exists( 'validate_theme_requirements' ) ) {
+		return;
+	}
+
 	// Add the help tab to explain what can be done within this screen.
 	get_current_screen()->add_help_tab( array(
 		'id'      => 'bp-group-edit-overview',
@@ -1539,7 +1552,9 @@ function entrepot_admin_versions() {
 	// Check the wp.apiRequest is available as it was introduced in 4.9.
 	$is_supported = false !== wp_scripts()->query( 'wp-api-request' );
 
-	if ( ! $is_supported ) {
+	if ( function_exists( 'validate_theme_requirements' ) ) {
+		$output = sprintf( '<div id="message" class="update-nag notice notice-warning inline"><p>%s</p></div>', esc_html__( 'La gestion manuelle des versions des extensions a été intégrée dans WordPress 5.5. Merci de vous rendre sur l’écran d’ajout d’extensions et d’utiliser son outil de téléversement', 'entrepot' ) );
+	} elseif ( ! $is_supported ) {
 		$output = sprintf( '<div id="message" class="error"><p>%s</p></div>', esc_html__( 'La gestion manuelle des versions des extensions nécessite WordPress 4.9.', 'entrepot' ) );
 	} else {
 		$output = '<script type="text/html" id="tmpl-entrepot-plugin-version">
