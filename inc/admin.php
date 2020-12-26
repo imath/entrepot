@@ -236,8 +236,14 @@ function entrepot_admin_get_theme_repositories_list() {
 			$theme->requires_php = $theme->requirements->PHP;
 		}
 
-		$theme->compatibleWP  = is_wp_version_compatible( $theme->requires );
-		$theme->compatiblePHP = is_php_version_compatible( $theme->requires_php );
+		// These were added in WP 5.5.
+		if ( function_exists( 'is_wp_version_compatible' ) && function_exists( 'is_wp_version_compatible' ) ) {
+			$theme->compatibleWP  = is_wp_version_compatible( $theme->requires );
+			$theme->compatiblePHP = is_php_version_compatible( $theme->requires_php );
+		} else {
+			$theme->compatibleWP  = true;
+			$theme->compatiblePHP = true;
+		}
 
 		if ( ! defined( 'PR_TESTING_ASSETS' ) ) {
 			foreach ( array( 'descriptions', 'country', 'releases', 'issues', 'README', 'urls', 'requirements' ) as $rk ) {
