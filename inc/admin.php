@@ -225,8 +225,22 @@ function entrepot_admin_get_theme_repositories_list() {
 			$theme->parent = false;
 		}
 
+		$theme->requires     = false;
+		$theme->requires_php = '5.6';
+
+		if ( isset( $theme->requirements->WP ) ) {
+			$theme->requires = $theme->requirements->WP;
+		}
+
+		if ( isset( $theme->requirements->PHP ) ) {
+			$theme->requires_php = $theme->requirements->PHP;
+		}
+
+		$theme->compatibleWP  = is_wp_version_compatible( $theme->requires );
+		$theme->compatiblePHP = is_php_version_compatible( $theme->requires_php );
+
 		if ( ! defined( 'PR_TESTING_ASSETS' ) ) {
-			foreach ( array( 'descriptions', 'country', 'releases', 'issues', 'README', 'urls' ) as $rk ) {
+			foreach ( array( 'descriptions', 'country', 'releases', 'issues', 'README', 'urls', 'requirements' ) as $rk ) {
 				unset( $theme->{$rk} );
 			}
 		}
