@@ -643,10 +643,37 @@ function entrepot_update_plugin_repositories( $option = null ) {
 			continue;
 		}
 
+		// Unset w.org plugins having the same name.
+		if ( isset( $option->response[ $kr ] ) && 'w.org/plugins/' . $repository_name === $option->response[ $kr ]->id ) {
+			unset( $option->response[ $kr ] );
+		}
+
+		// Make sure w.org plugins having the same name are not conflicting with the needed upgrade.
+		if ( isset( $option->no_update[ $kr ] ) && 'w.org/plugins/' . $repository_name === $option->no_update[ $kr ]->id ) {
+			unset( $option->no_update[ $kr ] );
+		}
+
 		$response = entrepot_get_repository_latest_stable_release( $json->releases, array_merge( $dp, array(
 			'plugin' => $kr,
 			'slug'   => $repository_name,
 		) ), 'plugin' );
+
+		// Look for requirements.
+		if ( isset( $response->full_upgrade_notice ) ) {
+			preg_match_all( '/\>Requires PHP (.*?)\<|\>Requires WordPress (.*?)\<|\>Tested up to WordPress (.*?)\</', $response->full_upgrade_notice, $config );
+
+			if ( isset( $config[1][0] ) && $config[1][0] ) {
+				$response->requires_php = $config[1][0];
+			}
+
+			if ( isset( $config[2][1] ) && $config[2][1] ) {
+				$response->requires_wp = $config[2][1];
+			}
+
+			if ( isset( $config[3][2] ) && $config[3][2] ) {
+				$response->tested = $config[3][2];
+			}
+		}
 
 		$repositories_data[ $kr ] = $response;
 	}
@@ -667,6 +694,8 @@ function entrepot_update_plugin_repositories( $option = null ) {
 	remove_action( 'set_site_transient_update_plugins', 'entrepot_update_plugin_repositories', 10, 1 );
 
 	set_site_transient( 'update_plugins', $option );
+
+	add_action( 'set_site_transient_update_plugins', 'entrepot_update_plugin_repositories', 10, 1 );
 }
 
 /**
@@ -721,6 +750,8 @@ function entrepot_update_theme_repositories( $option = null ) {
 	remove_action( 'set_site_transient_update_themes', 'entrepot_update_theme_repositories', 10, 1 );
 
 	set_site_transient( 'update_themes', $option );
+
+	add_action( 'set_site_transient_update_themes', 'entrepot_update_theme_repositories', 10, 1 );
 }
 
 /**
