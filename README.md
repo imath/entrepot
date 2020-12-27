@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/imath/entrepot.svg?branch=master)](https://travis-ci.org/imath/entrepot)
+[![Build Status](https://img.shields.io/travis/com/imath/entrepot/master.svg)](https://travis-ci.com/imath/entrepot)
 
 # Entrepôt
 
@@ -16,7 +16,7 @@ En téléchargeant et en installant cette extension, vos utilisateurs disposent 
 
 Les *auteurs* d'extensions, de thèmes ou de blocs, peuvent, à l'aide d'une "Pull Request" particulière référencer les dépôts publics hébergés sur GitHub.com correspondants. Pour en savoir plus, reportez-vous à la [documentation](https://github.com/imath/entrepot/wiki).
 
-Cette extension nécessite WordPress 5.0 et a été testée jusqu'à sa version 5.4.
+Cette extension nécessite WordPress 5.0 et a été testée jusqu'à sa version 5.6.
 
 ## English 🇬🇧
 *Register your free WordPress plugins, themes and blocks into the Entrepôt*
@@ -32,7 +32,7 @@ Users can download this plugin to enjoy an alternative source of free WordPress 
 
 *Authors* can, using a particular "Pull Request" register their free GitHub.com hosted plugins, themes or blocks. For more information, see the [documentation](https://github.com/imath/entrepot/wiki).
 
-This plugin requires WordPress 5.0 and been tested up to 5.4.
+This plugin requires WordPress 5.0 and been tested up to 5.6.
 
 ## Code of Conduct
 

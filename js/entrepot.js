@@ -14,18 +14,28 @@ window.entrepot = window.entrepot || _.extend( {}, _.pick( window.wp, 'Backbone'
 	$( document ).ready( function() {
 		$( 'body' ).addClass( 'entrepot-install-php' );
 
-		var search = $( '.plugin-install-php .wp-filter-search' );
+		var search = $( '.plugin-install-php .wp-filter-search' ),
+		    searchCss = {
+				margin: 0,
+				width: '280px',
+				'font-size': '16px',
+				'font-weight': 300,
+				'line-height': 1.5,
+				padding: '3px 5px',
+				height: '32px'
+			};
+
+		if ( entrepotl10n.wpVersion >= 5.5 ) {
+			searchCss = {
+				display: 'inline-block',
+				'margin-top': '10px',
+				'vertical-align': 'top'
+			};
+		}
+
 		$( search ).removeClass( 'wp-filter-search' )
 		           .prop( 'id', 'entrepot-search' )
-		           .css( {
-		             margin: 0,
-		             width: '280px',
-		             'font-size': '16px',
-		             'font-weight': 300,
-		             'line-height': 1.5,
-		             padding: '3px 5px',
-		             height: '32px'
-		           } );
+		           .css( searchCss );
 
 		$( '#typeselector [value="tag"]' ).remove();
 		$( '#the-list' ).css( { 'margin-top': '2em' } );

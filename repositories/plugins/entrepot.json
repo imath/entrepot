@@ -1,7 +1,10 @@
 {
 	"name": "Entrepôt",
 	"author": "imath",
-	"slug": "entrepot",
+  "slug": "entrepot",
+  "dependencies": [
+    { "render_block": "WordPress 5.0+" }
+  ],
 	"icon": "https://raw.githubusercontent.com/imath/entrepot/master/icon.png",
 	"tags": [
 	  "plugins",
@@ -11,8 +14,8 @@
 	"releases": "https://github.com/imath/entrepot/releases",
 	"issues": "https://github.com/imath/entrepot/issues",
 	"description": {
-		"en_US" : "Entrepôt, a list of free GitHub.com hosted plugins and themes.",
-		"fr_FR" : "Entrepôt, une liste d'extensions et de thèmes gratuits hébergés sur GitHub.com."
+		"en_US" : "Entrepôt, a list of free GitHub.com hosted plugins, blocks and themes.",
+		"fr_FR" : "Entrepôt, une liste d'extensions, de blocs et de thèmes gratuits hébergés sur GitHub.com."
 	},
 	"README": "https://raw.githubusercontent.com/imath/entrepot/master/README.md",
 	"urls": {

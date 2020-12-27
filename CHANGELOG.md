@@ -8,7 +8,7 @@ _Tested up to WordPress 5.6_
 ### Bug fixes
 
 - Avoids messing with the Block Editor `query_plugins` requests about block plugins.
-- Disable the Plugins overwrite feature used to manage plugin versions in favor of the WordPress 5.5 manual plugin down/upgrade feature.
+- When the WordPress version installed on the site is >= 5.5, disable the Plugins overwrite feature used to manage plugin versions in favor of the WordPress 5.5 manual plugin down/upgrade feature.
 - Set default values for WP/PHP version theme requirements to make sure it's still possible to install a Theme registered into the Entrepôt using the Customizer.
 
 ### Features

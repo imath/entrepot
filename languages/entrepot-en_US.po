@@ -5,14 +5,14 @@ msgstr ""
 "Project-Id-Version: Entrepôt 1.6.0\n"
 "Report-Msgid-Bugs-To: https://github.com/imath/entrepot/issues\n"
 "POT-Creation-Date: 2020-12-27 07:15:17+00:00\n"
-"PO-Revision-Date: 2020-12-27 08:20+0100\n"
+"PO-Revision-Date: 2020-12-27 12:58+0100\n"
 "Last-Translator: imath <contact@imathi.eu>\n"
 "Language-Team: imath <contact@imathi.eu>\n"
 "Language: en_US\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.7.4\n"
+"X-Generator: Poedit 2.3.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: inc/admin.php:116
@@ -181,7 +181,7 @@ msgstr ""
 msgid "%d extension nécessite une mise à niveau"
 msgid_plural "%d extensions nécessitent une mise à niveau."
 msgstr[0] "%d plugin requires an upgrade"
-msgstr[1] "%d plugins require an upgrade"
+msgstr[1] "%d plugins require an upgrade."
 
 #: inc/admin.php:1362
 msgid ""
@@ -191,7 +191,7 @@ msgstr "Please visit the %s administration page to process the needed tasks."
 
 #: inc/admin.php:1364
 msgid "mises à niveau"
-msgstr "Plugin upgrades"
+msgstr "plugin upgrades"
 
 #: inc/admin.php:1380
 msgid "<span class=\"count\">%d</span> Alerte"
@@ -247,8 +247,8 @@ msgid ""
 "Attention, vous ne pourrez pas faire machine arrière à moins d'avoir fait "
 "une sauvegarde de votre base de données. Souhaitez-vous poursuivre ?"
 msgstr ""
-"Be aware you will not be able to undo unless you backed up your database. "
-"Please confirm you want to go on."
+"Be aware you will not be able to undo unless you backed up your database. Do "
+"you confirm you want to go on?"
 
 #: inc/admin.php:1531
 msgid "Mise à niveau"
@@ -274,7 +274,7 @@ msgid ""
 "type de fichier"
 msgstr ""
 "In WordPress packages are using the ZIP format, please make sure to select "
-"this type of file."
+"this type of file"
 
 #: inc/admin.php:1580
 msgid "Erreur inconnue, merci de renouveler un peu plus tard"
@@ -430,7 +430,7 @@ msgstr "You are not allowed to remove blocks."
 
 #: inc/blocks.php:835
 msgid "Erreur de suppression du bloc"
-msgstr "Error while trying to remove the block."
+msgstr "Error while trying to remove the block"
 
 #: inc/blocks.php:904
 msgid "Types de bloc"
@@ -670,7 +670,7 @@ msgid ""
 "attendue"
 msgstr ""
 "The ZIP package is missing or does not respect the way plugin packages are "
-"organized."
+"organized"
 
 #: inc/classes/class-entrepot-rest-plugins-controller.php:336
 msgid "La version de l'extension est désormais celle l'archive ZIP transmise"
@@ -688,7 +688,7 @@ msgstr "Version %1$s has been downgraded to %2$s"
 msgid ""
 "Impossible de se connecter au système de fichier. Merci de vérifier votre "
 "authenification"
-msgstr "Unable to connect to the filesystem. Please confirm your credentials."
+msgstr "Unable to connect to the filesystem. Please confirm your credentials"
 
 #: inc/classes/class-entrepot-rest-plugins-controller.php:373
 msgid "Le changement de version a échoué."

@@ -404,6 +404,8 @@ function entrepot_admin_head() {
  * @since 1.0.0
  */
 function entrepot_admin_register_scripts() {
+	global $wp_version;
+
 	wp_register_script(
 		'entrepot',
 		sprintf( '%1$sentrepot%2$s.js', entrepot_js_url(), entrepot_min_suffix() ),
@@ -417,6 +419,7 @@ function entrepot_admin_register_scripts() {
 		'locale'       => get_user_locale(),
 		'defaultIcon'  => esc_url_raw( entrepot_assets_url() . 'repo.svg' ),
 		'byAuthor'     => _x( 'De %s', 'plugin', 'entrepot' ),
+		'wpVersion'    => (float) $wp_version,
 	) );
 
 	wp_register_script(
