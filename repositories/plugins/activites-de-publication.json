@@ -1,26 +1,26 @@
 {
-    "name": "Activités de Publication",
-    "author": "imath",
-    "slug": "activites-de-publication",
-    "dependencies": [
-        { "render_block" : "WordPress 5.0+" },
-        { "bp_rest_api_is_available": "BuddyPress 5.0+" }
-    ],
-    "icon": "https://raw.githubusercontent.com/imath/activites-de-publication/master/icon.png",
-    "tags": [
-      "BuddyPress",
-      "activity",
-      "Post-Types"
-    ],
-    "country": "fr_FR",
-    "releases": "https://github.com/imath/activites-de-publication/releases",
-    "issues": "https://github.com/imath/activites-de-publication/issues",
-    "description": {
-        "en_US" : "Use the BuddyPress activities to boost conversations about your WordPress posts.",
-        "fr_FR" : "Utilisez les activités de BuddyPress pour dynamiser les conversations de vos publications WordPress"
-    },
-    "README": "https://raw.githubusercontent.com/imath/activites-de-publication/master/README.md",
-    "urls": {
-      "donate": "https://paypal.me/imath"
-    }
+  "name": "Activités de Publication",
+  "author": "imath",
+  "slug": "activites-de-publication",
+  "dependencies": [
+    { "render_block": "WordPress 5.0+" },
+    { "bp_rest_api_is_available": "BuddyPress 5.0+" }
+  ],
+  "icon": "https://raw.githubusercontent.com/imath/activites-de-publication/master/icon.png",
+  "tags": [
+    "BuddyPress",
+    "activity",
+    "Post-Types"
+  ],
+  "country": "fr_FR",
+  "releases": "https://github.com/imath/activites-de-publication/releases",
+  "issues": "https://github.com/imath/activites-de-publication/issues",
+  "description": {
+      "en_US" : "Use the BuddyPress activities to boost conversations about your WordPress posts.",
+      "fr_FR" : "Utilisez les activités de BuddyPress pour dynamiser les conversations de vos publications WordPress"
+  },
+  "README": "https://raw.githubusercontent.com/imath/activites-de-publication/master/README.md",
+  "urls": {
+    "donate": "https://paypal.me/imath"
+  }
 }
