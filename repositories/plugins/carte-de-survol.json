@@ -3,9 +3,7 @@
   "author": "imath",
   "slug": "carte-de-survol",
   "dependencies": [
-      {
-        "bp_rest_api_is_available": "BuddyPress 5.0+"
-      }
+    {"bp_rest_api_is_available": "BuddyPress 5.0+" }
   ],
   "icon": "https://raw.githubusercontent.com/imath/carte-de-survol/master/icon.png",
   "tags": [
