@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Entrepôt 1.5.0\n"
+"Project-Id-Version: Entrepôt 1.6.0\n"
 "POT-Creation-Date: \n"
 "PO-Revision-Date: \n"
 "Last-Translator: imath <mathchristo@yahoo.fr>\n"
@@ -9,26 +9,26 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.7.1\n"
+"X-Generator: Poedit 2.3.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
-#: src/manage-block-types/index.js:114
+#: src/manage-block-types/index.js:115
 msgid "Installés"
 msgstr "Installed"
 
-#: src/manage-block-types/index.js:119
+#: src/manage-block-types/index.js:120
 msgid "Disponibles"
 msgstr "Available"
 
-#: src/manage-block-types/index.js:169
+#: src/manage-block-types/index.js:150
 msgid "Dépendance(s) insatisfaite(s):"
 msgstr "Unsatisfied dependencies:"
 
-#: src/manage-block-types/index.js:67
+#: src/manage-block-types/index.js:68
 msgid "Chargement en cours, merci de patienter."
 msgstr "Loading, please wait."
 
-#: src/manage-block-types/index.js:73
+#: src/manage-block-types/index.js:74
 msgid "Liste de blocs"
 msgstr "Blocks list"

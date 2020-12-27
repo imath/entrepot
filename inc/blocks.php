@@ -934,6 +934,17 @@ function entrepot_blocks_get_updates( $repositories = array() ) {
 			'GitHub Block URI' => str_replace( '/releases', '', $json->releases ),
 		), 'block' );
 
+		// Look for requirements.
+		if ( isset( $response->full_upgrade_notice ) ) {
+			$requirements = entrepot_get_update_requirements( $response->full_upgrade_notice );
+
+			if ( $requirements && 0 < count( $requirements ) ) {
+				foreach ( $requirements as $key_require => $require ) {
+					$response->{$key_require} = $require;
+				}
+			}
+		}
+
 		$repositories_data[ $block->id ] = $response;
 	}
 
