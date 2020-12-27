@@ -13,7 +13,7 @@
 
 
 		if ( r.wp && '' !== r.wp ) {
-			warnings += '<br><span class="attention">' + entrepotRepositories.warnings.WP.replace( 'pluginVersion', r.wp ) + '</span>';
+			warnings += '<br><span class="attention">' + entrepotRepositories.warnings.WP.replace( 'wpVersion', r.wp ) + '</span>';
 		}
 
 		if ( r.php && '' !== r.php ) {

@@ -58,6 +58,7 @@ function entrepot_admin_updater() {
 function entrepot_admin_get_plugin_repositories_list() {
 	$repositories    = entrepot_get_repositories();
 	$installed_repos = entrepot_get_installed_repositories();
+	$updates_require = entrepot_admin_check_plugin_requires( true );
 	$keyed_by_slug   = array();
 
 	foreach ( $installed_repos as $i => $installed_repo ) {
@@ -71,7 +72,8 @@ function entrepot_admin_get_plugin_repositories_list() {
 	$thickbox_link = self_admin_url( 'plugin-install.php?tab=plugin-information&amp;plugin=%s&amp;TB_iframe=true&amp;width=600&amp;height=550' );
 
 	foreach ( $repositories as $k => $repository ) {
-		$data = null;
+		$data            = null;
+		$plugin_requires = array();
 
 		if ( ! isset( $repository->slug ) ) {
 			$repositories[ $k ]->slug = sanitize_title( $repository->name );
@@ -129,6 +131,18 @@ function entrepot_admin_get_plugin_repositories_list() {
 				}
 
 				$repositories[ $k ]->activate_url = esc_url_raw( $repositories[ $k ]->activate_url );
+			}
+		} elseif ( 'update_available' === $data['status'] && isset( $updates_require['data'][ $data['file'] ] ) ) {
+			$plugin_requires = $updates_require['data'][ $data['file'] ];
+
+			if ( isset( $plugin_requires['php'] ) && $plugin_requires['php'] ) {
+				$repositories[ $k ]->requires_php         = $plugin_requires['php'];
+				$repositories[ $k ]->requires_php_message = str_replace( 'phpVersion', $plugin_requires['php'], $updates_require['warnings']['PHP'] );
+			}
+
+			if ( isset( $plugin_requires['wp'] ) && $plugin_requires['wp'] ) {
+				$repositories[ $k ]->requires_wp         = $plugin_requires['wp'];
+				$repositories[ $k ]->requires_wp_message = str_replace( 'wpVersion', $plugin_requires['wp'], $updates_require['warnings']['WP'] );
 			}
 		}
 	}
@@ -649,7 +663,7 @@ function entrepot_admin_plugins_print_templates() {
 							<a class="install-now button" data-slug="{{data.slug}}" href="{{{data.url}}}" aria-label="<?php esc_attr_e( 'Installer maintenant', 'entrepot' ); ?>" data-name="{{data.name}}"><?php esc_html_e( 'Installer', 'entrepot' ); ?></a>
 
 						<# } else if ( 'update_available' === data.status && data.url ) { #>
-							<a class="update-now button aria-button-if-js" data-plugin="{{data.file}}" data-slug="{{data.slug}}" href="{{{data.url}}}" aria-label="<?php esc_attr_e( 'Mettre à jour maintenant', 'entrepot' ); ?>" data-name="{{data.name}}"><?php esc_html_e( 'Mettre à jour', 'entrepot' ); ?></a>
+							<a class="update-now button aria-button-if-js" data-plugin="{{data.file}}" data-slug="{{data.slug}}" href="{{{data.url}}}" aria-label="<?php esc_attr_e( 'Mettre à jour maintenant', 'entrepot' ); ?>" data-name="{{data.name}}" <# if ( data.requires_php || data.requires_wp ) { #>disabled="disabled"<# } #>><?php esc_html_e( 'Mettre à jour', 'entrepot' ); ?></a>
 
 						<# } else if ( data.activate_url ) { #>
 							<a href="{{{data.activate_url}}}" class="button button-primary activate-now" aria-label="<?php echo is_network_admin() ? esc_attr__( 'Activer sur le réseau', 'entrepot' ) : esc_attr__( 'Activer', 'entrepot' ); ?>"><?php echo is_network_admin() ? esc_html__( 'Activer sur le réseau', 'entrepot' ) : esc_html__( 'Activer', 'entrepot' ); ?></a>
@@ -676,18 +690,32 @@ function entrepot_admin_plugins_print_templates() {
 			</div>
 		</div>
 
-		<# if ( data.unsatisfied_dependencies.length ) { #>
+		<# if ( data.unsatisfied_dependencies.length || data.requires_php || data.requires_wp ) { #>
 			<div class="plugin-card-bottom">
-				<div class="column-downloaded">
-					<?php esc_html_e( 'Dépendance(s) insatisfaite(s):', 'entrepot' ); ?>
-				</div>
-				<div class="column-compatibility">
-					<ul style="margin: 0">
-						<# _.each( data.unsatisfied_dependencies, function( dependency ) { #>
-							<li style="text-align: left"><strong>{{ dependency }}</strong></li>
-						<# } ); #>
-					</ul>
-				</div>
+				<# if ( data.unsatisfied_dependencies.length ) { #>
+					<div class="column-downloaded">
+						<?php esc_html_e( 'Dépendance(s) insatisfaite(s):', 'entrepot' ); ?>
+					</div>
+					<div class="column-compatibility">
+						<ul style="margin: 0">
+							<# _.each( data.unsatisfied_dependencies, function( dependency ) { #>
+								<li style="text-align: left"><strong>{{ dependency }}</strong></li>
+							<# } ); #>
+						</ul>
+					</div>
+				<# } #>
+				<# if ( data.requires_php || data.requires_wp ) { #>
+					<div class="column-requires">
+						<ul style="margin: 0">
+							<# if ( data.requires_wp ) { #>
+								<li style="text-align: left"><span class="attention">{{ data.requires_wp_message }}</span></li>
+							<# } #>
+							<# if ( data.requires_php ) { #>
+								<li style="text-align: left"><span class="attention">{{ data.requires_php_message }}</span></li>
+							<# } #>
+						</ul>
+					</div>
+				<# } #>
 			</div>
 		<# } #>
 
@@ -1155,6 +1183,7 @@ function entrepot_plugin_row_udpate_info( $plugin_data = array(), $response = nu
 		printf(
 			'<span class="attention entrepot-warning" style="display: block; margin-left: 25px">%s</span>',
 			sprintf(
+				/* translators: 1: Plugin WordPress required version. 2: WP current version. */
 				esc_html__( 'La version de WordPress requise pour cette mise à jour (%1$s) est supérieure à celle qui est installée sur ce site (%2$s).', 'entrepot' ),
 				esc_html( $response->requires_wp ),
 				esc_html( $wp_version )
@@ -1166,6 +1195,7 @@ function entrepot_plugin_row_udpate_info( $plugin_data = array(), $response = nu
 		printf(
 			'<span class="attention entrepot-warning" style="display: block; margin-left: 25px">%s</span>',
 			sprintf(
+				/* translators: 1: Plugin PHP required version. 2: PHP current version. */
 				esc_html__( 'La version de PHP requise pour cette mise à jour (%1$s) est supérieure à celle qui est installée sur ce site (%2$s).', 'entrepot' ),
 				esc_html( $response->requires_wp ),
 				esc_html( $wp_version )
@@ -1752,8 +1782,12 @@ function entrepot_ajax_after_edit_plugin_file() {
  * Output warnings if the Plugin update requires a newer PHP/WP version comparing to the ones installed.
  *
  * @since 1.5.5
+ *
+ * @param boolean $is_entrepot True if the check happens into the Entrpôt context.
+ *                             False otherwise. Default `false`
+ * @return void|array Nothing or the requirements for Entrepôt Plugin repositories.
  */
-function entrepot_admin_check_required_wp() {
+function entrepot_admin_check_plugin_requires( $is_entrepot = false ) {
 	include ABSPATH . WPINC . '/version.php'; // include an unmodified $wp_version
 	$wp_version = preg_replace( '/-.*$/', '', $wp_version );
 
@@ -1762,13 +1796,14 @@ function entrepot_admin_check_required_wp() {
 
 	if ( isset( $plugins->response ) && is_array( $plugins->response ) ) {
 		foreach ( $plugins->response as $plugin_file => $plugin_data ) {
-			if ( ! entrepot_get_repository_json( $plugin_data->slug ) ) {
+			if ( ! $is_entrepot && ! entrepot_get_repository_json( $plugin_data->slug ) ) {
 				continue;
 			}
 
 			$script_data[ $plugin_file ] = array();
 			$requires_php                = '';
 			$requires_wp                 = '';
+			$icon                        = '';
 
 			if ( isset( $plugin_data->requires_php ) && version_compare( phpversion(), $plugin_data->requires_php, '<' ) ) {
 				$requires_php = $plugin_data->requires_php;
@@ -1778,14 +1813,36 @@ function entrepot_admin_check_required_wp() {
 				$requires_wp = $plugin_data->requires_wp;
 			}
 
-			if ( isset( $plugin_data->icons['1x'] ) && ( $requires_php || $requires_wp ) ) {
+			if ( isset( $plugin_data->icons['1x'] ) ) {
+				$icon = $plugin_data->icons['1x'];
+			}
+
+			if ( ( '' !== $icon || true === $is_entrepot ) && ( $requires_php || $requires_wp ) ) {
 				$script_data[ $plugin_file ] = array(
-					'icon' => $plugin_data->icons['1x'],
+					'icon' => $icon,
 					'php'  => $requires_php,
 					'wp'   => $requires_wp,
 				);
 			}
 		}
+	}
+
+	// Set warnings.
+	$warnings = array(
+		'WP'  => sprintf(
+			/* translators: %s is the current WordPress version. wpVersion is to leave as is */
+			_x( 'La version de WordPress requise pour cette mise à jour (wpVersion) est supérieure à celle qui est installée sur ce site (%s).', 'JavaScript string', 'entrepot' ),
+			esc_html( $wp_version )
+		),
+		'PHP' => sprintf(
+			/* translators: %s is the current PHP version. wpVersion is to leave as is */
+			_x( 'La version de PHP requise pour cette mise à jour (phpVersion) est supérieure à celle qui est installée sur ce site (%s).', 'JavaScript string', 'entrepot' ),
+			esc_html( phpversion() )
+		),
+	);
+
+	if ( true === $is_entrepot ) {
+		return array( 'data' => $script_data, 'warnings' => $warnings );
 	}
 
 	$script_data = array_values( $script_data );
@@ -1800,10 +1857,7 @@ function entrepot_admin_check_required_wp() {
 		'entrepotRepositories',
 		array(
 			'plugins'  => $script_data,
-			'warnings' => array(
-				'WP'  => sprintf( __( 'La version de WordPress requise pour cette mise à jour (pluginVersion) est supérieure à celle qui est installée sur ce site (%s).', 'entrepot' ), esc_html( $wp_version ) ),
-				'PHP' => sprintf( __( 'La version de PHP requise pour cette mise à jour (phpVersion) est supérieure à celle qui est installée sur ce site (%s).', 'entrepot' ), esc_html( phpversion() ) ),
-			),
+			'warnings' => $warnings,
 		)
 	);
 }
