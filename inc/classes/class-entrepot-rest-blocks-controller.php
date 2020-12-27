@@ -30,6 +30,13 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 	protected $blocks;
 
 	/**
+	 * The block updates data.
+	 *
+	 * @var object
+	 */
+	protected $block_updates;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 1.5.0
@@ -152,10 +159,13 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 
 		if ( 'installed' === $type ) {
 			$active_blocks = get_site_option( 'entrepot_active_blocks', array() );
-			$block_updates = get_site_transient( 'entrepot_update_blocks' );
+
+			if ( ! $this->block_updates ) {
+				$this->block_updates = get_site_transient( 'entrepot_update_blocks' );
+			}
 
 			// Include update links for Blocks needing to be updated.
-			if ( current_user_can( 'update_entrepot_blocks' ) && isset( $block_updates->response[ $block['id'] ] ) && $block_updates->response[ $block['id'] ] ) {
+			if ( current_user_can( 'update_entrepot_blocks' ) && isset( $this->block_updates->response[ $block['id'] ] ) && $this->block_updates->response[ $block['id'] ] ) {
 				$links = array_merge( $links, array(
 					'update'    => array(
 						'href'       => add_query_arg( array(
@@ -257,12 +267,14 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 			return array();
         }
 
-		// Get available fields.
-		$fields = $this->get_fields_for_response( $request );
+		// Get available fields and block updates.
+		$fields              = $this->get_fields_for_response( $request );
+		$this->block_updates = get_site_transient( 'entrepot_update_blocks' );
+		$block_update        = null;
 
 		// Sanitize Block fields data.
 		foreach ( $fields as $property ) {
-			if ( ! isset( $block[ $property ] ) ) {
+			if ( 'requirements' !== $property && ! isset( $block[ $property ] ) ) {
 				continue;
 			}
 
@@ -285,6 +297,53 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 				$block[ $property ] = array_map( 'sanitize_text_field', $block[ $property ] );
 			} elseif ( 'dependencies' === $property ) {
 				$block[ $property ] = entrepot_get_repository_dependencies( $block[ $property ] );
+			} elseif ( 'requirements' === $property ) {
+				$requirements = array(
+					'php'         => '5.6',
+					'required_wp' => '5.0',
+					'tested'      => '',
+					'warnings'    => array(),
+				);
+
+				if ( isset( $this->block_updates->response[ $block['id'] ] ) && $this->block_updates->response[ $block['id'] ] ) {
+					include ABSPATH . WPINC . '/version.php'; // include an unmodified $wp_version
+
+					$wp_version   = preg_replace( '/-.*$/', '', $wp_version );
+					$php_version  = phpversion();
+					$block_update = $this->block_updates->response[ $block['id'] ];
+
+					if ( isset( $block_update->requires_php ) && version_compare( $php_version, $block_update->requires_php, '<' ) ) {
+						$requirements['php']        = $block_update->requires_php;
+						$requirements['warnings'][] = sprintf(
+							/* translators: 1. is the block update required PHP version. 2. is the current PHP version. */
+							esc_html__( 'La version de PHP requise pour la mise à jour du bloc (%1$s) est supérieure à celle qui est installée sur ce site (%2$s).', 'entrepot' ),
+							esc_html( $block_update->requires_php ),
+							esc_html( $php_version )
+						);
+					}
+
+					if ( isset( $block_update->requires_wp ) && version_compare( $wp_version, $block_update->requires_wp, '<' ) ) {
+						$requirements['requires_wp'] = $block_update->requires_wp;
+						$requirements['warnings'][]  = sprintf(
+							/* translators: 1. is the block update required WordPress version. 2. is the current WordPress version. */
+							esc_html__( 'La version de WordPress requise pour la mise à jour du bloc (%1$s) est supérieure à celle qui est installée sur ce site (%2$s).', 'entrepot' ),
+							esc_html( $block_update->requires_wp ),
+							esc_html( $wp_version )
+						);
+					}
+
+					if ( isset( $block_update->tested ) && $block_update->tested && version_compare( $wp_version, $block_update->tested, '>' ) ) {
+						$requirements['tested']     = $block_update->tested;
+						$requirements['warnings'][] = sprintf(
+							/* translators: 1. is the current WordPress version. 2. is the block update tested up to WordPress version. */
+							esc_html__( 'La version de WordPress installée sur votre site (%1$s) est supérieure à la version maximale supportée par le bloc (%2$s).', 'entrepot' ),
+							esc_html( $block_update->tested ),
+							esc_html( $wp_version )
+						);
+					}
+				}
+
+				$block[ $property ] = (object) $requirements;
 			}
 		}
 
@@ -455,6 +514,14 @@ class Entrepot_REST_Blocks_Controller extends WP_REST_Controller {
 				),
 				'dependencies' => array(
 					'description' => __( 'Une liste d’objets ayant pour nom de propriété le nom de la fonction requise et pour valeur de propriété le nom de la version de WordPress de l’extension ou du thème correspondant pour le type de bloc.', 'entrepot' ),
+					'type'        => 'array',
+					'items'       => array(
+						'type'    => 'object',
+					),
+					'context'     => array( 'view', 'edit', 'embed' ),
+				),
+				'requirements' => array(
+					'description' => __( 'La liste des versions requises pour le bloc.', 'entrepot' ),
 					'type'        => 'array',
 					'items'       => array(
 						'type'    => 'object',

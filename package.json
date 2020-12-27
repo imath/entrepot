@@ -31,8 +31,8 @@
     "npm": "6.14.0"
   },
   "scripts": {
-    "start": "parcel watch src/manage-block-types/index.js -d js --out-file manage-block-types.js",
-    "build": "parcel build src/manage-block-types/index.js -d js --out-file manage-block-types.min.js",
+    "start": "parcel watch src/manage-block-types/index.js -d js --out-file manage-block-types.js --no-source-maps",
+    "build": "parcel build src/manage-block-types/index.js -d js --out-file manage-block-types.min.js --no-source-maps",
     "translate": "po2json languages/js/entrepot-en_US.po languages/js/entrepot-en_US-entrepot-manage-blocks.json -f jed"
   },
   "keywords": [

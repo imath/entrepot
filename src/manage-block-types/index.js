@@ -55,7 +55,8 @@ class ManageBlocks extends Component {
                         icon={ block.icon }
                         author={ block.author }
                         actions={ actions }
-                        dependencies={ block.dependencies }
+						dependencies={ block.dependencies }
+						requirements={ block.requirements }
                     />
                 );
             } );
@@ -127,7 +128,8 @@ class BlockFilters extends Component {
 
 class Block extends Component {
     render() {
-        const { actions, dependencies } = this.props;
+		const { actions, dependencies, requirements } = this.props;
+		const hasCardBottom = dependencies || ( requirements.warnings && 1 <= requirements.warnings.length );
         const actionLinks = Object.values( actions ).map( ( action, key ) => (
             <li key={key}>
                 <a
@@ -138,10 +140,41 @@ class Block extends Component {
                     { action[0].title }
                 </a>
             </li>
-        ) );
+		) );
+
+		let dependenciesOuptut = null;
+		if ( dependencies ) {
+			dependenciesOuptut = (
+				<Fragment>
+					<div className="column-downloaded">
+						{ __( 'Dépendance(s) insatisfaite(s):', 'entrepot' ) }
+					</div>
+					<div className="column-compatibility">
+						<ul>
+							{ dependencies.map( ( dependency, key ) => (
+								<li key={ key }><strong>{ dependency }</strong></li>
+							) ) }
+						</ul>
+					</div>
+				</Fragment>
+			);
+		}
+
+		let requirementsOuptut = null;
+		if ( requirements.warnings && 1 <= requirements.warnings.length ) {
+			requirementsOuptut = (
+				<div className="column-requirements">
+					<ul>
+						{ requirements.warnings.map( ( warning, key) => (
+							<li key={ key }><span className="attention">{ warning }</span></li>
+						) ) }
+					</ul>
+				</div>
+			);
+		}
 
         return (
-            <div className="block plugin-card">
+            <div key={ this.props.id } className="block plugin-card">
                 <div className="plugin-card-top">
                     <div className="name column-name">
                         <h3>
@@ -163,18 +196,10 @@ class Block extends Component {
                         </p>
                     </div>
                 </div>
-                { dependencies &&
+                { hasCardBottom &&
                      <div className="plugin-card-bottom">
-                        <div className="column-downloaded">
-                            { __( 'Dépendance(s) insatisfaite(s):', 'entrepot' ) }
-                        </div>
-                        <div className="column-compatibility">
-                            <ul>
-                                { dependencies.map( ( dependency ) => (
-                                    <li><strong>{ dependency }</strong></li>
-                                ) ) }
-                            </ul>
-                        </div>
+						{ dependenciesOuptut }
+						{ requirementsOuptut }
                     </div>
                 }
             </div>

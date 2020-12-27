@@ -619,6 +619,42 @@ function entrepot_update_repositories( $option = null ) {
 }
 
 /**
+ * Looks for repository's requirements from its upgrade notice.
+ *
+ * @since 1.6.0
+ *
+ * @param string $upgrade_notice The upgrade notice.
+ * @return array The repository's requirements.
+ */
+function entrepot_get_update_requirements( $upgrade_notice = '' ) {
+	$requirements = array();
+
+	if ( ! $upgrade_notice ) {
+		return $requirements;
+	}
+
+	// Look for PHP config.
+	preg_match( '/\>Requires PHP (.*?)\</', $upgrade_notice, $config_php );
+	if ( isset( $config_php[1] ) && $config_php[1] ) {
+		$requirements['requires_php'] = $config_php[1];
+	}
+
+	// Look for Min WP config.
+	preg_match( '/\>Requires WordPress (.*?)\</', $upgrade_notice, $config_min_wp );
+	if ( isset( $config_min_wp[1] ) && $config_min_wp[1] ) {
+		$requirements['requires_wp'] = $config_min_wp[1];
+	}
+
+	// Look for Max WP config.
+	preg_match( '/\>Tested up to WordPress (.*?)\</', $upgrade_notice, $config_max_wp );
+	if ( isset( $config_max_wp[1] ) && $config_max_wp[1] ) {
+		$requirements['tested'] = $config_max_wp[1];
+	}
+
+	return $requirements;
+}
+
+/**
  * Manage Plugin repository Updates by overriding the update_plugins transient.
  *
  * @since 1.4.0
@@ -660,18 +696,12 @@ function entrepot_update_plugin_repositories( $option = null ) {
 
 		// Look for requirements.
 		if ( isset( $response->full_upgrade_notice ) ) {
-			preg_match_all( '/\>Requires PHP (.*?)\<|\>Requires WordPress (.*?)\<|\>Tested up to WordPress (.*?)\</', $response->full_upgrade_notice, $config );
+			$requirements = entrepot_get_update_requirements( $response->full_upgrade_notice );
 
-			if ( isset( $config[1][0] ) && $config[1][0] ) {
-				$response->requires_php = $config[1][0];
-			}
-
-			if ( isset( $config[2][1] ) && $config[2][1] ) {
-				$response->requires_wp = $config[2][1];
-			}
-
-			if ( isset( $config[3][2] ) && $config[3][2] ) {
-				$response->tested = $config[3][2];
+			if ( $requirements && 0 < count( $requirements ) ) {
+				foreach ( $requirements as $key_require => $require ) {
+					$response->{$key_require} = $require;
+				}
 			}
 		}
 
