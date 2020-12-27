@@ -1,3 +1,4 @@
+/* global entrepotRepositories */
 ( function() {
 	if ( 'undefined' === typeof entrepotRepositories ) {
 		return false;

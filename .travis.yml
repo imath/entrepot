@@ -21,11 +21,13 @@ php:
 # x.y mirrors the latest from the x.y branch
 env:
   - WP_VERSION=master PR_TRAVISCI=travis:build
+  - WP_VERSION=5.6 PR_TRAVISCI=travis:build
   - WP_VERSION=5.5 PR_TRAVISCI=travis:build
   - WP_VERSION=5.4 PR_TRAVISCI=travis:build
   - WP_VERSION=5.3 PR_TRAVISCI=travis:build
   - WP_VERSION=5.2 PR_TRAVISCI=travis:build
   - WP_VERSION=5.1 PR_TRAVISCI=travis:build
+  - WP_VERSION=5.0 PR_TRAVISCI=travis:build
 
 matrix:
   include:
