@@ -15,8 +15,8 @@
   "releases": "https://github.com/imath/bout-de-code/releases",
   "issues": "https://github.com/imath/bout-de-code/issues",
   "description": {
-      "en_US" : "The Section block is a block to put other blocks into it.",
-      "fr_FR" : "Le bloc de Section est un bloc pour y mettre d'autres blocs."
+      "en_US" : "Embed your Gists from Gist.GitHub.com into your WordPress posts.",
+      "fr_FR" : "Embarque des bouts de code hébergés sur Gist.GitHub.com dans vos publications."
   },
   "README": "https://raw.githubusercontent.com/imath/bout-de-code/trunk/README.md",
   "urls": {
