@@ -1,0 +1,22 @@
+{
+  "name": "Bout de Code",
+  "author": "imath",
+  "slug": "bout-de-code",
+  "icon": "https://raw.githubusercontent.com/imath/bout-de-code/trunk/icon.png",
+  "tags": [
+    "gist",
+    "code",
+    "embed"
+  ],
+  "country": "fr_FR",
+  "releases": "https://github.com/imath/bout-de-code/releases",
+  "issues": "https://github.com/imath/bout-de-code/issues",
+  "description": {
+      "en_US" : "The Section block is a block to put other blocks into it.",
+      "fr_FR" : "Le bloc de Section est un bloc pour y mettre d'autres blocs."
+  },
+  "README": "https://raw.githubusercontent.com/imath/bout-de-code/trunk/README.md",
+  "urls": {
+		"donate": "https://paypal.me/imath"
+	}
+}

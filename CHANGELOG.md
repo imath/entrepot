@@ -13,6 +13,10 @@ _Tested up to WordPress 5.6_
 - Adds PHP/WP requirements management for Plugin updates.
 - Adds PHP/WP requirements management for Block updates.
 
+### Newly Registered Block
+
+- [Bout de Code](https://github.com/imath/bout-de-code/)
+
 ### Newly Registered Plugin
 
 - [Réception](https://github.com/imath/reception/)
