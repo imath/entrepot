@@ -58,7 +58,7 @@ function entrepot_get_block_repositories( $block_slug = '' ) {
  * @param  string $json   The absolute path to the block.json file.
  * @return array          The list of installed blocks.
  */
-function entrepot_set_block_data( $blocks = array(), $json ) {
+function entrepot_set_block_data( $blocks = array(), $json = '' ) {
 	if ( is_readable( $json ) ) {
 		$json_data        = file_get_contents( $json );
 		$block_data       = json_decode( $json_data );

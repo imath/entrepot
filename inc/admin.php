@@ -16,23 +16,27 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.0.0
  */
 function entrepot_admin_updater() {
-	if ( ! version_compare( entrepot_db_version(), entrepot_version(), '<' ) ) {
+	$db_version = entrepot_db_version();
+	$version    = entrepot_version();
+
+	if ( ! version_compare( $db_version, $version, '<' ) ) {
 		return;
 	}
 
-	if ( 1.1 === (float) entrepot_version() ) {
+	if ( 1.1 === (float) $version ) {
 		set_site_transient( 'entrepot_notice_example', true, DAY_IN_SECONDS );
 	}
 
 	// New repositories can be added each time the Entrepôt has a new release.
-	if ( 1.4 >= (float) entrepot_version() ) {
+	if ( 1.4 >= (float) $version ) {
 		wp_cache_delete( 'plugins', 'entrepot' );
 		wp_cache_delete( 'themes', 'entrepot' );
 	} else {
 		wp_cache_delete( 'repositories', 'entrepot' );
 	}
 
-	if ( 1.5 === (float) entrepot_version() ) {
+
+	if ( ! $db_version || 1.5 > (float) $db_version ) {
 		$blocks_dir = entrepot_blocks_dir();
 		$index_file = trailingslashit( $blocks_dir ) . 'index.php';
 
@@ -45,7 +49,7 @@ function entrepot_admin_updater() {
 	}
 
 	// Update Entrepôt version.
-	update_network_option( 0, '_entrepot_version', entrepot_version() );
+	update_network_option( 0, '_entrepot_version', $version );
 }
 
 /**
