@@ -496,7 +496,7 @@ function (_Component3) {
         className: "desc column-description"
       }, createElement("p", null, this.props.description), createElement("p", {
         className: "authors"
-      }, createElement("cite", null, this.props.author)))), hasCardBottom && createElement("div", {
+      }, createElement("cite", null, this.props.author)))), true === hasCardBottom && createElement("div", {
         className: "plugin-card-bottom"
       }, dependenciesOuptut, requirementsOuptut));
     }
@@ -533,7 +533,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55044" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54213" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
@@ -710,4 +710,3 @@ function hmrAcceptRun(bundle, id) {
   }
 }
 },{}]},{},["../../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","index.js"], null)
-//# sourceMappingURL=/manage-block-types.js.map
