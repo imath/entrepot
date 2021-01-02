@@ -160,7 +160,7 @@ class Entrepot_Atom extends AtomParser {
 	/**
 	 * Override parent's method to prevent a fatal error in PHP 8.
 	 *
-	 * @since 1.6.0
+	 * @since 1.5.5
 	 *
 	 * @param XmlParser $parser The XML parser object.
 	 * @param string    $name   The element name.

@@ -1,6 +1,6 @@
 # Change Log
 
-## 1.6.0
+## 1.5.5
 
 _Requires WordPress 5.0_
 _Tested up to WordPress 5.6_
@@ -10,9 +10,6 @@ _Tested up to WordPress 5.6_
 - Avoids messing with the Block Editor `query_plugins` requests about block plugins.
 - When the WordPress version installed on the site is >= 5.5, disable the feature to manage plugin versions in favor of the WordPress 5.5 manual plugin down/upgrade one.
 - Set default values for WP/PHP version theme requirements to make sure it's still possible to install a Theme registered into the Entrepôt using the Customizer.
-
-### Features
-
 - Adds PHP/WP requirements management for Plugin updates.
 - Adds PHP/WP requirements management for Block updates.
 

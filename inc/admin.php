@@ -1177,7 +1177,7 @@ function entrepot_plugin_action_links( $actions = array(), $plugin_file = '', $p
 /**
  * Output warnings if the Plugin update requires a newer PHP/WP version comparing to the ones installed.
  *
- * @since 1.6.0
+ * @since 1.5.5
  *
  * @param array $plugin_data An array of the plugin's metadata.
  * @param null|object $response The Plugins's update data.
@@ -1788,7 +1788,7 @@ function entrepot_ajax_after_edit_plugin_file() {
 /**
  * Output warnings if the Plugin update requires a newer PHP/WP version comparing to the ones installed.
  *
- * @since 1.6.0
+ * @since 1.5.5
  *
  * @param boolean $is_entrepot True if the check happens into the Entrpôt context.
  *                             False otherwise. Default `false`

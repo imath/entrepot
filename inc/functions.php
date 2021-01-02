@@ -621,7 +621,7 @@ function entrepot_update_repositories( $option = null ) {
 /**
  * Looks for repository's requirements from its upgrade notice.
  *
- * @since 1.6.0
+ * @since 1.5.5
  *
  * @param string $upgrade_notice The upgrade notice.
  * @return array The repository's requirements.
