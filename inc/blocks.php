@@ -322,7 +322,7 @@ function entrepot_register_block_types() {
  */
 function entrepot_blocks_admin_menu() {
 	/* Translators: %s is the Update notice bubble html */
-	$menu_title = __( 'Types de Bloc%s', 'entrepot' );
+	$menu_title = __( 'Blocs%s', 'entrepot' );
 	$notice     = '';
 
 	$block_updates = get_site_transient( 'entrepot_update_blocks' );
@@ -333,14 +333,14 @@ function entrepot_blocks_admin_menu() {
 		</span>', $count, number_format_i18n( $count ) );
 	}
 
-	$screen = add_menu_page(
+	$screen = add_submenu_page(
+		'entrepot',
 		__( 'Gestion des types de bloc', 'entrepot' ),
 		sprintf( $menu_title, $notice ),
 		'activate_entrepot_blocks',
 		'entrepot-blocks',
 		'entrepot_admin_blocks',
-		'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPHN2ZyB2ZXJzaW9uPSIxLjEiIHg9IjBweCIgeT0iMHB4IiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgMTAwIDEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8Zz4KICAgIDxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBkPSJNODAsNzBIMjBWMzNoOXYtN2gxNnY3aDEydi03aDE2djdoN1Y3MHoiIHN0eWxlPSJmaWxsOiByZ2IoMjU1LCAyNTUsIDI1NSk7Ii8+CiAgPC9nPgo8L3N2Zz4=',
-		'network_admin_menu' !== current_action() ? 67 : 24
+		40
 	);
 
 	add_action( 'load-' . $screen, 'entrepot_admin_blocks_load' );

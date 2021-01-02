@@ -326,15 +326,6 @@ function entrepot_admin_add_menu() {
 				'load_callback' => 'entrepot_admin_theme_details',
 			),
 		);
-
-		/*
-		 * WordPress has started to manage Plugin/Theme update from
-		 * the Plugin/Theme zip uploader in WP 5.5
-		 */
-		if ( function_exists( 'validate_theme_requirements' ) ) {
-			remove_submenu_page( 'plugins.php', 'repositories-manage-versions' );
-			unset( $screens['overwrite'] );
-		}
 	}
 
 	if ( $entrepot->upgrades ) {
@@ -349,6 +340,30 @@ function entrepot_admin_add_menu() {
 			'load_callback' => 'entrepot_admin_upgrade_load',
 		);
 	}
+
+	$screen['entrepot_plugins'] = array(
+		'page_hook' => add_menu_page(
+			__( 'Gestion des extensions de l’Entrepôt', 'entrepot' ),
+			__( 'Extensions', 'entrepot' ),
+			'install_plugins',
+			'entrepot',
+			'entrepot_admin_menu',
+			'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+CjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+Cjxzdmcgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgeG1sbnM6c2VyaWY9Imh0dHA6Ly93d3cuc2VyaWYuY29tLyIgc3R5bGU9ImZpbGwtcnVsZTpldmVub2RkO2NsaXAtcnVsZTpldmVub2RkO3N0cm9rZS1saW5lam9pbjpyb3VuZDtzdHJva2UtbWl0ZXJsaW1pdDoyOyI+CiAgICA8ZyB0cmFuc2Zvcm09Im1hdHJpeCgxLDAsMCwxLC0wLjA3LDAuMTAwNzg4KSI+CiAgICAgICAgPHBhdGggZD0iTTMuNTA1LDQ5Ljc0OUw1MC4wNTUsNy45NzlMOTYuNjM1LDQ5Ljc0OUM5Ny43NjQsNTAuNzI5IDk3Ljg4Miw1Mi41MTEgOTYuODQzLDUzLjY5OEM5NS44MzQsNTQuNzk2IDk0LjA1Myw1NC45MTUgOTIuODk1LDUzLjg0Nkw1MC4wNTUsMTUuNDg5TDcuMjE2LDUzLjg0N0M2LjA4OCw1NC45MTUgNC4zMDcsNTQuNzk2IDMuMjY4LDUzLjY5OUMyLjI1OCw1Mi41MTEgMi4zMTgsNTAuNzI5IDMuNTA1LDQ5Ljc0OVoiIHN0eWxlPSJmaWxsLXJ1bGU6bm9uemVybzsiLz4KICAgIDwvZz4KICAgIDxnIHRyYW5zZm9ybT0ibWF0cml4KDAuMDEyOTEyLC0wLjk5OTkxNywwLjk5OTkxNywwLjAxMjkxMiw2LjQ5MTgyLDk1LjY5OTIpIj4KICAgICAgICA8cGF0aCBkPSJNNTkuMzIxLDMwLjc2MUw1MS40LDM4LjY4NEw0Ni44MjcsMzQuMTExTDU0Ljc0OSwyNi4xODdDNTUuNjA2LDI1LjM1NyA1Ny4zMTYsMjUuNjk5IDU4LjU2NCwyNi45N0M1OS44MzcsMjguMjE3IDYwLjE3OCwyOS45MyA1OS4zMjEsMzAuNzYxWk0zOS43NiwzNS4wODhMNDEuOTg0LDMyLjM1TDY0LjAxOCw1NC4zODRMNjEuMTA4LDU2LjQzNkM1OS4zNzEsNTguMTczIDU0LjY3Niw1OS4yNzQgNTEuNzY2LDU5LjI3NEw0Mi4yNzgsNTkuMjc0TDM5LjI0Niw2Mi4zMDZDMzcuODAzLDYzLjc0OSAzNS40NzksNjMuNzQ5IDM0LjA2MSw2Mi4zMDZDMzIuNjE5LDYwLjg4NyAzMi42MTksNTguNTY1IDM0LjA2MSw1Ny4xMjFMMzcuMDkzLDU0LjA4OUwzNy4wOTMsNDQuNjAyQzM3LjA5Myw0MS44MzkgMzguMDczLDM2LjgwMSAzOS43NiwzNS4wODhaTTU3LjUxMiw0NC43OTZMNjUuNDM2LDM2Ljg3NUM2Ni4yNjYsMzYuMDE4IDY3Ljk3OCwzNi4zNjEgNjkuMjI2LDM3LjYzMkM3MC40OTcsMzguODggNzAuODQsNDAuNTkgNjkuOTgzLDQxLjQyMUw2Mi4wNjEsNDkuMzY5TDU3LjUxMiw0NC43OTZaIiBzdHlsZT0iZmlsbC1ydWxlOm5vbnplcm87Ii8+CiAgICA8L2c+CiAgICA8cGF0aCBkPSJNMzcuNjMxLDgwLjEyMkwyNC42NjIsNjcuMTUxTDI3LjQxMyw2NC40QzI4LjMzMSw2My4zNzIgMzEuNjMzLDYzLjUzNyAzMy44NTIsNjQuOTg3QzM2LjA3Miw2Ni40NTQgMzYuNDc2LDY3LjMzNSAzOS4xOTIsNjguODRDNDEuMzU2LDcwLjAxMyA0My42ODYsNzEuMTUxIDQ3LjM1NSw3MC4zOTlMMzcuNjMxLDgwLjEyMlpNMzYuMzI5LDgxLjQyNEwyMy4zNTksNjguNDU0TDIwLjExMiw3MS43MDFDMTkuMzk3LDcyLjQxNiAxOS4zOTcsNzMuNTczIDIwLjExMiw3NC4yODhMMjIuMDU3LDc2LjIzMkMyMi43NzIsNzYuOTQ4IDIyLjc3Miw3OC4xMjMgMjIuMDU3LDc4LjgzOEMyMC45NTYsNzkuOTM5IDE5LjQzNCw4MC44NzQgMTguMDAyLDgxLjkzOEMxNy4zNjEsODIuNDE0IDE2LjcxOCw4Mi45MSAxNi4xNSw4My40NzlDMTMuNjkxLDg1LjkzOCAxMS44MDEsODkuMzMxIDEzLjYzNiw5MS4xNDdDMTUuNDUyLDkyLjk4MiAxOC44NDYsOTEuMDkyIDIxLjMwNCw4OC42NTJDMjEuODc0LDg4LjA4NCAyMi4zNjksODcuNDQxIDIyLjg2Myw4Ni43OEMyMy45MSw4NS4zNSAyNC44NDUsODMuODI4IDI1Ljk2NCw4Mi43MjdDMjYuNjc5LDgyLjAxMiAyNy44MzYsODIuMDEyIDI4LjU1MSw4Mi43MjdMMzAuNDk2LDg0LjY3MUMzMS4yMTEsODUuMzg3IDMyLjM2Nyw4NS4zODcgMzMuMDgyLDg0LjY3MUwzNi4zMjksODEuNDI0WiIgc3R5bGU9ImZpbGwtcnVsZTpub256ZXJvOyIvPgogICAgPGcgdHJhbnNmb3JtPSJtYXRyaXgoMC41MTU4LDAsMCwwLjUxNTgsNDAuODQ0OSw1NS43NzYyKSI+CiAgICAgICAgPHBhdGggZD0iTTgwLDcwTDIwLDcwTDIwLDMzTDI5LDMzTDI5LDI2TDQ1LDI2TDQ1LDMzTDU3LDMzTDU3LDI2TDczLDI2TDczLDMzTDgwLDMzTDgwLDcwWiIvPgogICAgPC9nPgo8L3N2Zz4K',
+			'network_admin_menu' !== current_action() ? 67 : 24
+		),
+	);
+
+	$screen['entrepot_themes'] = array(
+		'page_hook' => add_submenu_page(
+			'entrepot',
+			__( 'Gestion des thèmes de l’Entrepôt', 'entrepot' ),
+			__( 'Thèmes', 'entrepot' ),
+			'install_themes',
+			'entrepot-themes',
+			'entrepot_admin_menu',
+			20
+		),
+	);
 
 	if ( empty( $screens ) ) {
 		return;
@@ -376,6 +391,14 @@ function entrepot_admin_menu() {}
  * @since 1.0.0
  */
 function entrepot_admin_head() {
+	global $menu;
+
+	foreach ( $menu as $key => $menu_item ) {
+		if ( isset( $menu_item[2] ) && 'entrepot' === $menu_item[2] ) {
+			$menu[ $key ][0] = _x( 'Entrepôt', 'plugin main menu title', 'entrepot' );
+		}
+	}
+
 	remove_submenu_page( 'plugins.php', 'repositories' );
 	remove_submenu_page( 'themes.php', 'repositories' );
 
