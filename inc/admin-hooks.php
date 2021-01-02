@@ -50,6 +50,9 @@ add_action( 'install_plugins_pre_plugin-information', 'entrepot_admin_plugin_det
 add_filter( 'plugins_api', 'entrepot_repositories_api', 10, 3 );
 add_filter( 'themes_api', 'entrepot_repositories_api', 10, 3 );
 
+// Checks for Plugin updates incompatibility.
+add_action( 'core_upgrade_preamble', 'entrepot_admin_check_plugin_requires', 10, 0 );
+
 /**
  * Restricts the Plugins editor to only allow Plugin or custom functions file edits
  * when they use a "Allow File Edits:" Plugin Header Tag set to true.

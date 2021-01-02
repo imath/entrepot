@@ -35,7 +35,6 @@ function entrepot_admin_updater() {
 		wp_cache_delete( 'repositories', 'entrepot' );
 	}
 
-
 	if ( ! $db_version || 1.5 > (float) $db_version ) {
 		$blocks_dir = entrepot_blocks_dir();
 		$index_file = trailingslashit( $blocks_dir ) . 'index.php';
