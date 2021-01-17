@@ -53,6 +53,9 @@ add_filter( 'themes_api', 'entrepot_repositories_api', 10, 3 );
 // Checks for Plugin updates incompatibility.
 add_action( 'core_upgrade_preamble', 'entrepot_admin_check_plugin_requires', 10, 0 );
 
+// Add Entrepôt settings
+add_action( 'admin_init', 'entrepot_admin_settings', 50 );
+
 /**
  * Restricts the Plugins editor to only allow Plugin or custom functions file edits
  * when they use a "Allow File Edits:" Plugin Header Tag set to true.

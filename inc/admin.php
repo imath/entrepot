@@ -341,7 +341,7 @@ function entrepot_admin_add_menu() {
 		);
 	}
 
-	$screen['entrepot_plugins'] = array(
+	$screens['entrepot_plugins'] = array(
 		'page_hook' => add_menu_page(
 			__( 'Gestion des extensions de l’Entrepôt', 'entrepot' ),
 			__( 'Extensions', 'entrepot' ),
@@ -353,7 +353,7 @@ function entrepot_admin_add_menu() {
 		),
 	);
 
-	$screen['entrepot_themes'] = array(
+	$screens['entrepot_themes'] = array(
 		'page_hook' => add_submenu_page(
 			'entrepot',
 			__( 'Gestion des thèmes de l’Entrepôt', 'entrepot' ),
@@ -363,6 +363,19 @@ function entrepot_admin_add_menu() {
 			'entrepot_admin_menu',
 			20
 		),
+	);
+
+	$screens['entrepot_settings'] = array(
+		'page_hook' => add_submenu_page(
+			'entrepot',
+			__( 'Réglages de l’Entrepôt', 'entrepot' ),
+			__( 'Réglages', 'entrepot' ),
+			'install_plugins',
+			'entrepot-settings',
+			'entrepot_admin_settings_page',
+			100
+		),
+		'load_callback' => 'entrepot_admin_settings_load',
 	);
 
 	if ( empty( $screens ) ) {
@@ -379,11 +392,123 @@ function entrepot_admin_add_menu() {
 }
 
 /**
+ * Entrepôt settings section output.
+ *
+ * @since 1.6.0
+ */
+function entrepot_admin_settings_section() {}
+
+/**
+ * Entrepôt GitHub Token setting output.
+ *
+ * @since 1.6.0
+ */
+function entrepot_admin_settings_github_personal_token() {
+	$option_name  = '_entrepot_github_personal_token';
+	$github_token = get_option( $option_name, '' );
+
+	printf(
+		'<input id="%1$s" name="%2$s" type="text" class="regular-text code" value="%3$s" />',
+		$option_name,
+		$option_name,
+		esc_html( $github_token )
+	);
+}
+
+/**
+ * Adds Entrepôt settings.
+ *
+ * @since 1.6.0
+ */
+function entrepot_admin_settings() {
+	add_settings_section(
+		'entrepot_settings',
+		__( 'Intégration avec GitHub.com', 'entrepot' ),
+		'entrepot_admin_settings_section',
+		'entrepot'
+	);
+
+	add_settings_field(
+		'_entrepot_github_personal_token',
+		__( 'Jeton d’accès personnel à GitHub.com', 'entrepot' ),
+		'entrepot_admin_settings_github_personal_token',
+		'entrepot',
+		'entrepot_settings'
+	);
+
+	register_setting(
+		'entrepot',
+		'_entrepot_github_personal_token',
+		array(
+			'type'              => 'string',
+			'description'       => __( 'Réglage de l’Entrepôt pour garder en base de données le jeton d’accès personnel à GitHub.com de l’Administrateur', 'entrepot' ),
+			'sanitize_callback' => 'sanitize_text_field',
+			'show_in_rest'      => false,
+			'default'           => '',
+		)
+	);
+}
+
+/**
+ * Entrepot settings page output.
+ *
+ * @since 1.6.0
+ */
+function entrepot_admin_settings_page() {
+	?>
+	<div class="wrap">
+		<h1 class="wp-heading-inline"><?php esc_html_e( 'Réglages de l’Entrepôt', 'entrepot' ); ?></h1>
+		<hr class="wp-header-end">
+
+		<?php settings_errors(); ?>
+
+		<form method="POST" action="options.php">
+			<?php
+			settings_fields( 'entrepot' );
+			do_settings_sections( 'entrepot' );
+			submit_button();
+			?>
+		</form>
+	</div>
+	<?php
+}
+
+/**
  * The Repositories Administration page
  *
  * @since 1.0.0
  */
-function entrepot_admin_menu() {}
+function entrepot_admin_menu() {
+	$url = add_query_arg(
+		array(
+			'q' => 'topic:entrepot-registered+topic:wordpress-plugin',
+		),
+		'https://api.github.com/search/repositories'
+	);
+
+	$response = entrepot_remote_request_get( $url );
+
+	$response_code  = wp_remote_retrieve_response_code( $response );
+	$response_body  = json_decode( wp_remote_retrieve_body( $response ), true );
+	$response_headers = wp_remote_retrieve_headers( $response );
+	?>
+	<div class="wrap">
+		<h1 class="wp-heading-inline"><?php esc_html_e( 'Extensions de l’Entrepôt', 'entrepot' ); ?></h1>
+		<hr class="wp-header-end">
+		<pre>
+			<?php print_r( $response_code ); ?>
+		</pre>
+
+		<pre>
+			<?php print_r( $response_headers ); ?>
+		</pre>
+
+		<pre>
+			<?php print_r( $response_body ); ?>
+		</pre>
+	</div>
+	<?php
+}
 
 /**
  * Removes the Repositories Administration page from the Admin Menu.
@@ -391,12 +516,26 @@ function entrepot_admin_menu() {}
  * @since 1.0.0
  */
 function entrepot_admin_head() {
-	global $menu;
+	global $menu, $submenu;
 
 	foreach ( $menu as $key => $menu_item ) {
 		if ( isset( $menu_item[2] ) && 'entrepot' === $menu_item[2] ) {
 			$menu[ $key ][0] = _x( 'Entrepôt', 'plugin main menu title', 'entrepot' );
 		}
+	}
+
+	if ( isset( $submenu['entrepot'] ) ) {
+		$settings_menu = array();
+
+		foreach ( $submenu['entrepot'] as $sub_key => $submenu_item ) {
+			if ( isset( $submenu_item[2] ) && 'entrepot-settings' === $submenu_item[2] ) {
+				$settings_menu = $submenu_item;
+				unset( $submenu['entrepot'][ $sub_key] );
+			}
+		}
+
+		// Reorder to make sure the settings page is at last position.
+		$submenu['entrepot'] = array_merge( $submenu['entrepot'], array( $settings_menu ) );
 	}
 
 	remove_submenu_page( 'plugins.php', 'repositories' );
@@ -405,6 +544,21 @@ function entrepot_admin_head() {
 	if ( ! entrepot()->upgrades ) {
 		remove_submenu_page( 'plugins.php', 'upgrade-repositories' );
 	}
+}
+
+/**
+ * Add an help tab to the Entrepot settings screen.
+ *
+ * @since 1.6.0
+ */
+function entrepot_admin_settings_load() {
+	get_current_screen()->add_help_tab(
+		array(
+			'id'      => 'entrepot-setting-overview',
+			'title'   => __( 'Vue d’ensemble', 'entrepot' ),
+			'content' => '<p>' . __( 'Utilisez le champ Jeton d’accès à GitHub.com pour spécifier votre « Personal Access Token »', 'entrepot' ) . '</p>',
+		)
+	);
 }
 
 /**

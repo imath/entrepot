@@ -1013,3 +1013,57 @@ function entrepot_rest_routes() {
 		$controller->register_routes();
 	}
 }
+
+/**
+ * Callback function to force curl use for remote requests.
+ *
+ * @since 1.6.0
+ *
+ * @return array An array only containing the curl library.
+ */
+function entreport_remote_request_transport() {
+	return array( 'curl' );
+}
+
+/**
+ * Performs a remote GET request using the curl library.
+ *
+ * @since 1.6.0
+ *
+ * @see wp_remote_request() For more information on the response array format.
+ *
+ * @param string $url The remote URL to request.
+ * @param array  $args Custom arguments for the request to perfom.
+ * @return array|WP_Error The response or WP_Error on failure.
+ */
+function entrepot_remote_request_get( $url, $args = array() ) {
+	add_filter( 'http_api_transports', 'entreport_remote_request_transport', 1, 0 );
+
+	$headers = array(
+		'Accept' => 'application/vnd.github.v3+json',
+	);
+
+	$github_token = get_option( '_entrepot_github_personal_token', '' );
+	if ( $github_token ) {
+		$headers['Authorization'] = sprintf( 'token %s', $github_token );
+	}
+
+	if ( isset( $args['headers'] ) ) {
+		$custom_headers = (array) $args['headers'];
+		$headers        = wp_parse_args( $custom_headers, $headers );
+		unset( $args['headers'] );
+	}
+
+	$r = wp_parse_args( $args,
+		array(
+			'user-agent' => 'Entrepôt/' . entrepot_version() . '; https://imathi.eu/entrepot/',
+			'headers'    => $headers,
+		)
+	);
+
+	$request = wp_remote_get( $url, $r );
+
+	remove_filter( 'http_api_transports', 'entreport_remote_request_transport', 1, 0 );
+
+	return $request;
+}
