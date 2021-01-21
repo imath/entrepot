@@ -479,32 +479,20 @@ function entrepot_admin_settings_page() {
  * @since 1.0.0
  */
 function entrepot_admin_menu() {
-	$url = add_query_arg(
+	$preload_data = array_reduce(
 		array(
-			'q' => 'topic:entrepot-registered+topic:wordpress-plugin',
+			'/entrepot/v1/plugins',
 		),
-		'https://api.github.com/search/repositories'
+		'rest_preload_api_request',
+		array()
 	);
-
-	$response = entrepot_remote_request_get( $url );
-
-	$response_code  = wp_remote_retrieve_response_code( $response );
-	$response_body  = json_decode( wp_remote_retrieve_body( $response ), true );
-	$response_headers = wp_remote_retrieve_headers( $response );
 	?>
 	<div class="wrap">
 		<h1 class="wp-heading-inline"><?php esc_html_e( 'Extensions de l’Entrepôt', 'entrepot' ); ?></h1>
 		<hr class="wp-header-end">
-		<pre>
-			<?php print_r( $response_code ); ?>
-		</pre>
 
 		<pre>
-			<?php print_r( $response_headers ); ?>
-		</pre>
-
-		<pre>
-			<?php print_r( $response_body ); ?>
+			<?php print_r( $preload_data ); ?>
 		</pre>
 	</div>
 	<?php

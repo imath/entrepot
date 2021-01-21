@@ -1007,6 +1007,9 @@ function entrepot_get_upgrader_tasks() {
  * @since 1.2.0
  */
 function entrepot_rest_routes() {
+	$controller = new Entrepot_REST_Plugins_Controller;
+	$controller->register_routes();
+
 	// Blocks
 	if ( entrepot_block_supports() ) {
 		$controller = new Entrepot_REST_Blocks_Controller;
