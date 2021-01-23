@@ -1,19 +1,18 @@
 <phpunit
-	bootstrap="tests/phpunit/bootstrap.php"
+	bootstrap="../bootstrap.php"
 	backupGlobals="false"
 	colors="true"
 	convertErrorsToExceptions="true"
 	convertNoticesToExceptions="true"
 	convertWarningsToExceptions="true"
 	>
+	<php>
+		<env name="WP_PHPUNIT__TESTS_CONFIG" value="wp-tests-config.php" />
+		<const name="WP_TESTS_MULTISITE" value="1" />
+	</php>
 	<testsuites>
 		<testsuite name="default">
-			<directory suffix=".php">tests/phpunit/testcases/</directory>
+			<directory suffix=".php">./testcases/</directory>
 		</testsuite>
 	</testsuites>
-	<groups>
-		<exclude>
-			<group>ms-required</group>
-		</exclude>
-	</groups>
 </phpunit>
