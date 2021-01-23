@@ -68,7 +68,8 @@ class Entrepot_REST_Plugins_Controller extends WP_REST_Plugins_Controller {
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function get_items( $request ) {
-		$github_url = add_query_arg(
+		$github_repositories = array();
+		$github_url          = add_query_arg(
 			array(
 				'q' => 'topic:entrepot-registered+topic:wordpress-plugin',
 			),
@@ -86,14 +87,52 @@ class Entrepot_REST_Plugins_Controller extends WP_REST_Plugins_Controller {
 			);
 		}
 
+		// Gets GitHub API headers & body.
+		$github_response_headers = wp_remote_retrieve_headers( $github_response );
+		$github_response_body    = json_decode( wp_remote_retrieve_body( $github_response ), true );
+
+		if ( isset( $github_response_body['items'] ) && $github_response_body['items'] ) {
+			foreach ( $github_response_body['items'] as $github_repository ) {
+				if ( ! isset( $github_repository['full_name'] ) || ! $github_repository['full_name'] ) {
+					continue;
+				}
+
+				$full_name                         = str_replace( '/', '_', $github_repository['full_name'] );
+				$github_repositories[ $full_name ] = $github_repository;
+
+				if ( isset ( $github_repository['owner']['avatar_url'] ) ) {
+					$github_repositories[ $full_name ]['owner_avatar_url'] = $github_repository['owner']['avatar_url'];
+				}
+			}
+		}
+
+		// Merge GitHub plugins with registered ones.
+		$repositories = entrepot_get_plugin_repositories_list( $github_repositories );
+
 		/**
-		 * @todo check rate limits.
-		 * $response_headers = wp_remote_retrieve_headers( $response );
+		 * Filter here to edit the returned plugin repositories for the get_items() endpoint.
+		 *
+		 * @since 1.6.0
+		 *
+		 * @param array $repositories The list of plugin repository objects.
+		 * @param array $github_repositories The list of plugin repository arrays.
 		 */
+		$repositories       = apply_filters( 'entrepot_rest_get_plugins', $repositories, $github_repositories );
+		$repositories_count = count( $repositories );
+		$response           = rest_ensure_response( $repositories );
 
-		$repositories = json_decode( wp_remote_retrieve_body( $github_response ), true );
+		// Add headers.
+		$response->header( 'X-WP-Total', (int) $repositories_count );
+		$response->header( 'X-WP-TotalPages', (int) $repositories_count );
 
-		return rest_ensure_response( $repositories );
+		if ( is_object( $github_response_headers ) ) {
+			$response->header( 'X-GH-ratelimit-limit', (int) $github_response_headers['x-ratelimit-limit'] );
+			$response->header( 'X-GH-ratelimit-remaining', (int) $github_response_headers['x-ratelimit-remaining'] );
+			$response->header( 'X-GH-ratelimit-reset', (int) $github_response_headers['x-ratelimit-reset'] );
+			$response->header( 'X-GH-ratelimit-used', (int) $github_response_headers['x-ratelimit-used'] );
+		}
+
+		return $response;
 	}
 
 	/**
@@ -105,6 +144,18 @@ class Entrepot_REST_Plugins_Controller extends WP_REST_Plugins_Controller {
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function get_item( $request ) {
+		return $this->not_implemented( __METHOD__ );
+	}
+
+	/**
+	 * Uploads a plugin and optionally activates it.
+	 *
+	 * @since 1.6.0
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
+	 */
+	public function create_item( $request ) {
 		return $this->not_implemented( __METHOD__ );
 	}
 

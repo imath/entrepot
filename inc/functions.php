@@ -1070,3 +1070,122 @@ function entrepot_remote_request_get( $url, $args = array() ) {
 
 	return $request;
 }
+
+/**
+ * Gets the list of available plugin repositories.
+ *
+ * @since 1.6.0
+ *
+ * @param array  The list of repositories fetched from the GitHub API.
+ * @return array The list of available plugin repositories.
+ */
+function entrepot_get_plugin_repositories_list( $github_repositories = array() ) {
+	$repositories    = entrepot_get_repositories();
+	$installed_repos = entrepot_get_installed_repositories();
+	$updates_require = entrepot_admin_check_plugin_requires( true );
+	$keyed_by_slug   = array();
+
+	foreach ( $installed_repos as $i => $installed_repo ) {
+		$keyed_by_slug[ entrepot_get_repository_slug( $i ) ] = $installed_repo;
+	}
+
+	if ( ! function_exists( 'install_plugin_install_status' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
+	}
+
+	$thickbox_link = self_admin_url( 'plugin-install.php?tab=plugin-information&amp;plugin=%s&amp;TB_iframe=true&amp;width=600&amp;height=550' );
+
+	foreach ( $repositories as $k => $repository ) {
+		$data            = null;
+		$plugin_requires = array();
+
+		if ( ! isset( $repository->slug ) ) {
+			$repositories[ $k ]->slug = sanitize_title( $repository->name );
+		}
+
+		$repositories[ $k ]->name       = entrepot_sanitize_repository_text( $repositories[ $k ]->name );
+		$repositories[ $k ]->author_url = 'https://github.com/' . $repository->author;
+		$repositories[ $k ]->id         = $repository->author . '_' . $repository->slug;
+
+		// Always install the latest version.
+		if ( ! isset( $keyed_by_slug[ $repository->slug ] ) ) {
+			$repositories[ $k ]->version = 'latest';
+
+		// Inform about the installed version.
+		} else {
+			$repositories[ $k ]->version = $keyed_by_slug[ $repository->slug ]['Version'];
+
+			if ( ! empty( $keyed_by_slug[ $repository->slug ]['AuthorURI'] ) ) {
+				$repositories[ $k ]->author_url = esc_url_raw( $keyed_by_slug[ $repository->slug ]['AuthorURI'] );
+			}
+
+			if ( ! empty( $keyed_by_slug[ $repository->slug ]['Name'] ) ) {
+				$repositories[ $k ]->name = entrepot_sanitize_repository_text( $keyed_by_slug[ $repository->slug ]['Name'] );
+			}
+		}
+
+		if ( isset( $repositories[ $k ]->dependencies ) ) {
+			$repositories[ $k ]->unsatisfied_dependencies = entrepot_get_repository_dependencies( (array) $repositories[ $k ]->dependencies );
+		} else {
+			$repositories[ $k ]->unsatisfied_dependencies = array();
+		}
+
+		$repositories[ $k ]->description = (object) array_map( 'entrepot_sanitize_repository_text', (array) $repositories[ $k ]->description );
+
+		$data = install_plugin_install_status( $repository );
+		foreach ( $data as $kd => $kv ) {
+			$repositories[ $k ]->{$kd} = $kv;
+		}
+
+		$repositories[ $k ]->more_info = sprintf( __( 'Plus d\'informations sur %s', 'entrepot' ), $repositories[ $k ]->name );
+		$repositories[ $k ]->info_url  = sprintf( $thickbox_link, $repositories[ $k ]->slug );
+
+		if ( in_array( $data['status'], array( 'latest_installed', 'newer_installed' ), true ) ) {
+			if ( is_plugin_active( $data['file'] ) ) {
+				$repositories[ $k ]->active = true;
+			} elseif ( current_user_can( 'activate_plugins' ) ) {
+				$repositories[ $k ]->activate_url = add_query_arg( array(
+					'_wpnonce'    => wp_create_nonce( 'activate-plugin_' . $data['file'] ),
+					'action'      => 'activate',
+					'plugin'      => $data['file'],
+				), network_admin_url( 'plugins.php' ) );
+
+				if ( is_network_admin() ) {
+					$repositories[ $k ]->activate_url = add_query_arg( array( 'networkwide' => 1 ), $repositories[ $k ]->activate_url );
+				}
+
+				$repositories[ $k ]->activate_url = esc_url_raw( $repositories[ $k ]->activate_url );
+			}
+		} elseif ( 'update_available' === $data['status'] && isset( $updates_require['data'][ $data['file'] ] ) ) {
+			$plugin_requires = $updates_require['data'][ $data['file'] ];
+
+			if ( isset( $plugin_requires['php'] ) && $plugin_requires['php'] ) {
+				$repositories[ $k ]->requires_php         = $plugin_requires['php'];
+				$repositories[ $k ]->requires_php_message = str_replace( 'phpVersion', $plugin_requires['php'], $updates_require['warnings']['PHP'] );
+			}
+
+			if ( isset( $plugin_requires['wp'] ) && $plugin_requires['wp'] ) {
+				$repositories[ $k ]->requires_wp         = $plugin_requires['wp'];
+				$repositories[ $k ]->requires_wp_message = str_replace( 'wpVersion', $plugin_requires['wp'], $updates_require['warnings']['WP'] );
+			}
+		}
+
+		// Add GitHub's API specific data if availbale.
+		if ( isset( $github_repositories[ $repositories[ $k ]->id ] ) ) {
+			$github_properties = array_intersect_key(
+				$github_repositories[ $repositories[ $k ]->id ],
+				array(
+					'owner_avatar_url'  => true,
+					'stargazers_count'  => true,
+					'open_issues_count' => true,
+				)
+			);
+
+			foreach ( $github_properties as $github_property_key => $github_property ) {
+				$repositories[ $k ]->{$github_property_key} = $github_property;
+			}
+		}
+	}
+
+	return $repositories;
+}
