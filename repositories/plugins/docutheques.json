@@ -5,7 +5,8 @@
   "dependencies": [
 		{ "is_favicon": "WordPress 5.4+" }
 	],
-	"icon": "https://raw.githubusercontent.com/imath/docutheques/master/icon.png",
+  "icon": "https://raw.githubusercontent.com/imath/docutheques/master/icon.png",
+  "banner": "https://repository-images.githubusercontent.com/252492727/f5129400-9bdb-11ea-84e9-5e8ccc8ad4fb",
 	"tags": [
 	  "media",
 	  "library",

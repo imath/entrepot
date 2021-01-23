@@ -2,7 +2,8 @@
 	"name": "WP Statuses",
 	"author": "imath",
 	"slug": "wp-statuses",
-	"icon": "https://raw.githubusercontent.com/imath/wp-statuses/master/icon.png",
+  "icon": "https://raw.githubusercontent.com/imath/wp-statuses/master/icon.png",
+  "banner": "https://repository-images.githubusercontent.com/82959237/24413780-ac91-11e9-98e8-021bc0f9e7c1",
 	"tags": [
 	  "status",
 	  "custom"

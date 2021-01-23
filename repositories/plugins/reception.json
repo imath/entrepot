@@ -6,7 +6,8 @@
     { "is_favicon": "WordPress 5.4+" },
     { "bp_register_block": "BuddyPress 6.0+" }
 	],
-	"icon": "https://raw.githubusercontent.com/imath/reception/master/icon.png",
+  "icon": "https://raw.githubusercontent.com/imath/reception/master/icon.png",
+  "banner": "https://repository-images.githubusercontent.com/260408158/2dac5b00-c505-11ea-9374-f4864ed07fe9",
 	"tags": [
 	  "buddypress",
 	  "front",

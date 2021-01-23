@@ -6,6 +6,7 @@
     { "wp_after_insert_post": "WordPress 5.6+" }
   ],
   "icon": "https://raw.githubusercontent.com/imath/bout-de-code/trunk/icon.png",
+  "banner": "https://repository-images.githubusercontent.com/325384104/2d26ba00-4dee-11eb-9371-741e088f2081",
   "tags": [
     "gist",
     "code",

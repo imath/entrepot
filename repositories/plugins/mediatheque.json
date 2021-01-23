@@ -2,7 +2,8 @@
 	"name": "MediaThèque",
 	"author": "imath",
 	"slug": "mediatheque",
-	"icon": "https://raw.githubusercontent.com/imath/mediatheque/master/icon.png",
+  "icon": "https://raw.githubusercontent.com/imath/mediatheque/master/icon.png",
+  "banner": "https://repository-images.githubusercontent.com/91361325/a03d0900-dc5b-11e9-98c5-7a1a6b4afd1d",
 	"tags": [
 	  "media",
 	  "library",

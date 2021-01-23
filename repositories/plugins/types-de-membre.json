@@ -6,7 +6,8 @@
     { "wp_is_application_passwords_available": "WordPress 5.6+" },
     { "bp_get_member_type_metadata_schema": "BuddyPress 7.0+" }
 	],
-	"icon": "https://raw.githubusercontent.com/imath/types-de-membre/master/icon.png",
+  "icon": "https://raw.githubusercontent.com/imath/types-de-membre/master/icon.png",
+  "banner": "https://repository-images.githubusercontent.com/31076809/8941f800-429e-11eb-956f-3acca9486545",
 	"tags": [
 	  "buddypress",
 	  "member",

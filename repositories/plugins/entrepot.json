@@ -5,7 +5,8 @@
   "dependencies": [
 		{ "validate_theme_requirements": "WordPress 5.5+" }
 	],
-	"icon": "https://raw.githubusercontent.com/imath/entrepot/master/icon.png",
+  "icon": "https://raw.githubusercontent.com/imath/entrepot/master/icon.png",
+  "banner": "https://repository-images.githubusercontent.com/93020415/17ff5a80-4df1-11eb-93af-d5aea4976e81",
 	"tags": [
 	  "plugins",
 	  "repositories"

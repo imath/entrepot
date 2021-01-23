@@ -7,7 +7,8 @@
     { "bp_register_block": "BuddyPress 6.2+" },
     { "restricted_site_access_uninstall": "Restricted Site Access 7.2+" }
 	],
-	"icon": "https://raw.githubusercontent.com/imath/communaute-protegee/master/icon.png",
+  "icon": "https://raw.githubusercontent.com/imath/communaute-protegee/master/icon.png",
+  "banner": "https://repository-images.githubusercontent.com/47082438/2629ff80-e955-11ea-8f3b-8fca4441d8ef",
 	"tags": [
 	  "buddypress",
 	  "commmunity",

@@ -7,6 +7,7 @@
     { "bp_rest_api_is_available": "BuddyPress 5.0+" }
   ],
   "icon": "https://raw.githubusercontent.com/imath/activites-de-publication/master/icon.png",
+  "banner": "https://repository-images.githubusercontent.com/143919145/4d61a700-6c11-11e9-9c41-b3f7f98a7a69",
   "tags": [
     "BuddyPress",
     "activity",
