@@ -68,6 +68,14 @@ class Entrepot_REST_Plugins_Controller extends WP_REST_Plugins_Controller {
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
 	 */
 	public function get_items( $request ) {
+		if ( ! function_exists( 'is_plugin_active' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/plugin.php';
+		}
+
+		// Get the required Plugin status.
+		$status = $request->get_param( 'status' );
+
+		// Check the GitHub API.
 		$github_repositories = array();
 		$github_url          = add_query_arg(
 			array(
@@ -117,7 +125,25 @@ class Entrepot_REST_Plugins_Controller extends WP_REST_Plugins_Controller {
 		 * @param array $repositories The list of plugin repository objects.
 		 * @param array $github_repositories The list of plugin repository arrays.
 		 */
-		$repositories       = apply_filters( 'entrepot_rest_get_plugins', $repositories, $github_repositories );
+		$repositories = apply_filters( 'entrepot_rest_get_plugins', $repositories, $github_repositories );
+
+		// Filter the list according to the requested status.
+		foreach ( $repositories as $key => $repository ) {
+			if ( isset( $repository->status ) && in_array( $repository->status, array( 'update_available', 'latest_installed', 'newer_installed' ), true ) ) {
+				$repositories[ $key ]->active_status = $this->get_plugin_status( $repository->file );
+			} else {
+				$repositories[ $key ]->active_status = 'not-installed';
+			}
+
+			if ( 'installed' === $status && 'install' === $repository->status ) {
+				unset( $repositories[ $key ] );
+			}
+
+			if ( 'install' === $status && 'install' !== $repository->status ) {
+				unset( $repositories[ $key ] );
+			}
+		}
+
 		$repositories_count = count( $repositories );
 		$response           = rest_ensure_response( $repositories );
 
@@ -181,5 +207,36 @@ class Entrepot_REST_Plugins_Controller extends WP_REST_Plugins_Controller {
 	 */
 	public function delete_item( $request ) {
 		return $this->not_implemented( __METHOD__ );
+	}
+
+	/**
+	 * Retrieves the query params for the collections.
+	 *
+	 * @since 1.6.0
+	 *
+	 * @return array Query parameters for the collection.
+	 */
+	public function get_collection_params() {
+		$query_params = parent::get_collection_params();
+
+		$query_params['context']['default'] = 'view';
+
+		$query_params['status'] = array(
+			'description' => __( 'Limite les résultats aux extensions ayant le statut spécifié.', 'entrepot' ),
+			'type'        => 'string',
+			'enum'        => array( 'install', 'installed' ),
+			'default'     => 'installed',
+		);
+
+		$query_params['active_status'] = array(
+			'description' => __( 'Limite les résultats aux extensions ayant le statut d’activation spécifié.', 'entrepot' ),
+			'type'        => 'array',
+			'items'       => array(
+				'type' => 'string',
+				'enum' => is_multisite() ? array( 'inactive', 'active', 'network-active', 'not-installed' ) : array( 'inactive', 'active', 'not-installed' ),
+			),
+		);
+
+		return $query_params;
 	}
 }
