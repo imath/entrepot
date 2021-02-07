@@ -142,8 +142,8 @@ module.exports = function( grunt ) {
 
 	grunt.registerTask( 'release', ['checktextdomain', 'makepot', 'clean', 'jstest', 'shrink', 'exec'] );
 
-	// Travis CI Tasks.
-	grunt.registerTask( 'travis:build', ['jstest', 'checktextdomain', 'clean:entrepot', 'minjson', 'phpunit'] );
+	// CI Tasks.
+	grunt.registerTask( 'build', ['jstest', 'checktextdomain', 'clean:entrepot', 'minjson', 'phpunit'] );
 
 	// Default task.
 	grunt.registerTask( 'default', ['checktextdomain'] );
