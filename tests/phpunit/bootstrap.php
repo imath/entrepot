@@ -1,4 +1,9 @@
 <?php
+// If we're running in WP's build directory, ensure that WP knows that, too.
+if ( 'build' === getenv( 'LOCAL_DIR' ) ) {
+	define( 'WP_RUN_CORE_TESTS', true );
+}
+
 // Should we use wp-phpunit?
 if ( getenv( 'WP_PHPUNIT__TESTS_CONFIG' ) ) {
 	require_once dirname( __FILE__, 3 ) . '/vendor/autoload.php';
