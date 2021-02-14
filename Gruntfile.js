@@ -132,7 +132,10 @@ module.exports = function( grunt ) {
 		}, this.async() );
 	} );
 
-	grunt.registerTask( 'test', ['clean:entrepot', 'minjson', 'phpunit'] );
+	// Prepare PHPUnit tests
+	grunt.registerTask( 'prep', ['clean:entrepot', 'minjson'] );
+
+	grunt.registerTask( 'test', ['prep', 'phpunit'] );
 
 	grunt.registerTask( 'jstest', ['jsvalidate', 'jshint'] );
 
@@ -143,7 +146,7 @@ module.exports = function( grunt ) {
 	grunt.registerTask( 'release', ['checktextdomain', 'makepot', 'clean', 'jstest', 'shrink', 'exec'] );
 
 	// CI Tasks.
-	grunt.registerTask( 'build', ['jstest', 'checktextdomain', 'clean:entrepot', 'minjson', 'phpunit'] );
+	grunt.registerTask( 'build', ['jstest', 'checktextdomain', 'prep', 'phpunit'] );
 
 	// Default task.
 	grunt.registerTask( 'default', ['checktextdomain'] );
