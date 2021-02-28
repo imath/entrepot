@@ -37,8 +37,8 @@
     "translate": "po2json languages/js/entrepot-en_US.po languages/js/entrepot-en_US-entrepot-manage-blocks.json -f jed",
     "wp-env": "wp-env",
     "prep-unit-tests": "grunt prep",
-    "test-php": "npm run wp-env run phpunit 'phpunit -c /var/www/html/wp-content/plugins/entrepot/phpunit.xml.dist'",
-    "test-php-multisite": "npm run wp-env run phpunit 'phpunit -c /var/www/html/wp-content/plugins/entrepot/tests/phpunit/multisite.xml'"
+    "test-php": "npm run wp-env run phpunit 'php /var/www/html/wp-content/plugins/entrepot/vendor/phpunit/phpunit/phpunit -c /var/www/html/wp-content/plugins/entrepot/phpunit.xml.dist'",
+    "test-php-multisite": "npm run wp-env run phpunit 'php /var/www/html/wp-content/plugins/entrepot/vendor/phpunit/phpunit/phpunit -c /var/www/html/wp-content/plugins/entrepot/tests/phpunit/multisite.xml'"
   },
   "keywords": [
     "plugins",

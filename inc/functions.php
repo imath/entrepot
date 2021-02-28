@@ -606,6 +606,41 @@ function entrepot_get_installed_repositories( $type = 'plugins' ) {
 }
 
 /**
+ * Adds the detailed informations for repositories on Plugins main screen.
+ *
+ * @since 1.0.0
+ *
+ * @param  array  $plugins The plugins list.
+ * @return array           The plugins list.
+ */
+function entrepot_all_installed_repositories_list( $plugins = array() ) {
+	$repositories = entrepot_get_installed_repositories();
+
+	if ( ! empty( $repositories ) ) {
+		foreach ( array_keys( $repositories ) as $plugin_id ) {
+			if ( ! isset( $plugins[ $plugin_id ] ) ) {
+				continue;
+			}
+
+			$slug = sanitize_file_name( dirname( $plugin_id ) );
+
+			// It's not a repository.
+			if ( ! entrepot_get_repositories( $slug ) ) {
+				continue;
+			}
+
+			/**
+			 * Simply by adding the plugin's slug, the detailed informations
+			 * thickbox link will be output.
+			 */
+			$plugins[ $plugin_id ]['slug'] = $slug;
+		}
+	}
+
+	return $plugins;
+}
+
+/**
  * Manage repositories Upgrades by overriding the update_plugins transient.
  *
  * @since 1.0.0
