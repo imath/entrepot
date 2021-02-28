@@ -39,7 +39,7 @@ jobs:
       - name: Install Composer dependencies
         uses: ramsey/composer-install@v1
         with:
-          composer-options: "--no-progress --no-ansi --no-interaction"
+          composer-options: "--ignore-platform-reqs"
           dependency-versions: "lowest"
 
       - name: Cache node modules
