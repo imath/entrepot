@@ -40,6 +40,7 @@ jobs:
         uses: ramsey/composer-install@v1
         with:
           composer-options: "--no-progress --no-ansi --no-interaction"
+          dependency-versions: "highest"
 
       - name: Cache node modules
         uses: actions/cache@v2
