@@ -6,9 +6,6 @@
 	convertNoticesToExceptions="true"
 	convertWarningsToExceptions="true"
 	>
-	<php>
-		<env name="WP_PHPUNIT__TESTS_CONFIG" value="wp-tests-config.php" />
-	</php>
 	<testsuites>
 		<testsuite name="default">
 			<directory suffix=".php">./testcases/</directory>
