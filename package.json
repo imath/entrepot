@@ -28,8 +28,8 @@
     "po2json": "^1.0.0-alpha"
   },
   "engines": {
-    "node": "14.15.0",
-    "npm": "6.14.0"
+    "node": "14.17.0",
+    "npm": "7.15.1"
   },
   "scripts": {
     "start": "parcel watch src/manage-block-types/index.js -d js --out-file manage-block-types.js --no-source-maps",
