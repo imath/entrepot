@@ -3,7 +3,7 @@
   "author": "imath",
   "slug": "profil-de-groupes",
   "dependencies": [
-      { "bp_xprofile_maybe_format_datebox_post_data": "BuddyPress 2.8+" }
+      { "bp_xprofile_get_field_type": "BuddyPress 8.0+" }
   ],
   "icon": "https://raw.githubusercontent.com/imath/profil-de-groupes/master/icon.png",
   "tags": [
@@ -18,5 +18,8 @@
       "en_US" : "Profile fields for your BuddyPress groups.",
       "fr_FR" : "Un profil pour les groupes BuddyPress."
   },
-  "README": "https://raw.githubusercontent.com/imath/profil-de-groupes/master/README.md"
+  "README": "https://raw.githubusercontent.com/imath/profil-de-groupes/master/README.md",
+  "urls": {
+		"donate": "https://paypal.me/imath"
+	}
 }
