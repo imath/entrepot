@@ -1,28 +1,31 @@
 {
-  "name": "entrepot/entrepot",
-  "description": "Store your free WordPress plugins and themes into the Entrepôt.",
-  "type": "wordpress-plugin",
-  "keywords": [
-        "plugins",
-        "repositories"
-  ],
-  "homepage": "https://github.com/imath/entrepot",
-  "license": "GPL-2.0-or-later",
-  "authors": [ {
-    "name": "imath",
-    "homepage": "https://imathi.eu/"
-  } ],
-  "support": {
-    "issues": "https://github.com/imath/entrepot/issues"
-  },
-  "require": {
-    "composer/installers": "^1.10.0",
-    "php": ">=5.6.0"
-  },
-  "require-dev": {
-    "phpcompatibility/phpcompatibility-wp": "^2.1.0",
-    "dealerdirect/phpcodesniffer-composer-installer": "^0.7.1",
-    "wp-phpunit/wp-phpunit": "^5.6",
-    "phpunit/phpunit": "^7.5"
-  }
+	"name": "entrepot/entrepot",
+	"description": "Store your free WordPress plugins and themes into the Entrepôt.",
+	"type": "wordpress-plugin",
+	"keywords": [
+		"plugins",
+		"repositories"
+	],
+	"homepage": "https://github.com/imath/entrepot",
+	"license": "GPL-2.0-or-later",
+	"authors": [ {
+		"name": "imath",
+		"homepage": "https://imathi.eu/"
+	} ],
+	"support": {
+		"issues": "https://github.com/imath/entrepot/issues"
+	},
+	"require": {
+		"composer/installers": "^1.10.0",
+		"php": ">=5.6.0"
+	},
+	"require-dev": {"phpcompatibility/phpcompatibility-wp": "^2.1.0",
+		"dealerdirect/phpcodesniffer-composer-installer": "^0.7.1",
+		"wp-phpunit/wp-phpunit": "^5.6",
+		"phpunit/phpunit": "^7.5"
+	},
+	"scripts": {
+		"test": "@php ./vendor/phpunit/phpunit/phpunit",
+		"test_multisite": "@php ./vendor/phpunit/phpunit/phpunit -c tests/phpunit/multisite.xml"
+	}
 }

@@ -2,7 +2,6 @@
 /* global module */
 module.exports = function( grunt ) {
 	require( 'matchdep' ).filterDev( ['grunt-*', '!grunt-legacy-util'] ).forEach( grunt.loadNpmTasks );
-	grunt.util = require( 'grunt-legacy-util' );
 
 	grunt.initConfig( {
 		pkg: grunt.file.readJSON( 'package.json' ),
@@ -84,16 +83,6 @@ module.exports = function( grunt ) {
 				verbose: false
 			}
 		},
-		phpunit: {
-			'default': {
-				cmd: 'phpunit',
-				args: ['-c', 'phpunit.xml.dist']
-			},
-			'multisite': {
-				cmd: 'phpunit',
-				args: ['-c', 'tests/phpunit/multisite.xml']
-			}
-		},
 		minjson: {
 			compile: {
 				files: {
@@ -117,25 +106,24 @@ module.exports = function( grunt ) {
 				command: 'npm run build',
 				stdout: true,
 				stderr: true
+			},
+			test_php: {
+				command: 'composer test',
+				stdout: true,
+				stderr: true
+			},
+			test_php_multisite: {
+				command: 'composer test_multisite',
+				stdout: true,
+				stderr: true
 			}
 		}
-	} );
-
-	/**
-	 * Register tasks.
-	 */
-	grunt.registerMultiTask( 'phpunit', 'Runs PHPUnit tests, including the multisite tests.', function() {
-		grunt.util.spawn( {
-			args: this.data.args,
-			cmd:  this.data.cmd,
-			opts: { stdio: 'inherit' }
-		}, this.async() );
 	} );
 
 	// Prepare PHPUnit tests
 	grunt.registerTask( 'prep', ['clean:entrepot', 'minjson'] );
 
-	grunt.registerTask( 'test', ['prep', 'phpunit'] );
+	grunt.registerTask( 'phpunit', ['prep', 'exec:test_php', 'exec:test_php_multisite'] );
 
 	grunt.registerTask( 'jstest', ['jsvalidate', 'jshint'] );
 
@@ -146,7 +134,7 @@ module.exports = function( grunt ) {
 	grunt.registerTask( 'release', ['checktextdomain', 'makepot', 'clean', 'jstest', 'shrink', 'exec'] );
 
 	// CI Tasks.
-	grunt.registerTask( 'build', ['jstest', 'checktextdomain', 'prep', 'phpunit'] );
+	grunt.registerTask( 'build', ['jstest', 'checktextdomain', 'phpunit'] );
 
 	// Default task.
 	grunt.registerTask( 'default', ['checktextdomain'] );

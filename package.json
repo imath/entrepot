@@ -20,7 +20,6 @@
     "grunt-exec": "^3.0.0",
     "grunt-git-archive": "~0.0.3",
     "grunt-jsvalidate": "~0.2.2",
-    "grunt-legacy-util": "^2.0.1",
     "grunt-minjson": "~0.4.0",
     "grunt-wp-i18n": "^1.0.3",
     "matchdep": "^2.0.0",
