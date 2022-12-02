@@ -8,7 +8,7 @@
     "@babel/core": "^7.15.5",
     "@wordpress/babel-plugin-makepot": "^4.2.0",
     "@wordpress/babel-preset-default": "^6.3.2",
-    "@wordpress/env": "^4.1.1",
+    "@wordpress/env": "^5.7.0",
     "grunt": "^1.5.3",
     "grunt-check-dependencies": "^1.0.0",
     "grunt-checktextdomain": "~1.0.1",
