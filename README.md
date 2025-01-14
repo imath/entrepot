@@ -1,7 +1,5 @@
 # Entrepôt
 
-[![Unit Tests](https://github.com/imath/entrepot/workflows/PHP%20Unit%20Tests/badge.svg)](https://github.com/imath/entrepot/actions?query=workflow%3A%22PHP+Unit+Tests%22+branch%3Amaster)
-
 ## Français 🇫🇷
 *Inscrivez vos extensions, thèmes et blocs WordPress gratuits dans l'Entrepôt.*
 
