@@ -1,5 +1,7 @@
 # Entrepôt
 
+**This plugin is not more maintained & this repository has been archived.** 
+
 ## Français 🇫🇷
 *Inscrivez vos extensions, thèmes et blocs WordPress gratuits dans l'Entrepôt.*
 
